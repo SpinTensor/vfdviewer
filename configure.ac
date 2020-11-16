@@ -21,5 +21,6 @@ AX_CHECK_C99_STD
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0])
 
 AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([src/Makefile])
 
 AC_OUTPUT

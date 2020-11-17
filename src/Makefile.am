@@ -4,6 +4,6 @@ bin_PROGRAMS = vfdviewer
 
 vfdviewer_SOURCES = vfdviewer.c \
 		    paths.c
-vfdviewer_CPPFLAGS = @GTK_CFLAGS@ -rdynamic
+vfdviewer_CPPFLAGS = @GTK_CFLAGS@
 vfdviewer_CFLAGS = -g
-vfdviewer_LDADD = @GTK_LIBS@
+vfdviewer_LDFLAGS = @GTK_LIBS@ -rdynamic

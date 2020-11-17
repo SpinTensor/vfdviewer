@@ -6,8 +6,7 @@
 #include <stdio.h>
 
 char *get_executable_name(char *argv) {
-   char *argv_cpy = strdup(argv);
-   return basename(argv_cpy);
+   return basename(argv);
 }
 
 char *get_base_path(char *argv) {
@@ -50,35 +49,33 @@ char *get_include_path(char *argv) {
    return include_path;
 }
 
-char *get_shared_path(char *argv) {
-   char *sharedpostfix = "/shared";
+char *get_share_path(char *argv) {
+   char *sharepostfix = "/share";
    char *argv_cpy = strdup(argv);
    char *base_path = get_base_path(argv_cpy);
-   int shared_path_lenght = strlen(base_path) + strlen(sharedpostfix) + 1;
-   char *shared_path = (char*) malloc(shared_path_lenght*sizeof(char));
-   strcpy(shared_path, base_path);
-   strcat(shared_path, sharedpostfix);
+   int share_path_lenght = strlen(base_path) + strlen(sharepostfix) + 1;
+   char *share_path = (char*) malloc(share_path_lenght*sizeof(char));
+   strcpy(share_path, base_path);
+   strcat(share_path, sharepostfix);
    free(argv_cpy);
    free(base_path);
-   return shared_path;
+   return share_path;
 }
 
 char *get_gladefile_path(char *argv) {
    char *dirseparator = "/";
    char *glade_extension = ".glade";
-   char *sharedpath = get_shared_path(argv);
+   char *sharepath = get_share_path(argv);
    char *executable_name = get_executable_name(argv);
-   int glade_path_length = strlen(sharedpath) + strlen(dirseparator) +
+   int glade_path_length = strlen(sharepath) + strlen(dirseparator) +
                            strlen(executable_name) + 
                            strlen(glade_extension) + 1;
    char *gladefile_path = (char*) malloc(glade_path_length*sizeof(char));
-   strcpy(gladefile_path, sharedpath);
+   strcpy(gladefile_path, sharepath);
    strcat(gladefile_path, dirseparator);
    strcat(gladefile_path, executable_name);
    strcat(gladefile_path, glade_extension);
-   free(sharedpath);
-   sharedpath = NULL;
-   free(executable_name);
-   executable_name = NULL;
+   free(sharepath);
+   sharepath = NULL;
    return gladefile_path;
 }

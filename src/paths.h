@@ -10,7 +10,7 @@ char *get_lib_path(char *argv);
 
 char *get_include_path(char *argv);
 
-char *get_shared_path(char *argv);
+char *get_share_path(char *argv);
 
 char *get_gladefile_path(char *argv);
 #endif

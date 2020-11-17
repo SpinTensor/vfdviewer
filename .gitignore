@@ -51,8 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-/Makefile
-/Makefile.in
+Makefile
+Makefile.in
 /aclocal.m4
 /autom4te.cache/
 m4/libtool.m4

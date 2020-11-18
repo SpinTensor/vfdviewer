@@ -15,22 +15,100 @@ vfd_t read_vfd_file(FILE *vfd_file) {
 vfd_header_t read_vfd_header(FILE *vfd_file) {
    vfd_header_t header;
 
-   fread(&(header.vfd_version), 1, sizeof(int), vfd_file);
-   fread(&(header.vftrace_version), 1, VFTR_VERSIONSIZE*sizeof(char), vfd_file);
+   size_t read_elem;
+
+   read_elem = fread(&(header.vfd_version), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header vfd_version\n"
+                      "Expected 1 int, read %ld\n",
+                      read_elem);
+   }
+
+   read_elem = fread(&(header.vftrace_version), sizeof(char), VFTR_VERSIONSIZE, vfd_file);
+   if (read_elem != VFTR_VERSIONSIZE) {
+      fprintf(stderr, "Error in reading vfd-header vftrace_version\n"
+                      "Expected %d char, read %ld\n",
+                      VFTR_VERSIONSIZE, read_elem);
+   }
    header.vftrace_version[VFTR_VERSIONSIZE] = '\0';
-   fread(&(header.date), 1, DATESTRINGSIZE*sizeof(char), vfd_file);
+
+   read_elem = fread(&(header.date), sizeof(char), DATESTRINGSIZE, vfd_file);
+   if (read_elem != DATESTRINGSIZE) {
+      fprintf(stderr, "Error in reading vfd-header date\n"
+                      "Expected %d char, read %ld\n",
+                      DATESTRINGSIZE, read_elem);
+   }
    header.date[DATESTRINGSIZE] = '\0';
-   fread(&(header.interval), 1, sizeof(long long), vfd_file);
-   fread(&(header.nthreads), 1, sizeof(int), vfd_file);
-   fread(&(header.mythread), 1, sizeof(int), vfd_file);
-   fread(&(header.nranks), 1, sizeof(int), vfd_file);
-   fread(&(header.myrank), 1, sizeof(int), vfd_file);
-   fread(&(header.runtime), 1, sizeof(double), vfd_file);
-   fread(&(header.function_samplecount), 1, sizeof(unsigned int), vfd_file);
-   fread(&(header.message_samplecount), 1, sizeof(unsigned int), vfd_file);
-   fread(&(header.stackscount), 1, sizeof(unsigned int), vfd_file);
-   fread(&(header.stacksoffset), 1, sizeof(long), vfd_file);
-   fread(&(header.sampleoffset), 1, sizeof(long), vfd_file);
+
+   read_elem = fread(&(header.interval), sizeof(long long), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header interva\n"
+                      "Expected 1 long long, read %ld\n",
+                      read_elem);
+   }
+
+   read_elem = fread(&(header.nthreads), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header nthreads\n"
+                      "Expected 1 int, read %ld\n",
+                      read_elem);
+   }
+
+   read_elem = fread(&(header.mythread), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header mythread\n"
+                      "Expected 1 int, read %ld\n",
+                      read_elem);
+   }
+
+   read_elem = fread(&(header.nranks), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header nranks\n"
+                      "Expected 1 int, read %ld\n",
+                      read_elem);
+   }
+   read_elem = fread(&(header.myrank), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header myrank\n"
+                      "Expected 1 int, read %ld\n",
+                      read_elem);
+   }
+   read_elem = fread(&(header.runtime), sizeof(double), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header runtime\n"
+                      "Expected 1 double, read %ld\n",
+                      read_elem);
+   }
+   read_elem = fread(&(header.function_samplecount), sizeof(unsigned int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header function_samplecount\n"
+                      "Expected 1 unsigned int, read %ld\n",
+                      read_elem);
+   }
+   read_elem = fread(&(header.message_samplecount), sizeof(unsigned int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header message_samplecount\n"
+                      "Expected 1 unsigned int, read %ld\n",
+                      read_elem);
+   }
+   read_elem = fread(&(header.stackscount), sizeof(unsigned int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header stackscount\n"
+                      "Expected 1 unsigned int, read %ld\n",
+                      read_elem);
+   }
+   read_elem = fread(&(header.stacksoffset), sizeof(long), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header stacksoffset\n"
+                      "Expected 1 long, read %ld\n",
+                      read_elem);
+   }
+   read_elem = fread(&(header.sampleoffset), sizeof(long), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header sampleoffset\n"
+                      "Expected 1 long, read %ld\n",
+                      read_elem);
+   }
 
    return header;
 }

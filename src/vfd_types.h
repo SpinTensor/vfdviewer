@@ -32,7 +32,7 @@ typedef enum {
 
 typedef struct vdf_stack_entry_type vfd_stack_entry_t;
 struct vdf_stack_entry_type{
-   int id;
+   int ID;
    int levels;
    int callerID;
    vfd_stack_entry_t *caller;
@@ -44,7 +44,8 @@ struct vdf_stack_entry_type{
 };
 
 typedef struct {
-   int stack_id;
+   vfd_sample_kind_enum kind;
+   int stackID;
    long long sampletime;
 } vfd_stack_sample_t;
 
@@ -60,10 +61,11 @@ typedef struct {
    int count;
    int typeSize;
    int tag;
-   long long tstart;
-   double dtstart;
-   long long tend;
-   double dtend;
+   long long tstart_usec;
+   double dtstart_sec;
+   long long tend_usec;
+   double dtend_sec;
+   double rate_MiBs;
    int callingStackID;
 } vfd_message_t;
 

@@ -30,17 +30,18 @@ typedef enum {
    mpi_message
 } vfd_sample_kind_enum;
 
-typedef struct vdf_stack_entry_type{
+typedef struct vdf_stack_entry_type vfd_stack_entry_t;
+struct vdf_stack_entry_type{
    int id;
    int levels;
    int callerID;
-   struct vfd_stack_entry_type *caller;
+   vfd_stack_entry_t *caller;
    int ncallees;
-   struct vfd_stack_entry_ttype **callees;
+   vfd_stack_entry_t **callees;
    bool precise;
    int namelen;
    char *name;
-} vfd_stack_entry_t;
+};
 
 typedef struct {
    int stack_id;

@@ -3,6 +3,7 @@
 #include "vfd_types.h"
 #include "vfd_header_IO.h"
 #include "vfd_stacks_IO.h"
+#include "vfd_samples_IO.h"
 
 vfd_t read_vfd_file(FILE *vfd_file) {
    vfd_t vfd;
@@ -14,11 +15,8 @@ vfd_t read_vfd_file(FILE *vfd_file) {
 #ifdef _DEBUG
    print_vfd_stacks(vfd.stacks, vfd.header);
 #endif
+
+   read_vfd_samples(vfd_file, vfd.header, &(vfd.stack_samples), &(vfd.messages));
+
    return vfd;
 }
-
-//vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t);
-//
-//vfd_stack_sample_t read_vfd_stack_sample(FILE *vfd_file);
-//
-//vfd_message_t read_vfd_message_sample(FILE *vfd_file);

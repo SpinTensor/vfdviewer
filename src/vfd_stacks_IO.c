@@ -108,16 +108,17 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t header) {
 
 void print_vfd_stacks(vfd_stack_entry_t *stacks, vfd_header_t header) {
    unsigned int nstacks = header.stackscount;
+   fprintf(stderr, "VFD-Stacks:\n");
    for (unsigned int istack=0; istack<nstacks; istack++) {
       vfd_stack_entry_t *stack_ptr = stacks+istack;
-      fprintf(stderr, "ID:             %d\n", stack_ptr->id);
-      fprintf(stderr, "   Name         %s\n", stack_ptr->name);
-      fprintf(stderr, "   Precise      %s\n", stack_ptr->precise ? "true" : "false");
-      fprintf(stderr, "   Caller ID:   %d\n", stack_ptr->callerID);
-      fprintf(stderr, "   Caller name: %s\n", stack_ptr->caller->name);
-      fprintf(stderr, "   Callees:     %d\n", stack_ptr->ncallees);
+      fprintf(stderr, "   ID:             %d\n", stack_ptr->id);
+      fprintf(stderr, "      Name         %s\n", stack_ptr->name);
+      fprintf(stderr, "      Precise      %s\n", stack_ptr->precise ? "true" : "false");
+      fprintf(stderr, "      Caller ID:   %d\n", stack_ptr->callerID);
+      fprintf(stderr, "      Caller name: %s\n", stack_ptr->caller->name);
+      fprintf(stderr, "      Callees:     %d\n", stack_ptr->ncallees);
       for (int icallee=0; icallee < stack_ptr->ncallees; icallee++) {
-         fprintf(stderr, "      %s\n", stack_ptr->callees[icallee]->name);
+         fprintf(stderr, "         %s\n", stack_ptr->callees[icallee]->name);
       }
    }
 }

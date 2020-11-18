@@ -120,20 +120,23 @@ vfd_header_t read_vfd_header(FILE *vfd_file) {
 }
 
 void print_vfd_header(vfd_header_t vfd_header) {
-   fprintf(stderr, "vfd version:     %d\n", vfd_header.vfd_version);
-   fprintf(stderr, "vftrace version: %s\n", vfd_header.vftrace_version);
-   fprintf(stderr, "Date:            %s\n", vfd_header.date);
-   fprintf(stderr, "MPI rank         %d (of %d)\n", vfd_header.myrank,
-                                                    vfd_header.nranks);
-   fprintf(stderr, "OMP thread       %d (of %d)\n", vfd_header.mythread,
-                                                    vfd_header.nthreads);
-   fprintf(stderr, "Sample interval: %.6le seconds\n", vfd_header.interval*1.0e-6);
-   fprintf(stderr, "Runtime:         %.3lf seconds\n", vfd_header.runtime);
-   fprintf(stderr, "Samples:         %d\n", vfd_header.function_samplecount + 
-                                            vfd_header.message_samplecount);
-   fprintf(stderr, "   Function:     %d\n", vfd_header.function_samplecount);
-   fprintf(stderr, "   Messages:     %d\n", vfd_header.message_samplecount);
-   fprintf(stderr, "Stacks:          %u\n", vfd_header.stackscount);
-   fprintf(stderr, "Stacks offset:   0x%lx\n", vfd_header.stacksoffset);
-   fprintf(stderr, "Sample offset:   0x%lx\n", vfd_header.sampleoffset);
+
+   fprintf(stderr, "VFD-Header:\n");
+   fprintf(stderr, "   vfd version:     %d\n", vfd_header.vfd_version);
+   fprintf(stderr, "   vftrace version: %s\n", vfd_header.vftrace_version);
+   fprintf(stderr, "   Date:            %s\n", vfd_header.date);
+   fprintf(stderr, "   MPI rank         %d (of %d)\n", vfd_header.myrank,
+                                                       vfd_header.nranks);
+   fprintf(stderr, "   OMP thread       %d (of %d)\n", vfd_header.mythread,
+                                                       vfd_header.nthreads);
+   fprintf(stderr, "   Sample interval: %.6le seconds\n", vfd_header.interval*1.0e-6);
+   fprintf(stderr, "   Runtime:         %.3lf seconds\n", vfd_header.runtime);
+   fprintf(stderr, "   Samples:         %d\n", vfd_header.function_samplecount + 
+                                               vfd_header.message_samplecount);
+   fprintf(stderr, "      Function:     %d\n", vfd_header.function_samplecount);
+   fprintf(stderr, "      Messages:     %d\n", vfd_header.message_samplecount);
+   fprintf(stderr, "   Stacks:          %u\n", vfd_header.stackscount);
+   fprintf(stderr, "   Stacks offset:   0x%lx\n", vfd_header.stacksoffset);
+   fprintf(stderr, "   Sample offset:   0x%lx\n", vfd_header.sampleoffset);
+   fprintf(stderr, "\n");
 }

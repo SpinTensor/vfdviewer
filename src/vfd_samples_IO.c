@@ -5,27 +5,24 @@
 #include "mpi_types.h"
 #include "vfd_samples_IO.h"
 
-void read_vfd_samples(FILE *vfd_file, vfd_header_t header,
+void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
                       vfd_stack_sample_t **stack_samples_ptr,
                       vfd_message_t **messages_ptr) {
 
    vfd_stack_sample_t *stack_samples = (vfd_stack_sample_t*)
-      malloc(header.function_samplecount*sizeof(vfd_stack_sample_t));
+      malloc(header->function_samplecount*sizeof(vfd_stack_sample_t));
    *stack_samples_ptr = stack_samples;
 
    vfd_message_t *messages = (vfd_message_t*)
-      malloc(header.message_samplecount*sizeof(vfd_message_t));
+      malloc(header->message_samplecount*sizeof(vfd_message_t));
    *messages_ptr = messages;
 
    unsigned int tot_samplecount;
-   tot_samplecount = header.function_samplecount + header.message_samplecount;
+   tot_samplecount = header->function_samplecount + header->message_samplecount;
    unsigned int read_function_samplecount = 0;
    unsigned int read_message_samplecount = 0;
 
-#ifdef _DEBUG
-   fprintf(stderr, "VFD Stack and message samples:\n");
-#endif 
-   fseek(vfd_file, header.sampleoffset, SEEK_SET);
+   fseek(vfd_file, header->sampleoffset, SEEK_SET);
    for (unsigned int isample=0; isample<tot_samplecount; isample++) {
       vfd_sample_kind_enum sample_kind;
       size_t read_elem;
@@ -47,17 +44,11 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t header,
             fsample_ptr = stack_samples + read_function_samplecount;
             *fsample_ptr = read_vfd_stack_sample(vfd_file);
             fsample_ptr->kind = sample_kind;
-#ifdef _DEBUG
-            print_vfd_stack_sample(*fsample_ptr);
-#endif
             read_function_samplecount++;
             break;
          case mpi_message:
             msample_ptr = messages + read_message_samplecount;
             *msample_ptr = read_vfd_message_sample(vfd_file);
-#ifdef _DEBUG
-            print_vfd_message(*msample_ptr);
-#endif
             read_message_samplecount++;
             break;
          default:
@@ -67,14 +58,14 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t header,
       }
    }
 
-   if (read_function_samplecount != header.function_samplecount) {
+   if (read_function_samplecount != header->function_samplecount) {
       fprintf(stderr, "Expected %u function stack samples but read %u\n",
-              header.function_samplecount, read_function_samplecount);
+              header->function_samplecount, read_function_samplecount);
       exit(EXIT_FAILURE);
    }
-   if (read_message_samplecount != header.message_samplecount) {
+   if (read_message_samplecount != header->message_samplecount) {
       fprintf(stderr, "Expected %u messages but read %u\n",
-              header.message_samplecount, read_message_samplecount);
+              header->message_samplecount, read_message_samplecount);
       exit(EXIT_FAILURE);
    }
 }
@@ -175,26 +166,37 @@ vfd_message_t read_vfd_message_sample(FILE *vfd_file) {
    return message;
 }
 
-void print_vfd_stack_sample(vfd_stack_sample_t sample) {
-   fprintf(stderr, "%16.6lf", sample.sampletime*1.0e-6);
-   fprintf(stderr, " %s", sample.kind == fnct_entry ? "call" : "exit");
-   fprintf(stderr, " stackID=%d\n", sample.stackID);
+#ifdef _DEBUG
+#endif 
+
+void print_vfd_stack_samples(vfd_header_t *header, vfd_stack_sample_t *samples) {
+   fprintf(stderr, "VFD stack samples:\n");
+   unsigned int samplecount = header->function_samplecount;
+   for (unsigned int isample=0; isample<samplecount; isample++) {
+      fprintf(stderr, "%16.6lf", samples[isample].sampletime*1.0e-6);
+      fprintf(stderr, " %s", samples[isample].kind == fnct_entry ? "call" : "exit");
+      fprintf(stderr, " stackID=%d\n", samples[isample].stackID);
+   }
 }
 
-void print_vfd_message(vfd_message_t message) {
-   fprintf(stderr, "%16.6f", message.dtstart_sec);
-   fprintf(stderr, " %s", message.dir ? "recv" : "send");
-   fprintf(stderr, " in stackID %d\n", message.callingStackID);
+void print_vfd_messages(vfd_header_t *header, vfd_message_t *messages) {
+   fprintf(stderr, "VFD message samples:\n");
+   unsigned int msgcount = header->message_samplecount;
+   for (unsigned int imsg=0; imsg<msgcount; imsg++) {
+      fprintf(stderr, "%16.6f", messages[imsg].dtstart_sec);
+      fprintf(stderr, " %s", messages[imsg].dir ? "recv" : "send");
+      fprintf(stderr, " in stackID %d\n", messages[imsg].callingStackID);
 
-   fprintf(stderr, "%16s", "");
-   fprintf(stderr, " count=%d", message.count);
-   fprintf(stderr, " type=%s(%iBytes)",
-                   get_mpitype_string_from_idx(message.typeID),
-                   message.typeSize);
-   fprintf(stderr, " rate=%8.4lf MiB/s", message.rate_MiBs);
-   fprintf(stderr, " peer=%d", message.rank);
-   fprintf(stderr, " tag=%d\n", message.tag);
+      fprintf(stderr, "%16s", "");
+      fprintf(stderr, " count=%d", messages[imsg].count);
+      fprintf(stderr, " type=%s(%iBytes)",
+                      get_mpitype_string_from_idx(messages[imsg].typeID),
+                      messages[imsg].typeSize);
+      fprintf(stderr, " rate=%8.4lf MiB/s", messages[imsg].rate_MiBs);
+      fprintf(stderr, " peer=%d", messages[imsg].rank);
+      fprintf(stderr, " tag=%d\n", messages[imsg].tag);
 
-   fprintf(stderr, "%16.6lf", message.dtend_sec);
-   fprintf(stderr, " %s end\n", message.dir ? "recv" : "send");
+      fprintf(stderr, "%16.6lf", messages[imsg].dtend_sec);
+      fprintf(stderr, " %s end\n", messages[imsg].dir ? "recv" : "send");
+   }
 }

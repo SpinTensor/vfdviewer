@@ -5,15 +5,16 @@
 
 #include "vfd_types.h"
 
-vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t header) {
-   unsigned int nstacks = header.stackscount;
+vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
+                                   vfd_stack_entry_t **stacks_ptr) {
+   unsigned int nstacks = header->stackscount;
 
-   vfd_stack_entry_t *stacks;
-   stacks = (vfd_stack_entry_t*) malloc(nstacks*sizeof(vfd_stack_entry_t));
+   *stacks_ptr = (vfd_stack_entry_t*) malloc(nstacks*sizeof(vfd_stack_entry_t));
+   vfd_stack_entry_t *stacks = *stacks_ptr;
    memset((void*) stacks, 0, nstacks*sizeof(vfd_stack_entry_t));
 
    // Read in the vfd information
-   fseek(vfd_file, header.stacksoffset, SEEK_SET);
+   fseek(vfd_file, header->stacksoffset, SEEK_SET);
    for (unsigned int istack=0; istack<nstacks; istack++) {
       int id;
       size_t read_elem;
@@ -106,8 +107,8 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t header) {
    return stacks;
 }
 
-void print_vfd_stacks(vfd_stack_entry_t *stacks, vfd_header_t header) {
-   unsigned int nstacks = header.stackscount;
+void print_vfd_stacks(vfd_header_t *header, vfd_stack_entry_t *stacks) {
+   unsigned int nstacks = header->stackscount;
    fprintf(stderr, "VFD-Stacks:\n");
    for (unsigned int istack=0; istack<nstacks; istack++) {
       vfd_stack_entry_t *stack_ptr = stacks+istack;

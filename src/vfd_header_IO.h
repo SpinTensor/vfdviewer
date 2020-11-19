@@ -5,8 +5,8 @@
 
 #include "vfd_types.h"
 
-vfd_header_t read_vfd_header(FILE *vfd_file);
+void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr);
 
-void print_vfd_header(vfd_header_t vfd_header);
+void print_vfd_header(vfd_header_t *vfd_header);
 
 #endif

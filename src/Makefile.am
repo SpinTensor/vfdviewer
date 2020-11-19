@@ -8,7 +8,8 @@ vfdviewer_SOURCES = vfdviewer.c \
 		    vfd_header_IO.c \
 		    vfd_stacks_IO.c \
 		    vfd_samples_IO.c \
-		    vfd_IO.c
+		    vfd.c
+
 vfdviewer_CPPFLAGS = @GTK_CFLAGS@ -D_DEBUG -Wall -Wextra -Wpedantic
 vfdviewer_CFLAGS = -g
 vfdviewer_LDFLAGS = @GTK_LIBS@ -rdynamic

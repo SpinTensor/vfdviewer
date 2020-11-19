@@ -69,12 +69,15 @@ typedef struct {
    int callingStackID;
 } vfd_message_t;
 
-typedef struct {
+typedef struct vfd_type vfd_t;
+struct vfd_type {
    char *filename;
-   vfd_header_t header;
+   vfd_header_t *header;
    vfd_stack_sample_t *stack_samples;
    vfd_message_t *messages;
    vfd_stack_entry_t *stacks;
-} vfd_t;
+   vfd_t *prev;
+   vfd_t *next;
+};
 
 #endif

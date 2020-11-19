@@ -5,8 +5,9 @@
 
 #include "vfd_types.h"
 
-vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t header);
+void read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
+                     vfd_stack_entry_t **stacks_ptr);
 
-void print_vfd_stacks(vfd_stack_entry_t *stacks, vfd_header_t header);
+void print_vfd_stacks(vfd_header_t *header, vfd_stack_entry_t *stacks);
 
 #endif

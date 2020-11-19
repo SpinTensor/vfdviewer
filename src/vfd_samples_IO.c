@@ -23,7 +23,7 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t header,
    unsigned int read_message_samplecount = 0;
 
 #ifdef _DEBUG
-   fprintf(stderr, "Stack and message samples:\n");
+   fprintf(stderr, "VFD Stack and message samples:\n");
 #endif 
    fseek(vfd_file, header.sampleoffset, SEEK_SET);
    for (unsigned int isample=0; isample<tot_samplecount; isample++) {
@@ -176,15 +176,25 @@ vfd_message_t read_vfd_message_sample(FILE *vfd_file) {
 }
 
 void print_vfd_stack_sample(vfd_stack_sample_t sample) {
-   fprintf(stderr, "%16.6lf %s stackID=%d\n", sample.sampletime*1.0e-6,
-           sample.kind == fnct_entry ? "call" : "exit", sample.stackID);
+   fprintf(stderr, "%16.6lf", sample.sampletime*1.0e-6);
+   fprintf(stderr, " %s", sample.kind == fnct_entry ? "call" : "exit");
+   fprintf(stderr, " stackID=%d\n", sample.stackID);
 }
 
 void print_vfd_message(vfd_message_t message) {
-   fprintf(stderr, "%16.6f %s in stackID %d\n",
-           message.dtstart_sec, message.dir ? "recv" : "send",
-           message.callingStackID);
-   fprintf(stderr, "%16s count=%d type=%s(%iBytes) rate=%8.4lf MiB/s peer=%d tag=%d\n",
-           "", message.count, get_mpitype_string_from_idx(message.typeID), message.typeSize, message.rate_MiBs, message.rank, message.tag);
-   fprintf(stderr, "%16.6f %s end\n", message.dtend_sec, message.dir ? "recv" : "send");
+   fprintf(stderr, "%16.6f", message.dtstart_sec);
+   fprintf(stderr, " %s", message.dir ? "recv" : "send");
+   fprintf(stderr, " in stackID %d\n", message.callingStackID);
+
+   fprintf(stderr, "%16s", "");
+   fprintf(stderr, " count=%d", message.count);
+   fprintf(stderr, " type=%s(%iBytes)",
+                   get_mpitype_string_from_idx(message.typeID),
+                   message.typeSize);
+   fprintf(stderr, " rate=%8.4lf MiB/s", message.rate_MiBs);
+   fprintf(stderr, " peer=%d", message.rank);
+   fprintf(stderr, " tag=%d\n", message.tag);
+
+   fprintf(stderr, "%16.6lf", message.dtend_sec);
+   fprintf(stderr, " %s end\n", message.dir ? "recv" : "send");
 }

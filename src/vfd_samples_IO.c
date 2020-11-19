@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "vfd_types.h"
+#include "mpi_types.h"
 #include "vfd_samples_IO.h"
 
 void read_vfd_samples(FILE *vfd_file, vfd_header_t header,
@@ -183,7 +184,7 @@ void print_vfd_message(vfd_message_t message) {
    fprintf(stderr, "%16.6f %s in stackID %d\n",
            message.dtstart_sec, message.dir ? "recv" : "send",
            message.callingStackID);
-   fprintf(stderr, "%16s count=%d type=%iBytes rate=%8.4lf MiB/s peer=%d tag=%d\n",
-           "", message.count, message.typeSize, message.rate_MiBs, message.rank, message.tag);
+   fprintf(stderr, "%16s count=%d type=%s(%iBytes) rate=%8.4lf MiB/s peer=%d tag=%d\n",
+           "", message.count, get_mpitype_string_from_idx(message.typeID), message.typeSize, message.rate_MiBs, message.rank, message.tag);
    fprintf(stderr, "%16.6f %s end\n", message.dtend_sec, message.dir ? "recv" : "send");
 }

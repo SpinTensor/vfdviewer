@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 #include "vfd_types.h"
-#include "vfd_header_IO.h"
-#include "vfd_stacks_IO.h"
-#include "vfd_samples_IO.h"
+#include "vfd_header.h"
+#include "vfd_stacks.h"
+#include "vfd_samples.h"
 
 vfd_t *g_vfd_list = NULL;
 
@@ -39,6 +39,32 @@ vfd_t *new_vfd(char *filename) {
 #endif
 
    return new_vfd;
+}
+
+// free a vfd trace
+void free_vfd(vfd_t **vfd_ptr) {
+   vfd_t *vfd = *vfd_ptr;
+
+   // free the struct members
+   free_vfd_stacks(vfd->header->stackscount, vfd->stacks);
+   vfd->stacks = NULL;
+
+   free_vfd_messages(vfd->header->message_samplecount, vfd->messages);
+   vfd->messages = NULL;
+
+   free_vfd_stack_samples(vfd->header->function_samplecount, vfd->stack_samples);
+   vfd->stack_samples = NULL;
+
+   free_vfd_header(vfd->header);
+   vfd->header = NULL;
+
+   free(vfd->filename);
+   vfd->filename = NULL;
+
+   // free the vfd struct pointer itself
+   vfd = NULL;
+   free(*vfd_ptr);
+   *vfd_ptr = NULL;
 }
 
 //   vfd_t *tmp_vfd_ptr = vfd_trace_list;

@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "vfd_types.h"
-#include "vfd_header_IO.h"
+#include "vfd_header.h"
 
 void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
    *header_ptr = (vfd_header_t*) malloc(sizeof(vfd_header_t));
@@ -116,6 +116,26 @@ void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
                       read_elem);
       exit(EXIT_FAILURE);
    }
+}
+
+void free_vfd_header(vfd_header_t *vfd_header) {
+   vfd_header->vfd_version = 0;
+   vfd_header->vftrace_version[0] = '\0';
+   vfd_header->date[0] = '\0';
+   vfd_header->interval = 0;
+   vfd_header->nthreads = 0;
+   vfd_header->mythread = 0;
+   vfd_header->nranks = 0;
+   vfd_header->myrank = 0;
+   vfd_header->runtime = 0.0;
+   vfd_header->function_samplecount = 0;
+   vfd_header->message_samplecount = 0;
+   vfd_header->stackscount = 0;
+   vfd_header->stacksoffset = 0;
+   vfd_header->sampleoffset = 0;
+   vfd_header->nhwc = 0;
+
+   free(vfd_header);
 }
 
 void print_vfd_header(vfd_header_t *vfd_header) {

@@ -3,7 +3,7 @@
 
 #include "vfd_types.h"
 #include "mpi_types.h"
-#include "vfd_samples_IO.h"
+#include "vfd_samples.h"
 
 void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
                       vfd_stack_sample_t **stack_samples_ptr,
@@ -166,8 +166,16 @@ vfd_message_t read_vfd_message_sample(FILE *vfd_file) {
    return message;
 }
 
-#ifdef _DEBUG
-#endif 
+void free_vfd_stack_samples(unsigned int nstack_samples,
+                            vfd_stack_sample_t *stack_samples) {
+   (void) nstack_samples;
+   free(stack_samples);
+}
+
+void free_vfd_messages(unsigned int nmessages, vfd_message_t *messages) {
+   (void) nmessages;
+   free(messages);
+}
 
 void print_vfd_stack_samples(vfd_header_t *header, vfd_stack_sample_t *samples) {
    fprintf(stderr, "VFD stack samples:\n");

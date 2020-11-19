@@ -5,4 +5,6 @@
 
 vfd_t *new_vfd(char *filename);
 
+void free_vfd(vfd_t **vfd_ptr);
+
 #endif

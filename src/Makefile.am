@@ -5,9 +5,9 @@ bin_PROGRAMS = vfdviewer
 vfdviewer_SOURCES = vfdviewer.c \
 		    paths.c \
 		    mpi_types.c \
-		    vfd_header_IO.c \
-		    vfd_stacks_IO.c \
-		    vfd_samples_IO.c \
+		    vfd_header.c \
+		    vfd_stacks.c \
+		    vfd_samples.c \
 		    vfd.c
 
 vfdviewer_CPPFLAGS = @GTK_CFLAGS@ -D_DEBUG -Wall -Wextra -Wpedantic

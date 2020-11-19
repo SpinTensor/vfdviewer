@@ -107,6 +107,28 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
    return stacks;
 }
 
+void free_vfd_stacks(unsigned int nstacks, vfd_stack_entry_t *stacks) {
+   for (unsigned int istack=0; istack<nstacks; istack++) {
+      stacks[istack].ID = 0;
+      stacks[istack].levels = 0;
+      stacks[istack].callerID = 0;
+      stacks[istack].caller = NULL;
+      for (int icallee=0; icallee<stacks[istack].ncallees; icallee++) {
+         free(stacks[istack].callees);
+         stacks[istack].callees = NULL;
+      }
+      stacks[istack].ncallees = 0;
+      free(stacks[istack].callees);
+      stacks[istack].callees = NULL;
+      stacks[istack].precise = false;
+      stacks[istack].namelen = 0;
+      free(stacks[istack].name);
+      stacks[istack].name = NULL;
+   }
+
+   free(stacks);
+}
+
 void print_vfd_stacks(vfd_header_t *header, vfd_stack_entry_t *stacks) {
    unsigned int nstacks = header->stackscount;
    fprintf(stderr, "VFD-Stacks:\n");

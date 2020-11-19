@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
    char *gladefile = get_gladefile_path(argv[0]);
    printf("gladefile = %s\n", gladefile);
 
-   new_vfd("test.vfd");
+   vfd_t *testvfd = new_vfd(strdup("test.vfd"));
+   free_vfd(&testvfd);
 
 //   gtk_init(&argc, &argv);
 //

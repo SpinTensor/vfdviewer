@@ -30,7 +30,7 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t header) {
          exit(EXIT_FAILURE);
       }
       vfd_stack_entry_t *stack_ptr = stacks+id;
-      stack_ptr->id = id;
+      stack_ptr->ID = id;
       read_elem = fread(&(stack_ptr->levels), sizeof(int), 1, vfd_file);
       if (read_elem != 1) {
          fprintf(stderr, "Error in reading vfd-stack nr. %u: levels\n"
@@ -111,7 +111,7 @@ void print_vfd_stacks(vfd_stack_entry_t *stacks, vfd_header_t header) {
    fprintf(stderr, "VFD-Stacks:\n");
    for (unsigned int istack=0; istack<nstacks; istack++) {
       vfd_stack_entry_t *stack_ptr = stacks+istack;
-      fprintf(stderr, "   ID:             %d\n", stack_ptr->id);
+      fprintf(stderr, "   ID:             %d\n", stack_ptr->ID);
       fprintf(stderr, "      Name         %s\n", stack_ptr->name);
       fprintf(stderr, "      Precise      %s\n", stack_ptr->precise ? "true" : "false");
       fprintf(stderr, "      Caller ID:   %d\n", stack_ptr->callerID);

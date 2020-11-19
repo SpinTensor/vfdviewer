@@ -70,6 +70,7 @@ typedef struct {
 } vfd_message_t;
 
 typedef struct {
+   char *filename;
    vfd_header_t header;
    vfd_stack_sample_t *stack_samples;
    vfd_message_t *messages;

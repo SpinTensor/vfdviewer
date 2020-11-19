@@ -11,6 +11,6 @@ vfd_stack_sample_t read_vfd_stack_sample(FILE *vfd_file);
 
 vfd_message_t read_vfd_message_sample(FILE *vfd_file);
 
-vfd_t read_vfd_file(FILE *vfd_file);
+void read_vfd_file(vfd_t *vfd_file);
 
 #endif

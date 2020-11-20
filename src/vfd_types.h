@@ -33,7 +33,7 @@ typedef enum {
 typedef struct vdf_stack_entry_type vfd_stack_entry_t;
 struct vdf_stack_entry_type{
    int ID;
-   int levels;
+   int level;
    int callerID;
    vfd_stack_entry_t *caller;
    int ncallees;

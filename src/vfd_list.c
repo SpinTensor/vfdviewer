@@ -8,7 +8,7 @@
 
 static vfd_t *g_vfd_list = NULL;
 
-// add a new vfd trace to the list
+// create a new vfd trace from a file
 vfd_t *new_vfd(char *filename) {
 
    // allocate memory to hold the vfd data structure
@@ -101,7 +101,9 @@ void append_vfd(vfd_t *new_vfd) {
       vfd_t *tmp_vfd_ptr = g_vfd_list;
       // there are already elements in the list
       // go to the end
-      while (tmp_vfd_ptr->next != NULL) {;}
+      while (tmp_vfd_ptr->next != NULL) {
+         tmp_vfd_ptr = tmp_vfd_ptr->next;
+      }
       // connect the last element with the new one
       tmp_vfd_ptr->next = new_vfd;
       // connect the new with the (former) last one

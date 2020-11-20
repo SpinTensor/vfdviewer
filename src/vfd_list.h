@@ -3,7 +3,7 @@
 
 #include "vfd_types.h"
 
-// add a new vfd trace to the list
+// create a new vfd trace from a file
 vfd_t *new_vfd(char *filename);
 
 // free a vfd trace

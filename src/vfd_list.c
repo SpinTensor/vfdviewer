@@ -208,3 +208,14 @@ vfd_t *nth_vfd(int n) {
       }
    }
 }
+
+// remove every element in the vfd trace list
+// and free them
+void remove_and_free_vfd_list() {
+   vfd_t *tmpvfd = first_vfd();
+   while (tmpvfd != NULL) {
+      remove_vfd(tmpvfd);
+      free_vfd(&tmpvfd);
+      tmpvfd = first_vfd();
+   }
+}

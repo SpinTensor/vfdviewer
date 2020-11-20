@@ -39,4 +39,8 @@ vfd_t *last_vfd();
 // nth_vfd(-3) = c
 vfd_t *nth_vfd(int n);
 
+// remove every element in the vfd trace list
+// and free them
+void remove_and_free_vfd_list();
+
 #endif

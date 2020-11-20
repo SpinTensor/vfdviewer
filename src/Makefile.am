@@ -27,7 +27,8 @@ libvfd_la_CFLAGS = -g -Wall -Wextra -Wpedantic
 libvgtk_la_SOURCES = vgtk_builder.c \
 		     vgtk_main_window.c \
 		     vgtk_main_menu_bar.c \
-		     vgtk_open_file_dialog.c
+		     vgtk_open_file_dialog.c \
+		     vgtk_about_dialog.c
 libvgtk_la_CPPFLAGS = -D_DEBUG
 libvgtk_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 libvgtk_la_LDFLAGS = @GTK_LIBS@

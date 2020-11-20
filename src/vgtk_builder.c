@@ -2,6 +2,7 @@
 
 #include "vgtk_main_window.h"
 #include "vgtk_open_file_dialog.h"
+#include "vgtk_about_dialog.h"
 #include "vgtk_main_menu_bar.h"
 
 GtkBuilder *vgtk_builder = NULL;
@@ -18,7 +19,12 @@ void vgtk_build_user_interface(char *gladefile) {
    vgtk_open_file_dialog = GTK_FILE_CHOOSER(
       gtk_builder_get_object(vgtk_builder, "open_file_dialog"));
 
+   // assign the pointer to the about dialog
+   vgtk_about_dialog = GTK_ABOUT_DIALOG(
+      gtk_builder_get_object(vgtk_builder, "about_dialog"));
+
    // connect all callback singals 
    vgtk_connect_main_menu_bar_signals(vgtk_builder);
+   vgtk_connect_about_dialog_signals(vgtk_builder);
    gtk_builder_connect_signals(vgtk_builder, NULL);
 }

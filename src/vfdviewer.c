@@ -4,33 +4,21 @@
 #include <gtk/gtk.h>
 
 #include "paths.h"
-#include "vfd.h"
-
-GtkBuilder *builder;
-GtkWindow *window;
-GtkFileChooser *file_chooser;
+#include "vgtk_builder.h"
+#include "vgtk_main_window.h"
 
 int main(int argc, char **argv) {
    printf("init\n");
    char *gladefile = get_gladefile_path(argv[0]);
    printf("gladefile = %s\n", gladefile);
 
-   vfd_t *testvfd = new_vfd(strdup("test.vfd"));
-   free_vfd(&testvfd);
-
-//   gtk_init(&argc, &argv);
-//
-//   builder = gtk_builder_new_from_file(gladefile);
+   gtk_init(&argc, &argv);
+   vgtk_build_user_interface(gladefile);
    free(gladefile);
    gladefile = NULL;
-//
-//   window = GTK_WINDOW(gtk_builder_get_object(builder, "main_window"));
-//   file_chooser = GTK_FILE_CHOOSER(gtk_builder_get_object(builder, "filechooser_window"));
-//
-//   gtk_builder_connect_signals(builder, NULL);
-//
-//   gtk_widget_show(GTK_WIDGET(window));
-//   gtk_main();
+
+   vgtk_show_main_window();
+   gtk_main();
 
    return 0;
 }

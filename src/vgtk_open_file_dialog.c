@@ -13,3 +13,7 @@ void vgtk_hide_open_file_dialog() {
 gint vgtk_run_open_file_dialog() {
    return gtk_dialog_run(GTK_DIALOG(vgtk_open_file_dialog));
 }
+
+GSList *vgtk_open_file_dialog_get_filenames() {
+   return gtk_file_chooser_get_filenames(vgtk_open_file_dialog);
+}

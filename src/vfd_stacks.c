@@ -6,8 +6,9 @@
 #include "vfd_types.h"
 
 vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
-                                   vfd_stack_entry_t **stacks_ptr) {
+                                   vfd_stack_entry_t **stacks_ptr, int *maxlevel) {
    unsigned int nstacks = header->stackscount;
+   *maxlevel = 0;
 
    *stacks_ptr = (vfd_stack_entry_t*) malloc(nstacks*sizeof(vfd_stack_entry_t));
    vfd_stack_entry_t *stacks = *stacks_ptr;
@@ -39,6 +40,9 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
                          istack, read_elem);
          exit(EXIT_FAILURE);
       }
+      // update maximum level
+      *maxlevel = stack_ptr->level > *maxlevel ? stack_ptr->level : *maxlevel;
+
       read_elem = fread(&(stack_ptr->callerID), sizeof(int), 1, vfd_file);
       if (read_elem != 1) {
          fprintf(stderr, "Error in reading vfd-stack nr. %u: callerID\n"

@@ -22,7 +22,7 @@ vfd_t *new_vfd(char *filename) {
    read_vfd_header(vfd_handle, &(new_vfd->header));
    // read the stack information
    read_vfd_stacks(vfd_handle, new_vfd->header,
-                   &(new_vfd->stacks));
+                   &(new_vfd->stacks), &(new_vfd->maxlevel));
    // read stack and message samples 
    // they are wildly mixed so there is no chance
    // of reading them separately in one go

@@ -38,5 +38,7 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
                                       stack_tree_treeview_stackID_text,
                                       "text", 0);
 
+   stack_tree_treeselection = gtk_tree_view_get_selection(stack_tree_treeview);
+
    gtk_builder_connect_signals(builder, NULL);
 }

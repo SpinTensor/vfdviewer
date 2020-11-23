@@ -4,7 +4,9 @@
 
 GtkAboutDialog *vgtk_about_dialog = NULL;
 
-void vgtk_connect_about_dialog_signals(GtkBuilder *builder) {
+void vgtk_build_about_dialog(GtkBuilder *builder) {
+   vgtk_about_dialog = GTK_ABOUT_DIALOG(
+      gtk_builder_get_object(builder, "about_dialog"));
    gtk_builder_connect_signals(builder, NULL);
 }
 

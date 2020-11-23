@@ -3,9 +3,7 @@
 
 #include <gtk/gtk.h>
 
-extern GtkAboutDialog *vgtk_about_dialog;
-
-void vgtk_connect_about_dialog_signals(GtkBuilder *builder);
+void vgtk_build_about_dialog(GtkBuilder *builder);
 
 void vgtk_show_about_dialog();
 

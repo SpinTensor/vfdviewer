@@ -111,10 +111,14 @@
             <property name="orientation">vertical</property>
             <property name="spacing">2</property>
             <child>
-              <object class="GtkEntry" id="stack_tree_search_entry">
+              <object class="GtkSearchEntry" id="stack_tree_searchentry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="placeholder_text" translatable="yes">&lt;search stack tree&gt;</property>
+                <property name="primary_icon_name">edit-find-symbolic</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">False</property>
+                <property name="placeholder_text" translatable="yes">&lt;Search Stacks&gt;</property>
+                <signal name="search-changed" handler="on_stack_tree_searchentry_search_changed" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -136,6 +140,7 @@
                     <property name="headers_clickable">False</property>
                     <property name="enable_search">False</property>
                     <property name="enable_tree_lines">True</property>
+                    <signal name="row-activated" handler="on_stack_tree_treeview_row_activated" swapped="no"/>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection" id="stack_tree_treeselection"/>
                     </child>
@@ -312,5 +317,8 @@
       <action-widget response="-5">filechooser_open_button</action-widget>
       <action-widget response="-6">filechooser_cancel_button</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkTreeModelFilter" id="stack_tree_treefilter">
+    <property name="child_model">stack_tree_treestore</property>
   </object>
 </interface>

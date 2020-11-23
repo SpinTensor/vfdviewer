@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 
 #include "vgtk_stack_tree_toolbar.h"
+#include "vgtk_stack_tree_searchentry.h"
 #include "vfd_types.h"
 #include "vfd_list.h"
 
@@ -15,17 +16,24 @@ GtkCellRenderer *stack_tree_treeview_functionnames_text = NULL;
 
 GtkTreeSelection *stack_tree_treeselection = NULL;
 
+GtkTreeModelFilter *stack_tree_treefilter = NULL;
+
 void vgtk_build_stack_treeview(GtkBuilder *builder) {
    stack_tree_treestore = GTK_TREE_STORE(
       gtk_builder_get_object(builder, "stack_tree_treestore"));
    stack_tree_treeview = GTK_TREE_VIEW(
       gtk_builder_get_object(builder, "stack_tree_treeview"));
+
    stack_tree_treeview_functionnames_column = GTK_TREE_VIEW_COLUMN(
       gtk_builder_get_object(builder, "stack_tree_treeview_functionnames_column"));
    stack_tree_treeview_functionnames_text = GTK_CELL_RENDERER(
       gtk_builder_get_object(builder, "stack_tree_treeview_functionnames_text"));
+
    stack_tree_treeselection = GTK_TREE_SELECTION(
       gtk_builder_get_object(builder, "stack_tree_treeselection"));
+
+   stack_tree_treefilter = GTK_TREE_MODEL_FILTER(
+      gtk_builder_get_object(builder, "stack_tree_treefilter"));
 
    gtk_tree_view_column_add_attribute(stack_tree_treeview_functionnames_column,
                                       stack_tree_treeview_functionnames_text,
@@ -35,6 +43,7 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
 
    gtk_builder_connect_signals(builder, NULL);
 
+   vgtk_build_stack_tree_searchentry(builder);
    vgtk_build_stack_tree_toolbar(builder);
 }
 

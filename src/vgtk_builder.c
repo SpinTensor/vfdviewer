@@ -13,8 +13,7 @@ void vgtk_build_user_interface(char *gladefile) {
    vgtk_builder = gtk_builder_new_from_file(gladefile);
 
    // assign the pointer to the main window
-   vgtk_main_window = GTK_WINDOW(
-      gtk_builder_get_object(vgtk_builder, "main_window"));
+   vgtk_build_main_window(vgtk_builder);
 
    // assign the pointer to the file chooser dialog
    vgtk_open_file_dialog = GTK_FILE_CHOOSER(

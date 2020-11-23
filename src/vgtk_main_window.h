@@ -1,7 +1,7 @@
 #ifndef VGTK_MAIN_WINDOW_H
 #define VGTK_MAIN_WINDOW_H
 
-extern GtkWindow *vgtk_main_window;
+void vgtk_build_main_window(GtkBuilder *builder);
 
 void vgtk_show_main_window();
 

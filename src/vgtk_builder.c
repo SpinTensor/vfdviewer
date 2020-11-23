@@ -16,8 +16,7 @@ void vgtk_build_user_interface(char *gladefile) {
    vgtk_build_main_window(vgtk_builder);
 
    // assign the pointer to the file chooser dialog
-   vgtk_open_file_dialog = GTK_FILE_CHOOSER(
-      gtk_builder_get_object(vgtk_builder, "open_file_dialog"));
+   vgtk_build_open_file_dialog(vgtk_builder);
 
    // assign the pointer to the about dialog
    vgtk_build_about_dialog(vgtk_builder);

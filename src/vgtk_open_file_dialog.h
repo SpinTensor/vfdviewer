@@ -3,7 +3,7 @@
 
 #include <gtk/gtk.h>
 
-extern GtkFileChooser *vgtk_open_file_dialog;
+void vgtk_build_open_file_dialog(GtkBuilder *builder);
 
 void vgtk_show_open_file_dialog();
 

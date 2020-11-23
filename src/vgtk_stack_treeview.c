@@ -99,14 +99,15 @@ void vgtk_stack_tree_refilter() {
 
 // Function to determine the visibility of stack tree entries
 gboolean stack_tree_determine_visibility(GtkTreeModel *model,
-                                         GtkTreeIter *parent,
+                                         GtkTreeIter *iter,
                                          gpointer data) {
    (void) data;
    // first get the search entry text
    const gchar *search_text = vgtk_stack_tree_searchentry_get_text();
-   int length = strlen(search_text);
-   printf("applying filter %d\n", length);
-   if (length == 3) {
+   gchar *value;
+   gtk_tree_model_get(model, iter, 0, &value,  -1);
+   char *substrptr = strstr(value, search_text);
+   if (substrptr == NULL) {
       return FALSE;
    } else {
       return TRUE;

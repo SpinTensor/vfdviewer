@@ -18,6 +18,10 @@ GtkTreeSelection *stack_tree_treeselection = NULL;
 
 GtkTreeModelFilter *stack_tree_treefilter = NULL;
 
+gboolean stack_tree_determine_visibility(GtkTreeModel *model,
+                                         GtkTreeIter *parent,
+                                         gpointer data);
+
 void vgtk_build_stack_treeview(GtkBuilder *builder) {
    stack_tree_treestore = GTK_TREE_STORE(
       gtk_builder_get_object(builder, "stack_tree_treestore"));
@@ -40,6 +44,12 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
                                       "text", 0);
 
    stack_tree_treeselection = gtk_tree_view_get_selection(stack_tree_treeview);
+
+   gtk_tree_model_filter_set_visible_func(
+      GTK_TREE_MODEL_FILTER(stack_tree_treefilter),
+      (GtkTreeModelFilterVisibleFunc) stack_tree_determine_visibility,
+      NULL, NULL);
+
 
    gtk_builder_connect_signals(builder, NULL);
 
@@ -79,5 +89,26 @@ void vgtk_stack_tree_add_vfdtrace(vfd_t *vfdtrace) {
    // skip init as it has no additional information
    for (int icallee=1; icallee<vfdtrace->stacks->ncallees; icallee++) {
       vgtk_stack_tree_add_level(&iter, vfdtrace->stacks->callees[icallee]);
+   }
+}
+
+// reapply the tree filter
+void vgtk_stack_tree_refilter() {
+   gtk_tree_model_filter_refilter(stack_tree_treefilter);
+}
+
+// Function to determine the visibility of stack tree entries
+gboolean stack_tree_determine_visibility(GtkTreeModel *model,
+                                         GtkTreeIter *parent,
+                                         gpointer data) {
+   (void) data;
+   // first get the search entry text
+   const gchar *search_text = vgtk_stack_tree_searchentry_get_text();
+   int length = strlen(search_text);
+   printf("applying filter %d\n", length);
+   if (length == 3) {
+      return FALSE;
+   } else {
+      return TRUE;
    }
 }

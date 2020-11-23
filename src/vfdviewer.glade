@@ -16,6 +16,9 @@
       <column type="gchararray"/>
     </columns>
   </object>
+  <object class="GtkTreeModelFilter" id="stack_tree_treefilter">
+    <property name="child_model">stack_tree_treestore</property>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
     <property name="default_width">1024</property>
@@ -135,7 +138,7 @@
                   <object class="GtkTreeView" id="stack_tree_treeview">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="model">stack_tree_treestore</property>
+                    <property name="model">stack_tree_treefilter</property>
                     <property name="headers_visible">False</property>
                     <property name="headers_clickable">False</property>
                     <property name="enable_search">False</property>
@@ -317,8 +320,5 @@
       <action-widget response="-5">filechooser_open_button</action-widget>
       <action-widget response="-6">filechooser_cancel_button</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkTreeModelFilter" id="stack_tree_treefilter">
-    <property name="child_model">stack_tree_treestore</property>
   </object>
 </interface>

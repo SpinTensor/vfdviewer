@@ -3,8 +3,7 @@
 
 #include <gtk/gtk.h>
 
-// Connect main menu bar callback signals
-void vgtk_connect_main_menu_bar_signals(GtkBuilder *builder);
+void vgtk_build_main_menu_bar(GtkBuilder *builder);
 
 // Callback function to be executed if
 // File->Open is activated

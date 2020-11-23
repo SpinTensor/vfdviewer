@@ -15,6 +15,9 @@ void vgtk_build_user_interface(char *gladefile) {
    // assign the pointer to the main window
    vgtk_build_main_window(vgtk_builder);
 
+   // assign the pointer to the main menu bar
+   vgtk_build_main_menu_bar(vgtk_builder);
+
    // assign the pointer to the file chooser dialog
    vgtk_build_open_file_dialog(vgtk_builder);
 
@@ -45,7 +48,6 @@ void vgtk_build_user_interface(char *gladefile) {
                                       "text", 0);
 
    // connect all callback singals 
-   vgtk_connect_main_menu_bar_signals(vgtk_builder);
    vgtk_connect_stack_treeview(vgtk_builder);
    gtk_builder_connect_signals(vgtk_builder, NULL);
 }

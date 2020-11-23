@@ -7,8 +7,7 @@
 #include "vgtk_main_menu_bar.h"
 #include "vfd_list.h"
 
-// Connect main menu bar callback signals
-void vgtk_connect_main_menu_bar_signals(GtkBuilder *builder) {
+void vgtk_build_main_menu_bar(GtkBuilder *builder) {
    gtk_builder_connect_signals(builder, NULL);
 }
 

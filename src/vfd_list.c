@@ -16,6 +16,7 @@ vfd_t *new_vfd(char *filename) {
 
    // open the file to read the vfdfile
    new_vfd->filename = filename;
+   new_vfd->basefilename = basename(strdup(new_vfd->filename));
    FILE *vfd_handle = fopen(filename, "r");
 
    // read the header information
@@ -65,6 +66,9 @@ void free_vfd(vfd_t **vfd_ptr) {
 
    free(vfd->filename);
    vfd->filename = NULL;
+
+   free(vfd->basefilename);
+   vfd->basefilename = NULL;
 
    // free the vfd struct pointer itself
    vfd = NULL;

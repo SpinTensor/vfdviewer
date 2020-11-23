@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 
 #include <gtk/gtk.h>
@@ -45,23 +46,29 @@ void vgtk_stack_tree_collapse() {
    gtk_tree_view_collapse_all(stack_tree_treeview);
 }
 
+void vgtk_stack_tree_add_level(GtkTreeIter *parentIter, vfd_stack_entry_t *stacklevel) {
+   GtkTreeIter iter;
+   // Add this function to the stacktree
+   gtk_tree_store_append(stack_tree_treestore, &iter, parentIter);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      0, stacklevel->name, -1);
+   // recuresively go through all callees fo this function
+   for (int icallee=0; icallee<stacklevel->ncallees; icallee++) {
+      vgtk_stack_tree_add_level(&iter, stacklevel->callees[icallee]);
+   }
+}
+
 void vgtk_stack_tree_add_vfdtrace(vfd_t *vfdtrace) {
-   GtkTreeIter iter;       // iterators
-   GtkTreeIter iterChild1; // iterators
-   GtkTreeIter iterChild2; // iterators
-   
+   GtkTreeIter iter;
+
+   // add vfd name as top level entry
    gtk_tree_store_append(stack_tree_treestore, &iter, NULL);
-   gtk_tree_store_set(stack_tree_treestore, &iter, 0, "row 1", -1);
-   
-   gtk_tree_store_append(stack_tree_treestore, &iterChild1, &iter);
-   gtk_tree_store_set(stack_tree_treestore, &iterChild1, 0, "row 1 child", -1);
-   
-   gtk_tree_store_append(stack_tree_treestore, &iter, NULL);
-   gtk_tree_store_set(stack_tree_treestore, &iter, 0, "row 2", -1);
-   
-   gtk_tree_store_append(stack_tree_treestore, &iterChild1, &iter);
-   gtk_tree_store_set(stack_tree_treestore, &iterChild1, 0, "row 2 child", -1);
-   
-   gtk_tree_store_append(stack_tree_treestore, &iterChild2, &iterChild1);
-   gtk_tree_store_set(stack_tree_treestore, &iterChild2, 0, "row 2 child of child", -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      0, vfdtrace->filename, -1);
+
+   // add all stack entries recursively
+   // skip init as it has no additional information
+   for (int icallee=1; icallee<vfdtrace->stacks->ncallees; icallee++) {
+      vgtk_stack_tree_add_level(&iter, vfdtrace->stacks->callees[icallee]);
+   }
 }

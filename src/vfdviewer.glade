@@ -2,6 +2,22 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkFileFilter" id="open_files_filetype_filter">
+    <mime-types>
+      <mime-type>vftrace trace file</mime-type>
+    </mime-types>
+    <patterns>
+      <pattern>*.vfd</pattern>
+    </patterns>
+  </object>
+  <object class="GtkTreeStore" id="stack_tree_treestore">
+    <columns>
+      <!-- column-name Stack -->
+      <column type="gchararray"/>
+      <!-- column-name StackID -->
+      <column type="guint"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
     <property name="default_width">1024</property>
@@ -117,8 +133,28 @@
                   <object class="GtkTreeView" id="stack_tree_treeview">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="model">stack_tree_treestore</property>
                     <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
+                      <object class="GtkTreeSelection" id="stack_tree_treeselection"/>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="stack_tree_treeview_functionnames_column">
+                        <property name="resizable">True</property>
+                        <property name="sizing">autosize</property>
+                        <property name="title" translatable="yes">Stack</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="stack_tree_treeview_functionnames_text"/>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="stack_tree_treeview_stackID_column">
+                        <property name="resizable">True</property>
+                        <property name="title" translatable="yes">StackID</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="stack_tree_treeview_stackID_text"/>
+                        </child>
+                      </object>
                     </child>
                   </object>
                 </child>
@@ -218,14 +254,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkFileFilter" id="open_files_filetype_filter">
-    <mime-types>
-      <mime-type>vftrace trace file</mime-type>
-    </mime-types>
-    <patterns>
-      <pattern>*.vfd</pattern>
-    </patterns>
   </object>
   <object class="GtkFileChooserDialog" id="open_file_dialog">
     <property name="can_focus">False</property>

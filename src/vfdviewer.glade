@@ -176,6 +176,7 @@
                     <property name="label" translatable="yes">__glade_unnamed_18</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-go-down</property>
+                    <signal name="clicked" handler="on_stack_tree_toolbar_expand_button_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -189,6 +190,7 @@
                     <property name="label" translatable="yes">__glade_unnamed_19</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-goto-top</property>
+                    <signal name="clicked" handler="on_stack_tree_toolbar_collapse_button_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

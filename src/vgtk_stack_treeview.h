@@ -3,7 +3,14 @@
 
 #include <gtk/gtk.h>
 
+#include "vfd_types.h"
+
 void vgtk_build_stack_treeview(GtkBuilder *builder);
 
-#endif
+void vgtk_stack_tree_expand();
 
+void vgtk_stack_tree_collapse();
+
+void vgtk_stack_tree_add_vfdtrace(vfd_t *vfdtrace);
+
+#endif

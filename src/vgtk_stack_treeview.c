@@ -2,6 +2,8 @@
 
 #include <gtk/gtk.h>
 
+#include "vgtk_stack_tree_toolbar.h"
+#include "vfd_types.h"
 #include "vfd_list.h"
 
 GtkTreeStore *stack_tree_treestore = NULL;
@@ -41,4 +43,44 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
    stack_tree_treeselection = gtk_tree_view_get_selection(stack_tree_treeview);
 
    gtk_builder_connect_signals(builder, NULL);
+
+   vgtk_build_stack_tree_toolbar(builder);
+}
+
+void vgtk_stack_tree_expand() {
+   gtk_tree_view_expand_all(stack_tree_treeview);
+}
+
+void vgtk_stack_tree_collapse() {
+   gtk_tree_view_collapse_all(stack_tree_treeview);
+}
+
+void vgtk_stack_tree_add_vfdtrace(vfd_t *vfdtrace) {
+   GtkTreeIter iter;       // iterators
+   GtkTreeIter iterChild1; // iterators
+   GtkTreeIter iterChild2; // iterators
+   guint int1 = 42;
+   guint int2 = 137;
+   guint int3 = 1337;
+   guint int4 = 17;
+   
+   gtk_tree_store_append(stack_tree_treestore, &iter, NULL);
+   gtk_tree_store_set(stack_tree_treestore, &iter, 0, "row 1", -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter, 1, int1, -1);
+   
+   gtk_tree_store_append(stack_tree_treestore, &iterChild1, &iter);
+   gtk_tree_store_set(stack_tree_treestore, &iterChild1, 0, "row 1 child", -1);
+   gtk_tree_store_set(stack_tree_treestore, &iterChild1, 1, &int2, -1);
+   
+   gtk_tree_store_append(stack_tree_treestore, &iter, NULL);
+   gtk_tree_store_set(stack_tree_treestore, &iter, 0, "row 2", -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter, 1, &int3, -1);
+   
+   gtk_tree_store_append(stack_tree_treestore, &iterChild1, &iter);
+   gtk_tree_store_set(stack_tree_treestore, &iterChild1, 0, "row 2 child", -1);
+   gtk_tree_store_set(stack_tree_treestore, &iterChild1, 1, &int4, -1);
+   
+   gtk_tree_store_append(stack_tree_treestore, &iterChild2, &iterChild1);
+   gtk_tree_store_set(stack_tree_treestore, &iterChild2, 0, "row 2 child of child", -1);
+   gtk_tree_store_set(stack_tree_treestore, &iterChild2, 1, &int1, -1);
 }

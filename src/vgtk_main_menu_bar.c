@@ -5,6 +5,7 @@
 #include "vgtk_open_file_dialog.h"
 #include "vgtk_about_dialog.h"
 #include "vgtk_main_menu_bar.h"
+#include "vgtk_stack_treeview.h"
 #include "vfd_list.h"
 
 void vgtk_build_main_menu_bar(GtkBuilder *builder) {
@@ -34,6 +35,9 @@ void on_main_menu_file_menu_open_item_activate(GtkMenuItem *menuitem) {
 #endif
          vfd_t *vfdfile = new_vfd(filename);
          append_vfd(vfdfile);
+
+         // add the vfdtrace to the stack treeView
+         vgtk_stack_tree_add_vfdtrace(vfdfile);
       }
       // free list memory
       g_slist_free(g_steal_pointer(&selected_files));

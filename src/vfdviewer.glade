@@ -14,8 +14,6 @@
     <columns>
       <!-- column-name Stack -->
       <column type="gchararray"/>
-      <!-- column-name StackID -->
-      <column type="guint"/>
     </columns>
   </object>
   <object class="GtkWindow" id="main_window">
@@ -144,15 +142,6 @@
                         <property name="title" translatable="yes">Stack</property>
                         <child>
                           <object class="GtkCellRendererText" id="stack_tree_treeview_functionnames_text"/>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="stack_tree_treeview_stackID_column">
-                        <property name="resizable">True</property>
-                        <property name="title" translatable="yes">StackID</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="stack_tree_treeview_stackID_text"/>
                         </child>
                       </object>
                     </child>

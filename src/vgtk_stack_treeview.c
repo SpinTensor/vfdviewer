@@ -12,9 +12,6 @@ GtkTreeView *stack_tree_treeview = NULL;
 GtkTreeViewColumn *stack_tree_treeview_functionnames_column = NULL;
 GtkCellRenderer *stack_tree_treeview_functionnames_text = NULL;
 
-GtkTreeViewColumn *stack_tree_treeview_stackID_column = NULL;
-GtkCellRenderer *stack_tree_treeview_stackID_text = NULL;
-
 GtkTreeSelection *stack_tree_treeselection = NULL;
 
 void vgtk_build_stack_treeview(GtkBuilder *builder) {
@@ -26,18 +23,11 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "stack_tree_treeview_functionnames_column"));
    stack_tree_treeview_functionnames_text = GTK_CELL_RENDERER(
       gtk_builder_get_object(builder, "stack_tree_treeview_functionnames_text"));
-   stack_tree_treeview_stackID_column = GTK_TREE_VIEW_COLUMN(
-      gtk_builder_get_object(builder, "stack_tree_treeview_stackID_column"));
-   stack_tree_treeview_stackID_text = GTK_CELL_RENDERER(
-      gtk_builder_get_object(builder, "stack_tree_treeview_stackID_text"));
    stack_tree_treeselection = GTK_TREE_SELECTION(
       gtk_builder_get_object(builder, "stack_tree_treeselection"));
 
    gtk_tree_view_column_add_attribute(stack_tree_treeview_functionnames_column,
                                       stack_tree_treeview_functionnames_text,
-                                      "text", 0);
-   gtk_tree_view_column_add_attribute(stack_tree_treeview_stackID_column,
-                                      stack_tree_treeview_stackID_text,
                                       "text", 0);
 
    stack_tree_treeselection = gtk_tree_view_get_selection(stack_tree_treeview);
@@ -59,28 +49,19 @@ void vgtk_stack_tree_add_vfdtrace(vfd_t *vfdtrace) {
    GtkTreeIter iter;       // iterators
    GtkTreeIter iterChild1; // iterators
    GtkTreeIter iterChild2; // iterators
-   guint int1 = 42;
-   guint int2 = 137;
-   guint int3 = 1337;
-   guint int4 = 17;
    
    gtk_tree_store_append(stack_tree_treestore, &iter, NULL);
    gtk_tree_store_set(stack_tree_treestore, &iter, 0, "row 1", -1);
-   gtk_tree_store_set(stack_tree_treestore, &iter, 1, int1, -1);
    
    gtk_tree_store_append(stack_tree_treestore, &iterChild1, &iter);
    gtk_tree_store_set(stack_tree_treestore, &iterChild1, 0, "row 1 child", -1);
-   gtk_tree_store_set(stack_tree_treestore, &iterChild1, 1, &int2, -1);
    
    gtk_tree_store_append(stack_tree_treestore, &iter, NULL);
    gtk_tree_store_set(stack_tree_treestore, &iter, 0, "row 2", -1);
-   gtk_tree_store_set(stack_tree_treestore, &iter, 1, &int3, -1);
    
    gtk_tree_store_append(stack_tree_treestore, &iterChild1, &iter);
    gtk_tree_store_set(stack_tree_treestore, &iterChild1, 0, "row 2 child", -1);
-   gtk_tree_store_set(stack_tree_treestore, &iterChild1, 1, &int4, -1);
    
    gtk_tree_store_append(stack_tree_treestore, &iterChild2, &iterChild1);
    gtk_tree_store_set(stack_tree_treestore, &iterChild2, 0, "row 2 child of child", -1);
-   gtk_tree_store_set(stack_tree_treestore, &iterChild2, 1, &int1, -1);
 }

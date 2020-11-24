@@ -120,7 +120,6 @@ vfd_stack_entry_t *indexed_vfd_stack(int nidx, int*idx, vfd_t *vfdtrace) {
    vfd_stack_entry_t *stacks = vfdtrace->stacks;
    vfd_stack_entry_t *entry;
    entry = stacks->callees[idx[0]+1];
-   printf("%s\n", entry->name);
 
    // follow the indexed path through the stack
    for (int iidx=1; iidx<nidx; iidx++){

@@ -102,14 +102,32 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
                                          GtkTreeIter *iter,
                                          gpointer data) {
    (void) data;
-   // first get the search entry text
-   const gchar *search_text = vgtk_stack_tree_searchentry_get_text();
-   gchar *value;
-   gtk_tree_model_get(model, iter, 0, &value,  -1);
-   char *substrptr = strstr(value, search_text);
-   if (substrptr == NULL) {
-      return FALSE;
-   } else {
-      return TRUE;
+
+   gboolean retval = FALSE;
+   // this node should be visible
+   // if any of its children is visible
+   GtkTreeIter childiter;
+   gboolean has_children;
+   has_children = gtk_tree_model_iter_children(model, &childiter, iter);
+   if (has_children) {
+      // loop over all children of this generation
+      do {
+         retval = stack_tree_determine_visibility(model, &childiter, data);
+      } while (gtk_tree_model_iter_next(model, &childiter) && !retval);
    }
+
+   // if it is still not decided
+   // check if this node matches the search entry
+   if (!retval) {
+      //
+      // first get the search entry text
+      const gchar *search_text = vgtk_stack_tree_searchentry_get_text();
+      // next get the text of the node
+      gchar *node_text;
+      gtk_tree_model_get(model, iter, 0, &node_text,  -1);
+      // check if search text is a substring of node_text
+      retval = (strstr(node_text, search_text) != NULL);
+   }
+
+   return retval;
 }

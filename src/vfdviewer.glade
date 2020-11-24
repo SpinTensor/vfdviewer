@@ -143,6 +143,7 @@
                     <property name="headers_clickable">False</property>
                     <property name="enable_search">False</property>
                     <property name="enable_tree_lines">True</property>
+                    <property name="activate_on_single_click">True</property>
                     <signal name="row-activated" handler="on_stack_tree_treeview_row_activated" swapped="no"/>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection" id="stack_tree_treeselection"/>

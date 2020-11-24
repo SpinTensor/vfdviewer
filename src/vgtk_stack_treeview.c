@@ -22,6 +22,9 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
                                          GtkTreeIter *parent,
                                          gpointer data);
 
+gint stack_tree_selected_treepath_depth = 0;
+gint *stack_tree_selected_treepath = NULL;
+
 void vgtk_build_stack_treeview(GtkBuilder *builder) {
    stack_tree_treestore = GTK_TREE_STORE(
       gtk_builder_get_object(builder, "stack_tree_treestore"));
@@ -130,4 +133,38 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
    }
 
    return retval;
+}
+
+// Callback function if a row is activated
+void on_stack_tree_treeview_row_activated(GtkTreeView *tree_view,
+                                          GtkTreePath *path,
+                                          GtkTreeViewColumn *column,
+                                          gpointer user_data) {
+   (void) tree_view;
+   (void) column;
+   (void) user_data;
+   stack_tree_selected_treepath =
+      gtk_tree_path_get_indices_with_depth(path,
+                                           &stack_tree_selected_treepath_depth);
+
+#ifdef _DEBUG
+   printf("Selected treepath: %d", stack_tree_selected_treepath[0]);
+   for (int i=1; i<stack_tree_selected_treepath_depth; i++) {
+      printf("->%d", stack_tree_selected_treepath[i]);
+   }
+   printf("\n");
+
+   vfd_t *vfd_file = NULL;
+   vfd_stack_entry_t *vfd_stack = NULL;
+   indexed_vfd_trace_and_stack(stack_tree_selected_treepath_depth,
+                               stack_tree_selected_treepath,
+                               &vfd_file,
+                               &vfd_stack);
+   if (vfd_file != NULL) {
+      printf("selected vfdfile: %s\n", vfd_file->filename);
+   }
+   if (vfd_stack != NULL) {
+      printf("selected Stack: ID=%d, name=%s\n", vfd_stack->ID, vfd_stack->name);
+   }
+#endif
 }

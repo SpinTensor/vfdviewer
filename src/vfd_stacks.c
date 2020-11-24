@@ -111,6 +111,27 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
    return stacks;
 }
 
+// returns a pointer to a vfd trace stack entry
+// based on a list of callee indices
+vfd_stack_entry_t *indexed_vfd_stack(int nidx, int*idx, vfd_t *vfdtrace) {
+   if (nidx == 0) {return NULL;}
+   // first index is off by one.
+   // init first points to itself as callee
+   vfd_stack_entry_t *stacks = vfdtrace->stacks;
+   vfd_stack_entry_t *entry;
+   entry = stacks->callees[idx[0]+1];
+   printf("%s\n", entry->name);
+
+   // follow the indexed path through the stack
+   for (int iidx=1; iidx<nidx; iidx++){
+      entry = entry->callees[idx[iidx]];
+   }
+
+   return entry;
+}
+
+
+
 void free_vfd_stacks(unsigned int nstacks, vfd_stack_entry_t *stacks) {
    for (unsigned int istack=0; istack<nstacks; istack++) {
       stacks[istack].ID = 0;

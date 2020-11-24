@@ -143,9 +143,18 @@ void on_stack_tree_treeview_row_activated(GtkTreeView *tree_view,
    (void) tree_view;
    (void) column;
    (void) user_data;
+
+   // first convert the path of the filtered model
+   // into the full tree model
+   GtkTreePath *unfiltered_path =
+      gtk_tree_model_filter_convert_path_to_child_path(
+         GTK_TREE_MODEL_FILTER(stack_tree_treefilter),
+         path);
+   // extrac the unfiltered path indices
    stack_tree_selected_treepath =
-      gtk_tree_path_get_indices_with_depth(path,
-                                           &stack_tree_selected_treepath_depth);
+      gtk_tree_path_get_indices_with_depth(
+         unfiltered_path,
+         &stack_tree_selected_treepath_depth);
 
 #ifdef _DEBUG
    printf("Selected treepath: %d", stack_tree_selected_treepath[0]);

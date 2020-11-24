@@ -19,7 +19,7 @@ const char *vgtk_stack_tree_searchentry_get_text() {
 
 // Callback function if content of search entry is changed
 void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
-   printf("%s\n", gtk_entry_get_text(GTK_ENTRY(entry)));
+   (void) entry;
    vgtk_stack_tree_expand();
    vgtk_stack_tree_refilter();
 }

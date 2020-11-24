@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libgen.h>
 
 #include "vfd_types.h"
 #include "vfd_header.h"
@@ -31,6 +32,7 @@ vfd_t *new_vfd(char *filename) {
                     &(new_vfd->stack_samples),
                     &(new_vfd->messages));
    fclose(vfd_handle);
+   new_vfd->filename = basename(new_vfd->filename);
 
    new_vfd->next = NULL;
    new_vfd->prev = NULL;

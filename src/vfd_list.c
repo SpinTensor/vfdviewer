@@ -210,6 +210,24 @@ vfd_t *nth_vfd(int n) {
    }
 }
 
+// returns a pointer to a vfd trace stack entry
+// based on a list of callee indices
+void indexed_vfd_trace_and_stack(int nidx, int*idx,
+                                 vfd_t **vfdtrace,
+                                 vfd_stack_entry_t **vfd_stack) {
+
+   if (nidx == 0) {
+      *vfdtrace = NULL;
+      *vfd_stack = NULL;
+   } else {
+      // first index corresponds to the vfd trace position in the list
+      *vfdtrace = nth_vfd(idx[0]);
+      // get the stack entry for that vfd trace
+      // ommit the first index as it is not used for the stacks
+      *vfd_stack = indexed_vfd_stack(nidx-1, idx+1, *vfdtrace);
+   }
+}
+
 // remove every element in the vfd trace list
 // and free them
 void remove_and_free_vfd_list() {

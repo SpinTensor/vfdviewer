@@ -39,6 +39,12 @@ vfd_t *last_vfd();
 // nth_vfd(-3) = c
 vfd_t *nth_vfd(int n);
 
+// returns a pointer to a vfd trace stack entry
+// based on a list of callee indices
+void indexed_vfd_trace_and_stack(int nidx, int*idx,
+                                 vfd_t **vfdtrace,
+                                 vfd_stack_entry_t **vfd_stack);
+
 // remove every element in the vfd trace list
 // and free them
 void remove_and_free_vfd_list();

@@ -71,6 +71,7 @@ typedef struct {
 
 typedef struct vfd_type vfd_t;
 struct vfd_type {
+   char *filepath;
    char *filename;
    vfd_header_t *header;
    int maxlevel;

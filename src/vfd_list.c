@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libgen.h>
 
 #include "vfd_types.h"
 #include "vfd_header.h"
@@ -11,14 +10,14 @@
 static vfd_t *g_vfd_list = NULL;
 
 // create a new vfd trace from a file
-vfd_t *new_vfd(char *filename) {
+vfd_t *new_vfd(char *vfdpath) {
 
    // allocate memory to hold the vfd data structure
    vfd_t *new_vfd = (vfd_t*) malloc(sizeof(vfd_t));
 
    // open the file to read the vfdfile
-   new_vfd->filename = filename;
-   FILE *vfd_handle = fopen(filename, "r");
+   new_vfd->filepath = vfdpath;
+   FILE *vfd_handle = fopen(new_vfd->filepath, "r");
 
    // read the header information
    read_vfd_header(vfd_handle, &(new_vfd->header));
@@ -32,7 +31,19 @@ vfd_t *new_vfd(char *filename) {
                     &(new_vfd->stack_samples),
                     &(new_vfd->messages));
    fclose(vfd_handle);
-   new_vfd->filename = basename(new_vfd->filename);
+
+   // find the last occurence of '/',
+   // which marks the end of the filepath
+   new_vfd->filename = strrchr(new_vfd->filepath, '/');
+   // if the filename has no path only the filename
+   // simply point to the path pointer
+   if (new_vfd->filename == NULL) {
+      new_vfd->filename = new_vfd->filepath;
+   } else {
+      // move pointer one over to
+      // not start on '/' but after it
+      new_vfd->filename++;
+   }
 
    new_vfd->next = NULL;
    new_vfd->prev = NULL;
@@ -66,8 +77,8 @@ void free_vfd(vfd_t **vfd_ptr) {
    free_vfd_header(vfd->header);
    vfd->header = NULL;
 
-   free(vfd->filename);
-   vfd->filename = NULL;
+   free(vfd->filepath);
+   vfd->filepath = NULL;
 
    // free the vfd struct pointer itself
    vfd = NULL;

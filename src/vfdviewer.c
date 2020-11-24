@@ -11,23 +11,19 @@
 #include "vfd_list.h"
 
 int main(int argc, char **argv) {
-   printf("init\n");
-   char *gladefile = get_gladefile_path(argv[0]);
-   printf("gladefile = %s\n", gladefile);
-
    gtk_init(&argc, &argv);
-   vgtk_build_user_interface(gladefile);
-   free(gladefile);
-   gladefile = NULL;
+   vgtk_build_user_interface();
 
-#ifdef _DEBUG
-         fprintf(stderr, "Reading vfd traces from the command line\n");
-#endif
    // read in all vfdfiles supplied via the commandline
+#ifdef _DEBUG
+   if (argc > 1) {
+      fprintf(stderr, "Reading vfd traces from the command line\n");
+   }
+#endif
    for (int iarg=1; iarg<argc; iarg++) {
       if (access(argv[iarg], F_OK) != -1) {
 #ifdef _DEBUG
-         fprintf(stderr, "Opening File %s\n", argv[iarg]);
+         fprintf(stderr, "Opening File \"%s\"\n", argv[iarg]);
 #endif
          char *filename = strdup(argv[iarg]);
          vfd_t *vfdfile = new_vfd(filename);
@@ -35,10 +31,9 @@ int main(int argc, char **argv) {
          // add the vfdtrace to the stack treeView
          vgtk_stack_tree_add_vfdtrace(vfdfile);
       } else {
-         fprintf(stderr, "Unable to locate file %s\n", argv[iarg]);
+         fprintf(stderr, "Unable to locate file \"%s\"\n", argv[iarg]);
       }
    }
-
 
    vgtk_show_main_window();
    gtk_main();

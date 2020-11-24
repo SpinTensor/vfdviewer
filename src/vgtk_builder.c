@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <gtk/gtk.h>
 
 #include "vgtk_main_window.h"
@@ -9,8 +11,27 @@
 GtkBuilder *vgtk_builder = NULL;
 
 // build the gtk user interface
-void vgtk_build_user_interface(char *gladefile) {
-   vgtk_builder = gtk_builder_new_from_file(gladefile);
+void vgtk_build_user_interface() {
+   // _DATADIR is fed in throught -D_DATADIR=...
+   // This two layer stringify is needed to make it into
+   // a literal string that can be combined with the 
+   // glade filename
+#define STRINGIFY_(x) #x
+#define STRINGIFY(x) STRINGIFY_(x)
+   char *gladefile = STRINGIFY(_DATADIR) "/vfdviewer.glade";
+#undef STRINGIFY
+#undef STRINGIFY_
+
+   if (access(gladefile, F_OK) != -1) {
+#ifdef _DEBUG
+   fprintf(stderr, "Opening GTK-builder file: \"%s\"\n", gladefile);
+#endif
+      vgtk_builder = gtk_builder_new_from_file(gladefile);
+   } else {
+      fprintf(stderr, "Unable to locale GTK-builder file\n");
+      fprintf(stderr, "Expected location: \"%s\"\n", gladefile);
+      exit(EXIT_FAILURE);
+   }
 
    // assign the pointer to the main window
    vgtk_build_main_window(vgtk_builder);

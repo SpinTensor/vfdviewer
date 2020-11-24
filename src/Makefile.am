@@ -1,4 +1,8 @@
-dist_data_DATA = vfdviewer.glade
+# install directory for glade file
+# without specific choice it is
+# $(prefix)/share/vfdviewer/
+vfdview_dir = $(pkgdatadir)
+vfdview__DATA = vfdviewer.glade
 
 noinst_LTLIBRARIES = libvfd.la \
 		     libvgtk.la
@@ -30,5 +34,6 @@ libvgtk_la_SOURCES = vgtk_builder.c \
 		     vgtk_stack_treeview.c \
 		     vgtk_stack_tree_searchentry.c \
 		     vgtk_stack_tree_toolbar.c
+libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir)
 libvgtk_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 libvgtk_la_LDFLAGS = @GTK_LIBS@

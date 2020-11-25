@@ -8,6 +8,10 @@
 #include "vfd_types.h"
 #include "vfd_list.h"
 
+#ifdef _DEBUG
+#include "v_timer.h"
+#endif
+
 GtkTreeStore *stack_tree_treestore = NULL;
 GtkTreeView *stack_tree_treeview = NULL;
 
@@ -105,34 +109,46 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
                                          GtkTreeIter *iter,
                                          gpointer data) {
    (void) data;
+   (void) model;
+   // visibility was precomputed by the search entry changed signal
+   // Here only a simple lookup is needed.
 
-   gboolean retval = FALSE;
-   // this node should be visible
-   // if any of its children is visible
-   GtkTreeIter childiter;
-   gboolean has_children;
-   has_children = gtk_tree_model_iter_children(model, &childiter, iter);
-   if (has_children) {
-      // loop over all children of this generation
-      do {
-         retval = stack_tree_determine_visibility(model, &childiter, data);
-      } while (gtk_tree_model_iter_next(model, &childiter) && !retval);
+   // Get the path iter is pointing to
+   GtkTreePath *path =
+      gtk_tree_model_get_path(
+         model, iter);
+
+   // convert the path to a sequence of indices
+   gint path_depth = 0;
+   gint *path_indices =
+      gtk_tree_path_get_indices_with_depth(
+         path,
+         &path_depth);
+
+#ifdef _DEBUG
+   printf("Updating visibility for path %d", path_indices[0]);
+   for (int i=1; i<path_depth; i++) {
+      printf(":%d", path_indices[i]);
    }
+   printf("\n");
+#endif
 
-   // if it is still not decided
-   // check if this node matches the search entry
-   if (!retval) {
-      //
-      // first get the search entry text
-      const gchar *search_text = vgtk_stack_tree_searchentry_get_text();
-      // next get the text of the node
-      gchar *node_text;
-      gtk_tree_model_get(model, iter, 0, &node_text,  -1);
-      // check if search text is a substring of node_text
-      retval = (strstr(node_text, search_text) != NULL);
+   // get the corresponding vfd trace and stack entry
+   vfd_t *vfd_file = NULL;
+   vfd_stack_entry_t *vfd_stack = NULL;
+   indexed_vfd_trace_and_stack((int) path_depth,
+                               (int*) path_indices,
+                               &vfd_file,
+                               &vfd_stack);
+
+   // free the newly created path
+   gtk_tree_path_free(path);
+   path = NULL;
+   if (path_depth == 1) {
+      return vfd_file->stacks[0].visible_in_treeview;
+   } else {
+      return vfd_stack->visible_in_treeview;
    }
-
-   return retval;
 }
 
 // Callback function if a row is activated

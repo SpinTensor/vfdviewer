@@ -41,6 +41,7 @@ struct vdf_stack_entry_type{
    bool precise;
    int namelen;
    char *name;
+   bool visible_in_treeview;
 };
 
 typedef struct {

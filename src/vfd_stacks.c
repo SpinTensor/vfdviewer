@@ -73,7 +73,11 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
    // the rest is derived
    for (unsigned int istack=0; istack<nstacks; istack++) {
       vfd_stack_entry_t *stack_ptr = stacks+istack;
+      // if the function is precise
       stack_ptr->precise = stack_ptr->name[stack_ptr->namelen-1] == '*';
+      // if the function should be visible in the treeview
+      stack_ptr->visible_in_treeview = true;
+      // who called this function?
       stack_ptr->caller = stacks+stack_ptr->callerID;
 
       // increament the callee counter for the calling function
@@ -129,7 +133,32 @@ vfd_stack_entry_t *indexed_vfd_stack(int nidx, int*idx, vfd_t *vfdtrace) {
    return entry;
 }
 
+// precompute the visibility of each stack
+// so that the actual visibility function
+// can simply lookup the value, instead
+// of computing it in exponential time.
+bool update_stack_visible_in_treeview(const char *search_entry,
+                                      vfd_stack_entry_t *stack) {
+   // a stack should only be visible if
+   // 1. its function name contains the search_entry
+   // OR
+   // 2. one of its callees is visible
+   stack->visible_in_treeview = false;
 
+   // check if any of the callees is visible
+   for (int icallee=0; icallee<stack->ncallees; icallee++) {
+      bool child_visible =
+         update_stack_visible_in_treeview(search_entry, stack->callees[icallee]);
+      stack->visible_in_treeview = child_visible || stack->visible_in_treeview;
+   }
+
+   // if it is not determined whether this stack will be visible
+   // use lazy evaluation to prevent useless execution of strstr
+   stack->visible_in_treeview = stack->visible_in_treeview ||
+      (strstr(stack->name, search_entry) != NULL);
+
+   return stack->visible_in_treeview;
+}
 
 void free_vfd_stacks(unsigned int nstacks, vfd_stack_entry_t *stacks) {
    for (unsigned int istack=0; istack<nstacks; istack++) {

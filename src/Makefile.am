@@ -12,7 +12,8 @@ bin_PROGRAMS = vfdviewer
 
 vfdviewer_SOURCES = vfdviewer.c \
 		    paths.c \
-		    mpi_types.c
+		    mpi_types.c \
+		    v_timer.c
 vfdviewer_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 vfdviewer_LDFLAGS = @GTK_LIBS@ -rdynamic 
 vfdviewer_LDADD = libvfd.la \

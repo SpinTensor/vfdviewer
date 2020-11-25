@@ -40,6 +40,9 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
                          istack, read_elem);
          exit(EXIT_FAILURE);
       }
+      // reduce level by one as init starts with level one
+      // but everything is easier if it starts at zero
+      stack_ptr->level--;
       // update maximum level
       *maxlevel = stack_ptr->level > *maxlevel ? stack_ptr->level : *maxlevel;
 

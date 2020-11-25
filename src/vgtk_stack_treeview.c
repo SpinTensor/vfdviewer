@@ -125,14 +125,6 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
          path,
          &path_depth);
 
-#ifdef _DEBUG
-   printf("Updating visibility for path %d", path_indices[0]);
-   for (int i=1; i<path_depth; i++) {
-      printf(":%d", path_indices[i]);
-   }
-   printf("\n");
-#endif
-
    // get the corresponding vfd trace and stack entry
    vfd_t *vfd_file = NULL;
    vfd_stack_entry_t *vfd_stack = NULL;
@@ -140,6 +132,14 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
                                (int*) path_indices,
                                &vfd_file,
                                &vfd_stack);
+
+#ifdef _DEBUG
+   printf("Updating visibility for %s", vfd_file->filename);
+   for (int i=1; i<path_depth; i++) {
+      printf(":%d", path_indices[i]);
+   }
+   printf("\n");
+#endif
 
    // free the newly created path
    gtk_tree_path_free(path);

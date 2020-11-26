@@ -11,7 +11,6 @@ noinst_LTLIBRARIES = libvfd.la \
 bin_PROGRAMS = vfdviewer
 
 vfdviewer_SOURCES = vfdviewer.c \
-		    paths.c \
 		    mpi_types.c \
 		    v_timer.c
 vfdviewer_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic

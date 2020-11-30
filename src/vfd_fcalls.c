@@ -259,6 +259,9 @@ void construct_vfd_fcalls(vfd_t *vfd) {
 #endif
    }
 
+   free(curr_stack);
+   curr_stack = NULL;
+
    vfd->header->fcallscount = nfcalls;
    vfd->fcalls = fcalls;
 }

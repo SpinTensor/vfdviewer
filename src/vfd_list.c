@@ -57,6 +57,7 @@ vfd_t *new_vfd(char *vfdpath) {
    print_vfd_stacks(new_vfd->header, new_vfd->stacks);
    print_vfd_stack_samples(new_vfd->header, new_vfd->stack_samples);
    print_vfd_messages(new_vfd->header, new_vfd->messages);
+   print_vfd_fcalls(new_vfd->header, new_vfd->fcalls);
 #endif
 
    return new_vfd;
@@ -77,6 +78,9 @@ void free_vfd(vfd_t **vfd_ptr) {
 
    free_vfd_stack_samples(vfd->header->function_samplecount, vfd->stack_samples);
    vfd->stack_samples = NULL;
+
+   free_vfd_fcalls(vfd->header->function_samplecount, vfd->fcalls);
+   vfd->fcalls = NULL;
 
    free_vfd_header(vfd->header);
    vfd->header = NULL;

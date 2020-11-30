@@ -6,6 +6,7 @@
 #include "vfd_header.h"
 #include "vfd_stacks.h"
 #include "vfd_samples.h"
+#include "vfd_fcalls.h"
 
 static vfd_t *g_vfd_list = NULL;
 
@@ -31,6 +32,9 @@ vfd_t *new_vfd(char *vfdpath) {
                     &(new_vfd->stack_samples),
                     &(new_vfd->messages));
    fclose(vfd_handle);
+
+   // construct the function calls timeline
+   construct_vfd_fcalls(new_vfd);
 
    // find the last occurence of '/',
    // which marks the end of the filepath

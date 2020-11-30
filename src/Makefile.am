@@ -5,23 +5,27 @@ vfdview_dir = $(pkgdatadir)
 vfdview__DATA = vfdviewer.glade
 
 noinst_LTLIBRARIES = libvfd.la \
-		     libvgtk.la
+		     libvgtk.la \
+		     libvutils.la
 
 
 bin_PROGRAMS = vfdviewer
 
-vfdviewer_SOURCES = vfdviewer.c \
-		    mpi_types.c \
-		    v_timer.c
+vfdviewer_SOURCES = vfdviewer.c
 vfdviewer_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 vfdviewer_LDFLAGS = @GTK_LIBS@ -rdynamic 
 vfdviewer_LDADD = libvfd.la \
-		  libvgtk.la
+		  libvgtk.la \
+		  libvutils.la 
 
+libvutils_la_SOURCES = mpi_types.c \
+		       v_timer.c
+libvutils_la_CFLAGS = -g -Wall -Wextra -Wpedantic
 
 libvfd_la_SOURCES = vfd_header.c \
 		    vfd_stacks.c \
 		    vfd_samples.c \
+		    vfd_fcalls.c \
 		    vfd_list.c
 libvfd_la_CFLAGS = -g -Wall -Wextra -Wpedantic
 

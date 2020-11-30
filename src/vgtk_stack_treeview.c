@@ -133,13 +133,13 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
                                &vfd_file,
                                &vfd_stack);
 
-#ifdef _DEBUG
-   printf("Updating visibility for %s", vfd_file->filename);
-   for (int i=1; i<path_depth; i++) {
-      printf(":%d", path_indices[i]);
-   }
-   printf("\n");
-#endif
+//#ifdef _DEBUG
+//   printf("Updating visibility for %s", vfd_file->filename);
+//   for (int i=1; i<path_depth; i++) {
+//      printf(":%d", path_indices[i]);
+//   }
+//   printf("\n");
+//#endif
 
    // free the newly created path
    gtk_tree_path_free(path);

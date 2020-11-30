@@ -18,6 +18,7 @@ typedef struct {
    double runtime;
    unsigned int function_samplecount;
    unsigned int message_samplecount;
+   unsigned int fcallscount;
    unsigned int stackscount;
    long stacksoffset;
    long sampleoffset;
@@ -50,6 +51,12 @@ typedef struct {
    long long sampletime;
 } vfd_stack_sample_t;
 
+typedef struct {
+   int stackID;
+   long long entry_time;
+   long long exit_time;
+} vfd_fcall_t;
+
 typedef enum {
    send,
    recv
@@ -77,6 +84,8 @@ struct vfd_type {
    vfd_header_t *header;
    int maxlevel;
    vfd_stack_sample_t *stack_samples;
+
+   vfd_fcall_t *fcalls;
    vfd_message_t *messages;
    vfd_stack_entry_t *stacks;
    vfd_t *prev;

@@ -42,7 +42,7 @@ vfd_t *new_vfd(char *vfdpath) {
    construct_vfd_fcalls(new_vfd);
 
    // sort the fcalls
-   shellsort_fcalls(new_vfd->header->message_samplecount,
+   shellsort_fcalls(new_vfd->header->fcallscount,
                     new_vfd->fcalls);
 
    // find the last occurence of '/',

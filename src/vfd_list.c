@@ -41,6 +41,10 @@ vfd_t *new_vfd(char *vfdpath) {
    // construct the function calls timeline
    construct_vfd_fcalls(new_vfd);
 
+   // sort the fcalls
+   shellsort_fcalls(new_vfd->header->message_samplecount,
+                    new_vfd->fcalls);
+
    // find the last occurence of '/',
    // which marks the end of the filepath
    new_vfd->filename = strrchr(new_vfd->filepath, '/');

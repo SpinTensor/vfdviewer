@@ -240,6 +240,14 @@ void construct_vfd_fcalls(vfd_t *vfd) {
    curr_stack = NULL;
 
    vfd->header->fcallscount = nfcalls;
+   // reallocate one last time to match the actual number of entries
+   vfd_fcall_t* tmpfcalls = (vfd_fcall_t*) malloc(nfcalls*sizeof(vfd_fcall_t));
+   for (int ifcall=0; ifcall<nfcalls; ifcall++) {
+      tmpfcalls[ifcall] = fcalls[ifcall];
+   }
+   free(fcalls);
+   fcalls = tmpfcalls;
+   tmpfcalls = NULL;
    vfd->fcalls = fcalls;
 }
 

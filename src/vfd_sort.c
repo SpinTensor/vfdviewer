@@ -6,9 +6,9 @@
 #define SHELL_GAPS {701,30,1132,57,23,10,4,1}
 
 void shellsort_messages(unsigned int nmsg, vfd_message_t *messages) {
+   // Marcin Ciura's gap sequence
    const int ngaps = SHELL_NGAPS;
    const unsigned int gaps[SHELL_NGAPS] = SHELL_GAPS;
-
    // repeat the sort for each gap
    // start with the largest and work down to 1
    for (int igap=0; igap< ngaps; igap++) {
@@ -34,6 +34,7 @@ void shellsort_messages(unsigned int nmsg, vfd_message_t *messages) {
 }
 
 void shellsort_fcalls(unsigned int nfcalls, vfd_fcall_t *fcalls) {
+   // Marcin Ciura's gap sequence
    const int ngaps = SHELL_NGAPS;
    const unsigned int gaps[SHELL_NGAPS] = SHELL_GAPS;
    // repeat the sort for each gap

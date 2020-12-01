@@ -4,7 +4,6 @@
 
 #include <gtk/gtk.h>
 
-#include "paths.h"
 #include "vgtk_builder.h"
 #include "vgtk_main_window.h"
 #include "vgtk_stack_treeview.h"

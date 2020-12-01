@@ -183,12 +183,6 @@ void construct_vfd_fcalls(vfd_t *vfd) {
       // current stack already has entries
       // get the next sample
       sample = stack_samples[isample];
-#ifdef _DEBUG
-   fprintf(stderr, "Stack-sample %u\n", isample);
-   fprintf(stderr, "%16.6lf", sample.sampletime*1.0e-6);
-   fprintf(stderr, " %s", sample.kind == fnct_entry ? "call" : "exit");
-   fprintf(stderr, " stackID=%d\n", sample.stackID);
-#endif
       // as it is not available estimate the time of events 
       // since the last sample
       long long timeestimate;
@@ -201,9 +195,6 @@ void construct_vfd_fcalls(vfd_t *vfd) {
       int ccstackID = closest_common_stack(stacks,
                                            curr_stack[ilevel].stackID,
                                            sample.stackID);
-#ifdef _DEBUG
-
-#endif
 
       // dismantle everything above the common stack.
       // if the closest common stack is the sampled stack itself,
@@ -212,20 +203,12 @@ void construct_vfd_fcalls(vfd_t *vfd) {
       dismantle_stack(ccstackID, timeestimate,
                       stacks, &ilevel, curr_stack,
                       &nfcalls, &maxfcalls, &fcalls);
-#ifdef _DEBUG
-      fprintf(stderr, "Dismantled stack\n");
-      print_current_fcalls(ilevel, curr_stack);
-#endif 
 
       // build up stack until it reaches the sampled stack
       // if the current stack head is already equal the the sampled stack
       // nothing will be done
       buildup_stack(sample.stackID, timeestimate,
                     stacks, &ilevel, curr_stack);
-#ifdef _DEBUG
-      fprintf(stderr, "Build up stack\n");
-      print_current_fcalls(ilevel, curr_stack);
-#endif 
 
       if (sample.kind == fnct_exit) {
          // if the current stack head and the sampel stack are
@@ -238,23 +221,17 @@ void construct_vfd_fcalls(vfd_t *vfd) {
          dismantle_stackhead(sample.stackID, sample.sampletime,
                              stacks, &ilevel, curr_stack,
                              &nfcalls, &maxfcalls, &fcalls);
-#ifdef _DEBUG
-         fprintf(stderr, "Dismantled stack head\n");
-         print_current_fcalls(ilevel, curr_stack);
-#endif 
       } else {
          // if the sample is a function entry build new head stack
          buildup_stackhead(sample.stackID, sample.sampletime,
                            stacks, &ilevel, curr_stack);
-#ifdef _DEBUG
-         fprintf(stderr, "Build up stack head\n");
-         print_current_fcalls(ilevel, curr_stack);
-#endif 
       }
-
-
-
 #ifdef _DEBUG
+      fprintf(stderr, "Stack-sample %u\n", isample);
+      fprintf(stderr, "%16.6lf", sample.sampletime*1.0e-6);
+      fprintf(stderr, " %s", sample.kind == fnct_entry ? "call" : "exit");
+      fprintf(stderr, " stackID=%d\n", sample.stackID);
+      print_current_fcalls(ilevel, curr_stack);
       fprintf(stderr, "\n");
 #endif
    }

@@ -13,6 +13,10 @@ void vgtk_stack_tree_collapse();
 
 void vgtk_stack_tree_add_vfdtrace(vfd_t *vfdtrace);
 
+void vgtk_stack_tree_remove_selected_vfdtrace();
+
+vfd_t *get_stack_tree_currently_selected_vfdtrace();
+
 void vgtk_stack_tree_refilter();
 
 #endif

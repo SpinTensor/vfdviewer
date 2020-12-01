@@ -184,7 +184,8 @@
                   <object class="GtkToolButton" id="stack_tree_toolbar_expand_button">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">__glade_unnamed_18</property>
+                    <property name="tooltip_text" translatable="yes">Expand all stack tree entries</property>
+                    <property name="label" translatable="yes">expand</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-go-down</property>
                     <signal name="clicked" handler="on_stack_tree_toolbar_expand_button_clicked" swapped="no"/>
@@ -198,10 +199,51 @@
                   <object class="GtkToolButton" id="stack_tree_toolbar_collapse_button">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">__glade_unnamed_19</property>
+                    <property name="tooltip_text" translatable="yes">Collapse all stacktree entries</property>
+                    <property name="label" translatable="yes">collapse</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-goto-top</property>
                     <signal name="clicked" handler="on_stack_tree_toolbar_collapse_button_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparatorToolItem">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="stack_tree_toolbar_add_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">add new vfd trace</property>
+                    <property name="label" translatable="yes">add</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-add</property>
+                    <signal name="clicked" handler="on_stack_tree_toolbar_add_button_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton" id="stack_tree_toolbar_remove_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">remove marked vfd trace</property>
+                    <property name="label" translatable="yes">remove</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-remove</property>
+                    <signal name="clicked" handler="on_stack_tree_toolbar_remove_button_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

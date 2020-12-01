@@ -99,6 +99,90 @@ void vgtk_stack_tree_add_vfdtrace(vfd_t *vfdtrace) {
    }
 }
 
+void vgtk_stack_tree_remove_level(GtkTreeModel *model, GtkTreeIter *iter) {
+   // Check if the iter has child iters
+#ifdef _DEBUG
+   GtkTreePath *path = gtk_tree_model_get_path (model, iter);
+   fprintf(stderr, "   removing tree entry %s\n", gtk_tree_path_to_string(path));
+   gtk_tree_path_free(path);
+#endif
+
+   while (gtk_tree_model_iter_has_child(model, iter)) {
+      gint nchildren = gtk_tree_model_iter_n_children(model, iter);
+      // iterate over the children in reverse
+      // and remove them
+      GtkTreeIter child_iter;
+      gtk_tree_model_iter_nth_child(model,
+                                    &child_iter,
+                                    iter,
+                                    nchildren-1);
+      // call this function recuresively
+      vgtk_stack_tree_remove_level(model, &child_iter);
+   }
+   // remove the iter
+   gtk_tree_store_remove(GTK_TREE_STORE(model), iter);
+}
+
+void vgtk_stack_tree_remove_selected_vfdtrace() {
+   if (stack_tree_selected_treepath_depth == 1) {
+      GtkTreePath *path = gtk_tree_path_new_from_indicesv(
+         stack_tree_selected_treepath,
+         stack_tree_selected_treepath_depth);
+      GtkTreeIter iter;
+      gtk_tree_model_get_iter(GTK_TREE_MODEL(stack_tree_treestore),
+                              &iter,
+                              path);
+
+      // remove the entry as well as all its children
+      vgtk_stack_tree_remove_level(GTK_TREE_MODEL(stack_tree_treestore), &iter);
+
+      // unselect everything
+      gtk_tree_selection_unselect_all(stack_tree_treeselection);
+      stack_tree_selected_treepath_depth = 0;
+      stack_tree_selected_treepath = NULL;
+   }
+}
+
+vfd_t *get_stack_tree_currently_selected_vfdtrace() {
+   // first get information
+   // if any node in the tree is selected
+   gboolean has_selected_row;
+   GtkTreeIter iter;
+   GtkTreeModel *tmpmodel = GTK_TREE_MODEL(stack_tree_treefilter);
+   has_selected_row = gtk_tree_selection_get_selected(
+      stack_tree_treeselection,
+      &tmpmodel,
+      &iter);
+   // if no tree node is selected terminate
+   if (!has_selected_row) {
+      return NULL;
+   }
+   // get the path iter points to
+   GtkTreePath *path;
+   path = gtk_tree_model_get_path(
+      tmpmodel, &iter);
+
+   // convert the path to a sequence of indices
+   gint path_depth = 0;
+   gint *path_indices =
+      gtk_tree_path_get_indices_with_depth(
+         path,
+         &path_depth);
+
+   // continue only if the vfd entry is selected,
+   // no subnode and not nothing
+   if (path_depth != 1) {
+      return NULL;
+   }
+   // get the corresponding vfd trace and stack entry
+   vfd_t *vfd_file = nth_vfd(path_indices[0]);
+
+   gtk_tree_path_free(path);
+   path = NULL;
+
+   return vfd_file;
+}
+
 // reapply the tree filter
 void vgtk_stack_tree_refilter() {
    gtk_tree_model_filter_refilter(stack_tree_treefilter);

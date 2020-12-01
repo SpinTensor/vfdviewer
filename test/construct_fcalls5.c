@@ -5,6 +5,10 @@
 
 #include "vfd_types.h"
 #include "vfd_header.h"
+#include "vfd_stacks.h"
+#include "vfd_samples.h"
+#include "vfd_fcalls.h"
+#include "vfd_sort.h"
 
 int main(int argc, char **argv) {
 
@@ -150,6 +154,7 @@ int main(int argc, char **argv) {
 
    // construct fcalls from stack samples
    construct_vfd_fcalls(vfd);
+   shellsort_fcalls(vfd->header->fcallscount, vfd->fcalls);
 
    // show constructed fcalls
    print_vfd_fcalls(vfd->header, vfd->fcalls);

@@ -7,6 +7,7 @@
 #include "vfd_stacks.h"
 #include "vfd_samples.h"
 #include "vfd_fcalls.h"
+#include "vfd_sort.h"
 
 static vfd_t *g_vfd_list = NULL;
 
@@ -32,6 +33,10 @@ vfd_t *new_vfd(char *vfdpath) {
                     &(new_vfd->stack_samples),
                     &(new_vfd->messages));
    fclose(vfd_handle);
+
+   // sort the messages
+   shellsort_messages(new_vfd->header->message_samplecount,
+                      new_vfd->messages);
 
    // construct the function calls timeline
    construct_vfd_fcalls(new_vfd);

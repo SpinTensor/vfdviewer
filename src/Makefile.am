@@ -26,6 +26,7 @@ libvfd_la_SOURCES = vfd_header.c \
 		    vfd_stacks.c \
 		    vfd_samples.c \
 		    vfd_fcalls.c \
+		    vfd_sort.c \
 		    vfd_list.c
 libvfd_la_CFLAGS = -g -Wall -Wextra -Wpedantic
 

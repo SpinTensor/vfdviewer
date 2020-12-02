@@ -38,7 +38,10 @@ libvgtk_la_SOURCES = vgtk_builder.c \
 		     vgtk_about_dialog.c \
 		     vgtk_stack_treeview.c \
 		     vgtk_stack_tree_searchentry.c \
-		     vgtk_stack_tree_toolbar.c
+		     vgtk_stack_tree_toolbar.c \
+		     vgtk_main_view.c \
+		     vgtk_main_view_gtkstack.c \
+		     vgtk_main_view_main_stacktimeline.c
 libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir)
 libvgtk_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 libvgtk_la_LDFLAGS = @GTK_LIBS@

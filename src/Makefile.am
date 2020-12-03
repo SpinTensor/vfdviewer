@@ -28,10 +28,11 @@ libvfd_la_SOURCES = vfd_header.c \
 		    vfd_fcalls.c \
 		    vfd_sort.c \
 		    vfd_list.c
-libvfd_la_CFLAGS = -g -Wall -Wextra -Wpedantic
+libvfd_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 
 
-libvgtk_la_SOURCES = vgtk_builder.c \
+libvgtk_la_SOURCES = vgtk_handles.c \
+		     vgtk_builder.c \
 		     vgtk_main_window.c \
 		     vgtk_main_menu_bar.c \
 		     vgtk_open_file_dialog.c \
@@ -41,7 +42,9 @@ libvgtk_la_SOURCES = vgtk_builder.c \
 		     vgtk_stack_tree_toolbar.c \
 		     vgtk_main_view.c \
 		     vgtk_main_view_gtkstack.c \
-		     vgtk_main_view_main_stacktimeline.c
+		     vgtk_main_view_main_stacktimeline.c \
+		     vgtk_stacktimeline_entry.c \
+		     vgtk_colors.c
 libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir)
 libvgtk_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 libvgtk_la_LDFLAGS = @GTK_LIBS@

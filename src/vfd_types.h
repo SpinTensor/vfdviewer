@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#include "vgtk_types.h"
+
 #define VFTR_VERSIONSIZE 16
 #define DATESTRINGSIZE 24
 
@@ -84,10 +86,10 @@ struct vfd_type {
    vfd_header_t *header;
    int maxlevel;
    vfd_stack_sample_t *stack_samples;
-
    vfd_fcall_t *fcalls;
    vfd_message_t *messages;
    vfd_stack_entry_t *stacks;
+   vgtk_handles_t *vgtk_handles;
    vfd_t *prev;
    vfd_t *next;
 };

@@ -9,6 +9,8 @@
 #include "vfd_fcalls.h"
 #include "vfd_sort.h"
 
+#include "vgtk_handles.h"
+
 static vfd_t *g_vfd_list = NULL;
 
 // create a new vfd trace from a file
@@ -58,6 +60,10 @@ vfd_t *new_vfd(char *vfdpath) {
       new_vfd->filename++;
    }
 
+   // create the storage space for gtk handles for the vfd-trace
+   new_vfd->vgtk_handles = new_vgtk_handles();
+
+   // initialize the linked list connectors
    new_vfd->next = NULL;
    new_vfd->prev = NULL;
 
@@ -96,6 +102,8 @@ void free_vfd(vfd_t **vfd_ptr) {
 
    free(vfd->filepath);
    vfd->filepath = NULL;
+
+   free_vgtk_handles(&(vfd->vgtk_handles));
 
    // free the vfd struct pointer itself
    vfd = NULL;

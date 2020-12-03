@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
 
+#include "vfd_types.h"
+
 GtkScrolledWindow *main_view_main_stacktimeline_scrolledwindow = NULL;
 GtkBox *main_view_main_stacktimeline_timelineinfo_box = NULL;
 GtkBox *main_view_main_stacktimeline_timeline_box = NULL;

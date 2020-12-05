@@ -1,6 +1,8 @@
 #ifndef VGTK_TYPES
 #define VGTK_TYPES
 
+#include <gtk/gtk.h>
+
 typedef struct {
    cairo_surface_t *surface;
    GtkDrawingArea *drawing_area;

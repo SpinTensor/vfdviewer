@@ -27,7 +27,8 @@ libvfd_la_SOURCES = vfd_header.c \
 		    vfd_samples.c \
 		    vfd_fcalls.c \
 		    vfd_sort.c \
-		    vfd_list.c
+		    vfd_list.c \
+		    vfd_load.c
 libvfd_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 
 

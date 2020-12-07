@@ -2,6 +2,7 @@
 
 #include "vfd_types.h"
 #include "vfd_list.h"
+#include "vfd_load.h"
 #include "vgtk_stack_treeview.h"
 #include "vgtk_stacktimeline_entry.h"
 
@@ -31,13 +32,7 @@ void run_open_file_dialog() {
 #ifdef _DEBUG
          fprintf(stderr, "Loading vfd-file: %s\n", filename);
 #endif
-         vfd_t *vfdfile = new_vfd(filename);
-         append_vfd(vfdfile);
-
-         // add the vfdtrace to the stack treeView
-         vgtk_stack_tree_add_vfdtrace(vfdfile);
-         // add the vfdtrace to the timeline view
-         init_stacktimeline_entry(vfdfile);
+         vfd_load_file(filename);
       }
       // free list memory
       g_slist_free(g_steal_pointer(&selected_files));

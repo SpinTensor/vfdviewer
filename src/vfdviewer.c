@@ -6,8 +6,7 @@
 
 #include "vgtk_builder.h"
 #include "vgtk_main_window.h"
-#include "vgtk_stack_treeview.h"
-#include "vgtk_stacktimeline_entry.h"
+#include "vfd_load.h"
 #include "vfd_list.h"
 
 int main(int argc, char **argv) {
@@ -26,12 +25,7 @@ int main(int argc, char **argv) {
          fprintf(stderr, "Opening File \"%s\"\n", argv[iarg]);
 #endif
          char *filename = strdup(argv[iarg]);
-         vfd_t *vfdfile = new_vfd(filename);
-         append_vfd(vfdfile);
-         // add the vfdtrace to the stack treeView
-         vgtk_stack_tree_add_vfdtrace(vfdfile);
-         // add the vfdtrace to the timeline view
-         init_stacktimeline_entry(vfdfile);
+         vfd_load_file(filename);
       } else {
          fprintf(stderr, "Unable to locate file \"%s\"\n", argv[iarg]);
       }

@@ -45,7 +45,8 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_main_view_gtkstack.c \
 		     vgtk_main_view_main_stacktimeline.c \
 		     vgtk_stacktimeline_entry.c \
-		     vgtk_colors.c
+		     vgtk_colors.c \
+		     vgtk_surfaces.c
 libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir)
 libvgtk_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 libvgtk_la_LDFLAGS = @GTK_LIBS@

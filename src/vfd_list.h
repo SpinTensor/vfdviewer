@@ -48,6 +48,9 @@ void indexed_vfd_trace_and_stack(int nidx, int*idx,
 // returns the maximum of all maxlevel
 int vfds_max_maxlevel();
 
+// returns the maximum of all runtimes
+double vfds_max_runtime();
+
 // remove every element in the vfd trace list
 // and free them
 void remove_and_free_vfd_list();

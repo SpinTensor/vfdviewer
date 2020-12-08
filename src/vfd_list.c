@@ -278,6 +278,18 @@ int vfds_max_maxlevel() {
    return mmlvl;
 }
 
+// returns the maximum of all runtimes
+double vfds_max_runtime() {
+   double maxrt = 0.0;
+   vfd_t *vfd = first_vfd();
+   while (vfd != NULL) {
+      maxrt = vfd->header->runtime > maxrt ? vfd->header->runtime : maxrt;
+      vfd = vfd->next;
+   }
+
+   return maxrt;
+}
+
 // remove every element in the vfd trace list
 // and free them
 void remove_and_free_vfd_list() {

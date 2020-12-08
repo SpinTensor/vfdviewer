@@ -4,6 +4,8 @@
 #include <string.h>
 
 #include "vfd_types.h"
+#include "vgtk_colors.h"
+#include "hashing.h"
 
 vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
                                    vfd_stack_entry_t **stacks_ptr, int *maxlevel) {
@@ -82,6 +84,10 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
       stack_ptr->visible_in_treeview = true;
       // who called this function?
       stack_ptr->caller = stacks+stack_ptr->callerID;
+      // determine the default color for drawing this stack entry
+      uint32_t namehash = jenkins_32_hash(stack_ptr->namelen,
+                                          (uint8_t*) stack_ptr->name);
+      stack_ptr->drawcolor = vgtk_color_list[namehash%vgtk_ncolors];
 
       // increament the callee counter for the calling function
       (stacks[stack_ptr->callerID].ncallees)++;

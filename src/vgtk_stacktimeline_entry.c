@@ -157,13 +157,14 @@ void vgtk_draw_stacktimeline(
    cr = cairo_create (surface);
 
    for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
+      unsigned int stackID = vfdtrace->fcalls[ifcall].stackID;
 
       double x;
       x = vfdtrace->fcalls[ifcall].entry_time;
       x *= scalex;
 
       double y;
-      y = maxlvl - vfdtrace->stacks[vfdtrace->fcalls[ifcall].stackID].level+1;
+      y = maxlvl - vfdtrace->stacks[stackID].level+1;
       y *= scaley;
 
       double width;
@@ -174,11 +175,17 @@ void vgtk_draw_stacktimeline(
       double height;
       height = scaley;
 
+      vgtk_color_t col;
+      if (vfdtrace->stacks[stackID].visible_in_treeview) {
+         col = vfdtrace->stacks[stackID].drawcolor;
+      } else {
+         col = vgtk_color2grayscale(vfdtrace->stacks[stackID].drawcolor);
+      }
       cairo_set_source_rgba(cr,
-                            ((double)rand())/RAND_MAX,
-                            ((double)rand())/RAND_MAX,
-                            ((double)rand())/RAND_MAX,
-                            1.0);
+                            col.red,
+                            col.green,
+                            col.blue,
+                            col.alpha);
 
       cairo_rectangle(cr,
                       x, y,

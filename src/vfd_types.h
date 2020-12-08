@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include "vgtk_types.h"
+#include "vgtk_colors.h"
 
 #define VFTR_VERSIONSIZE 16
 #define DATESTRINGSIZE 24
@@ -44,6 +45,7 @@ struct vdf_stack_entry_type{
    bool precise;
    int namelen;
    char *name;
+   vgtk_color_t drawcolor;
    bool visible_in_treeview;
 };
 

@@ -19,7 +19,8 @@ vfdviewer_LDADD = libvfd.la \
 		  libvutils.la 
 
 libvutils_la_SOURCES = mpi_types.c \
-		       v_timer.c
+		       v_timer.c \
+		       hashing.c
 libvutils_la_CFLAGS = -g -Wall -Wextra -Wpedantic
 
 libvfd_la_SOURCES = vfd_header.c \

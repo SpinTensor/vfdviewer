@@ -33,9 +33,6 @@ int main(int argc, char **argv) {
 
    vgtk_show_main_window();
    gtk_main();
-
-   // remove all remaining vfd traces
-   remove_and_free_vfd_list();
    
    return 0;
 }

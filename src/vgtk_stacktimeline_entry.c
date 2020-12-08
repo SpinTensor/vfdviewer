@@ -69,6 +69,12 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
 void free_stackTimelineEntry(vgtk_stackTimelineEntry_t **stackTimelineEntry_ptr) {
    vgtk_stackTimelineEntry_t *stackTimelineEntry = *stackTimelineEntry_ptr;
 
+   // destroy surface
+   free_surface(&(stackTimelineEntry->surface));
+
+   // destroy drawing area
+   gtk_widget_destroy(GTK_WIDGET(stackTimelineEntry->drawing_area));
+   stackTimelineEntry->drawing_area = NULL;
 
    free(stackTimelineEntry);
    stackTimelineEntry = NULL;
@@ -105,6 +111,7 @@ static gboolean vgtk_stacktimeline_draw_callback(
    GtkWidget *widget,
    cairo_t   *cr,
    gpointer   data) {
+   (void) widget;
 
    // first cast the data pointer to the appropiate data format pointer
    vfd_t *vfdtrace = (vfd_t*) data;

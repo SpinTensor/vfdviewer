@@ -11,6 +11,8 @@
 #include "vgtk_surfaces.h"
 #include "vgtk_colors.h"
 
+double tmin_stacktimeline_draw = 0.0;
+double tmax_stacktimeline_draw = 0.0;
 
 // Callback declarations
 static gboolean vgtk_stacktimeline_entry_configure_callback(
@@ -214,3 +216,19 @@ void vgtk_redraw_all_stacktimelines() {
    }
 }
 
+double get_tmin_stacktimeline_draw() {
+   return tmin_stacktimeline_draw;
+}
+
+double get_tmax_stacktimeline_draw() {
+   return tmax_stacktimeline_draw;
+}
+
+void set_tmin_stacktimeline_draw(double new_time) {
+   tmin_stacktimeline_draw = new_time >= 0.0 ? new_time : 0.0;
+}
+
+void set_tmax_stacktimeline_draw(double new_time) {
+   double tmptime = vfds_max_runtime();
+   tmax_stacktimeline_draw = new_time <= tmptime ? new_time : tmptime; 
+}

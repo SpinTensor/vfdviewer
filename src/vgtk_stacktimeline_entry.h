@@ -18,4 +18,9 @@ void vgtk_draw_stacktimeline(
 
 void vgtk_redraw_all_stacktimelines();
 
+double get_tmin_stacktimeline_draw();
+double get_tmax_stacktimeline_draw();
+void set_tmin_stacktimeline_draw(double new_time);
+void set_tmax_stacktimeline_draw(double new_time);
+
 #endif

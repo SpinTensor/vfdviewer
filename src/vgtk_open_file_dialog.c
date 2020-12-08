@@ -38,6 +38,8 @@ void run_open_file_dialog() {
       g_slist_free(g_steal_pointer(&selected_files));
 
       // redraw all stacktimelines
+      set_tmin_stacktimeline_draw(0.0);
+      set_tmax_stacktimeline_draw(vfds_max_runtime());
       vgtk_redraw_all_stacktimelines();
    }
 

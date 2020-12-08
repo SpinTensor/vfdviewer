@@ -10,4 +10,10 @@ void init_stacktimeline_entry(vfd_t *vfdtrace);
 
 void free_stackTimelineEntry(vgtk_stackTimelineEntry_t **stackTimelineEntry_ptr);
 
+void vgtk_draw_stacktimeline(
+   GtkDrawingArea *drawing_area,
+   cairo_surface_t *surface,
+   vfd_t *vfdtrace,
+   double tstart, double tend);
+
 #endif

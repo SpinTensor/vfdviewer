@@ -4,10 +4,13 @@
 
 #include "vgtk_types.h"
 #include "vfd_types.h"
+#include "vfd_list.h"
+
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_main_view_main_stacktimeline.h"
 #include "vgtk_surfaces.h"
 #include "vgtk_colors.h"
+
 
 // Callback declarations
 static gboolean vgtk_stacktimeline_entry_configure_callback(
@@ -102,7 +105,10 @@ static gboolean vgtk_stacktimeline_entry_configure_callback(
       gtk_widget_get_allocated_width (widget),
       gtk_widget_get_allocated_height (widget));
 
-   clear_surface(entry->surface, vgtk_color_white);
+   vgtk_draw_stacktimeline(entry->drawing_area,
+                           entry->surface,
+                           vfdtrace,
+                           0.0, vfdtrace->header->runtime);
 
    return TRUE;
 }
@@ -123,4 +129,67 @@ static gboolean vgtk_stacktimeline_draw_callback(
    cairo_paint(cr);
 
    return FALSE;
+}
+
+void vgtk_draw_stacktimeline(
+   GtkDrawingArea *drawing_area,
+   cairo_surface_t *surface,
+   vfd_t *vfdtrace,
+   double tstart, double tend) {
+
+   // get surface dimensions
+   int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
+   int sfheight = gtk_widget_get_allocated_height(GTK_WIDGET(drawing_area));
+
+   // get maximum level and max runtime to derive image scaling parameters
+   int maxlvl = vfds_max_maxlevel();
+   double maxrt = vfds_max_runtime()*1.0e6;
+
+   // +2 on the max level because it starts at 0 and needs some space on top
+   double scalex = ((double) sfwidth) / maxrt;
+   double scaley = ((double) sfheight) / ((double) maxlvl+2);
+
+   // clear surface before painting
+   clear_surface(surface);
+   
+   // loop over all fcalls (TODO: more efficient) and draw
+   cairo_t *cr;
+   cr = cairo_create (surface);
+
+   for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
+
+      double x;
+      x = vfdtrace->fcalls[ifcall].entry_time;
+      x *= scalex;
+
+      double y;
+      y = maxlvl - vfdtrace->stacks[vfdtrace->fcalls[ifcall].stackID].level+1;
+      y *= scaley;
+
+      double width;
+      width = vfdtrace->fcalls[ifcall].exit_time;
+      width -= vfdtrace->fcalls[ifcall].entry_time;
+      width *= scalex;
+
+      double height;
+      height = scaley;
+
+      cairo_set_source_rgba(cr,
+                            ((double)rand())/RAND_MAX,
+                            ((double)rand())/RAND_MAX,
+                            ((double)rand())/RAND_MAX,
+                            1.0);
+
+      cairo_rectangle(cr,
+                      x, y,
+                      width, height);
+
+      cairo_fill(cr);
+   }
+
+   cairo_destroy(cr);
+
+   // actually draw the queued actions
+   gtk_widget_queue_draw(GTK_WIDGET(drawing_area));
+
 }

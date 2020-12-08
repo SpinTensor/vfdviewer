@@ -111,6 +111,7 @@ static gboolean vgtk_stacktimeline_draw_callback(
    GtkWidget *widget,
    cairo_t   *cr,
    gpointer   data) {
+
    (void) widget;
 
    // first cast the data pointer to the appropiate data format pointer

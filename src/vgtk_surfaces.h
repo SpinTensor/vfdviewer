@@ -3,9 +3,7 @@
 
 #include <gtk/gtk.h>
 
-#include "vgtk_draw_types.h"
-
-void clear_surface(cairo_surface_t *surface, vgtk_color_t color);
+void clear_surface(cairo_surface_t *surface);
 
 cairo_surface_t *new_vgtk_surface(GtkDrawingArea *drawArea);
 

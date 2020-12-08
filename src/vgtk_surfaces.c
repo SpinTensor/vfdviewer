@@ -2,18 +2,18 @@
 
 #include <gtk/gtk.h>
 
-#include "vgtk_draw_types.h"
 #include "vgtk_colors.h"
 
-void clear_surface(cairo_surface_t *surface, vgtk_color_t color) {
+void clear_surface(cairo_surface_t *surface) {
    cairo_t *cr;
    cr = cairo_create(surface);
 
    cairo_set_source_rgba(cr,
-                         color.red,
-                         color.green,
-                         color.blue,
-                         color.alpha);
+                         1.0,
+                         1.0,
+                         1.0,
+                         1.0);
+
    cairo_paint(cr);
 
    cairo_destroy(cr);
@@ -30,7 +30,7 @@ cairo_surface_t *new_vgtk_surface(GtkDrawingArea *drawArea) {
       gtk_widget_get_allocated_width(tmpwidget),
       gtk_widget_get_allocated_height(tmpwidget));
 
-   clear_surface(surface, vgtk_color_white);
+   clear_surface(surface);
 
    return surface;
 }

@@ -45,6 +45,9 @@ void indexed_vfd_trace_and_stack(int nidx, int*idx,
                                  vfd_t **vfdtrace,
                                  vfd_stack_entry_t **vfd_stack);
 
+// returns the maximum of all maxlevel
+int vfds_max_maxlevel();
+
 // remove every element in the vfd trace list
 // and free them
 void remove_and_free_vfd_list();

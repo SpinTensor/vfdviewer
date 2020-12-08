@@ -266,6 +266,18 @@ void indexed_vfd_trace_and_stack(int nidx, int*idx,
    }
 }
 
+// returns the maximum of all maxlevel
+int vfds_max_maxlevel() {
+   int mmlvl = -1;
+   vfd_t *vfd = first_vfd();
+   while (vfd != NULL) {
+      mmlvl = vfd->maxlevel > mmlvl ? vfd->maxlevel : mmlvl;
+      vfd = vfd->next;
+   }
+
+   return mmlvl;
+}
+
 // remove every element in the vfd trace list
 // and free them
 void remove_and_free_vfd_list() {

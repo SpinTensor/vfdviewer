@@ -36,6 +36,9 @@ void run_open_file_dialog() {
       }
       // free list memory
       g_slist_free(g_steal_pointer(&selected_files));
+
+      // redraw all stacktimelines
+      vgtk_redraw_all_stacktimelines();
    }
 
 #ifdef _DEBUG

@@ -16,4 +16,6 @@ void vgtk_draw_stacktimeline(
    vfd_t *vfdtrace,
    double tstart, double tend);
 
+void vgtk_redraw_all_stacktimelines();
+
 #endif

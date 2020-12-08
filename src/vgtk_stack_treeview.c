@@ -5,6 +5,7 @@
 
 #include "vgtk_stack_tree_toolbar.h"
 #include "vgtk_stack_tree_searchentry.h"
+#include "vgtk_stacktimeline_entry.h"
 #include "vfd_types.h"
 #include "vfd_list.h"
 
@@ -186,6 +187,9 @@ vfd_t *get_stack_tree_currently_selected_vfdtrace() {
 // reapply the tree filter
 void vgtk_stack_tree_refilter() {
    gtk_tree_model_filter_refilter(stack_tree_treefilter);
+
+   // redraw stacktimelines (for highlighting selected stacks)
+   vgtk_redraw_all_stacktimelines();
 }
 
 // Function to determine the visibility of stack tree entries

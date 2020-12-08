@@ -4,6 +4,7 @@
 
 #include "vgtk_stack_treeview.h"
 #include "vgtk_open_file_dialog.h"
+#include "vgtk_stacktimeline_entry.h"
 #include "vfd_list.h"
 
 GtkToolbar *stack_tree_toolbar = NULL;
@@ -62,5 +63,8 @@ void on_stack_tree_toolbar_remove_button_clicked(GtkToolButton *button) {
       vgtk_stack_tree_remove_selected_vfdtrace();
       remove_vfd(vfd_trace);
       free_vfd(&vfd_trace);
+
+      // redraw all stacktimelines
+      vgtk_redraw_all_stacktimelines();
    }
 }

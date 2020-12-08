@@ -200,3 +200,17 @@ void vgtk_draw_stacktimeline(
    gtk_widget_queue_draw(GTK_WIDGET(drawing_area));
 
 }
+
+// loop over all vfdtraces and redraw the stacktimeline
+void vgtk_redraw_all_stacktimelines() {
+   vfd_t *vfdtrace = first_vfd();
+   while (vfdtrace != NULL) {
+      vgtk_draw_stacktimeline(
+         vfdtrace->vgtk_handles->stackTimelineEntry->drawing_area,
+         vfdtrace->vgtk_handles->stackTimelineEntry->surface,
+         vfdtrace,
+         0.0, vfdtrace->header->runtime*1.0e6);
+      vfdtrace = vfdtrace->next;
+   }
+}
+

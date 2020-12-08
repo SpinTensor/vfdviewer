@@ -1012,4 +1012,14 @@ vgtk_color_t vgtk_color_list[NCOLORS] = {
 
 #undef NCOLORS
 
+vgtk_color_t vgtk_color2grayscale(vgtk_color_t color) {
+   vgtk_color_t greyscale;
+   greyscale.name  = "GreyScale";
+   greyscale.red   = 0.2126 * color.red;
+   greyscale.green = 0.7152 * color.green;
+   greyscale.blue  = 0.0722 * color.blue;
+   greyscale.alpha = color.alpha;
+   return greyscale;
+}
+
 #undef CNORM

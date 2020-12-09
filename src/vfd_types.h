@@ -57,8 +57,8 @@ typedef struct {
 
 typedef struct {
    int stackID;
-   long long entry_time;
-   long long exit_time;
+   double entry_time;
+   double exit_time;
 } vfd_fcall_t;
 
 typedef enum {

@@ -28,7 +28,7 @@ void store_vfcall(int *ilevel, vfd_fcall_t *curr_stack,
    (*ilevel)--;
 }
 
-void buildup_stack(int stackID, long long t0,
+void buildup_stack(int stackID, double t0,
                    vfd_stack_entry_t *stacks,
                    int *ilevel, vfd_fcall_t *curr_stack) {
    // get the newlevel and fill the current stack
@@ -44,13 +44,13 @@ void buildup_stack(int stackID, long long t0,
       // set exit time to an invalid -1
       for (int jlevel=oldilevel+1; jlevel<newilevel; jlevel++) {
          curr_stack[jlevel].entry_time = t0;
-         curr_stack[jlevel].exit_time = -1ll;
+         curr_stack[jlevel].exit_time = -1.0;
       }
       *ilevel = newilevel-1;
    }
 }
 
-void buildup_stackhead(int stackID, long long t1,
+void buildup_stackhead(int stackID, double t1,
                        vfd_stack_entry_t *stacks,
                        int *ilevel, vfd_fcall_t *curr_stack) {
    // get the newlevel and fill the current stack
@@ -58,12 +58,12 @@ void buildup_stackhead(int stackID, long long t1,
 
    // the sampled function gets t1 as entry time
    curr_stack[newilevel].entry_time = t1;
-   curr_stack[newilevel].exit_time = -1ll;
+   curr_stack[newilevel].exit_time = -1.0;
 
    *ilevel = newilevel;
 }
 
-void dismantle_stack(int stackID, long long t0,
+void dismantle_stack(int stackID, double t0,
                      vfd_stack_entry_t *stacks,
                      int *ilevel, vfd_fcall_t *curr_stack,
                      int *nfcalls, int *maxfcalls, vfd_fcall_t **fcalls) {
@@ -86,7 +86,7 @@ void dismantle_stack(int stackID, long long t0,
    }
 }
 
-void dismantle_stackhead(int stackID, long long t1,
+void dismantle_stackhead(int stackID, double t1,
                          vfd_stack_entry_t *stacks,
                          int *ilevel, vfd_fcall_t *curr_stack,
                          int *nfcalls, int *maxfcalls, vfd_fcall_t **fcalls) {
@@ -152,18 +152,18 @@ void construct_vfd_fcalls(vfd_t *vfd) {
    sample = stack_samples[0];
    if (sample.kind == fnct_entry) {
       // only need to build up the stack
-      buildup_stack(sample.stackID, 0ll,
+      buildup_stack(sample.stackID, 0.0,
                     stacks, &ilevel, curr_stack);
-      buildup_stackhead(sample.stackID, sample.sampletime,
+      buildup_stackhead(sample.stackID, sample.sampletime*1.0e-6,
                         stacks, &ilevel, curr_stack);
    } else {
       // first build up the stack
       // then dismantle the top function
-      buildup_stack(sample.stackID, 0ll,
+      buildup_stack(sample.stackID, 0.0,
                     stacks, &ilevel, curr_stack);
-      buildup_stackhead(sample.stackID, 0ll,
+      buildup_stackhead(sample.stackID, 0.0,
                         stacks, &ilevel, curr_stack);
-      dismantle_stackhead(sample.stackID, sample.sampletime,
+      dismantle_stackhead(sample.stackID, sample.sampletime*1.0e-6,
                           stacks, &ilevel, curr_stack,
                           &nfcalls, &maxfcalls, &fcalls);
    }
@@ -177,7 +177,7 @@ void construct_vfd_fcalls(vfd_t *vfd) {
 #endif 
 
    // save the last time for time estimates
-   long long lastsampletime = sample.sampletime;
+   double lastsampletime = sample.sampletime*1.0e-6;
    // go through all stack samples and reconstruct the function calls
    for (unsigned int isample=1; isample<vfd->header->function_samplecount; isample++) {
       // current stack already has entries
@@ -185,10 +185,10 @@ void construct_vfd_fcalls(vfd_t *vfd) {
       sample = stack_samples[isample];
       // as it is not available estimate the time of events 
       // since the last sample
-      long long timeestimate;
-      timeestimate = lastsampletime + sample.sampletime;
+      double timeestimate;
+      timeestimate = lastsampletime + sample.sampletime*1.0e-6;
       timeestimate *=0.5;
-      lastsampletime = sample.sampletime;
+      lastsampletime = sample.sampletime*1.0e-6;
       // compute the closest common stack
       // between the current stackhead
       // and the new stack sample
@@ -218,12 +218,12 @@ void construct_vfd_fcalls(vfd_t *vfd) {
                               stacks, &ilevel, curr_stack);
          }
          // if the sample is a function exit dismantle the current head stack
-         dismantle_stackhead(sample.stackID, sample.sampletime,
+         dismantle_stackhead(sample.stackID, sample.sampletime*1.0e-6,
                              stacks, &ilevel, curr_stack,
                              &nfcalls, &maxfcalls, &fcalls);
       } else {
          // if the sample is a function entry build new head stack
-         buildup_stackhead(sample.stackID, sample.sampletime,
+         buildup_stackhead(sample.stackID, sample.sampletime*1.0e-6,
                            stacks, &ilevel, curr_stack);
       }
 #ifdef _DEBUG

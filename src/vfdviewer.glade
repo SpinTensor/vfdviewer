@@ -6,7 +6,7 @@
     <property name="lower">1</property>
     <property name="upper">10000</property>
     <property name="value">100</property>
-    <property name="step_increment">1</property>
+    <property name="step_increment">0.10000000000000001</property>
     <property name="page_increment">10</property>
   </object>
   <object class="GtkAdjustment" id="main_view_main_stacktimeline_yzoom_spinner_adjustment">
@@ -34,6 +34,8 @@
     <property name="child_model">stack_tree_treestore</property>
   </object>
   <object class="GtkWindow" id="main_window">
+    <property name="width_request">768</property>
+    <property name="height_request">512</property>
     <property name="can_focus">False</property>
     <property name="default_width">1024</property>
     <property name="default_height">576</property>
@@ -274,6 +276,7 @@
         </child>
         <child>
           <object class="GtkBox" id="main_view_box">
+            <property name="width_request">500</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_left">2</property>
@@ -368,12 +371,15 @@
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
+                                        <property name="spacing">2</property>
                                         <child>
-                                          <object class="GtkLabel">
+                                          <object class="GtkLabel" id="tmin_stacktimeline_draw_label">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="label" translatable="yes">0.0s</property>
+                                            <property name="width_chars">16</property>
                                             <property name="single_line_mode">True</property>
+                                            <property name="max_width_chars">16</property>
                                             <property name="xalign">0</property>
                                           </object>
                                           <packing>
@@ -383,11 +389,13 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel">
+                                          <object class="GtkLabel" id="tcen_stacktimeline_draw_label">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="label" translatable="yes">0.5s</property>
+                                            <property name="width_chars">16</property>
                                             <property name="single_line_mode">True</property>
+                                            <property name="max_width_chars">16</property>
                                             <property name="xalign">0.5</property>
                                           </object>
                                           <packing>
@@ -397,11 +405,13 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel">
+                                          <object class="GtkLabel" id="tmax_stacktimeline_draw_label">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="label" translatable="yes">1.0s</property>
+                                            <property name="width_chars">16</property>
                                             <property name="single_line_mode">True</property>
+                                            <property name="max_width_chars">16</property>
                                             <property name="xalign">1</property>
                                           </object>
                                           <packing>

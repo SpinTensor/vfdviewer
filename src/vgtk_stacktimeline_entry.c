@@ -147,10 +147,10 @@ void vgtk_draw_stacktimeline(
 
    // get maximum level and max runtime to derive image scaling parameters
    int maxlvl = vfds_max_maxlevel();
-   double maxrt = vfds_max_runtime()*1.0e6;
+   double maxrt = vfds_max_runtime();
 
    // +2 on the max level because it starts at 0 and needs some space on top
-   double scalex = ((double) sfwidth) / maxrt;
+   double scalex = ((double) sfwidth*stacktimeline_xzoom_spinner_get_value()) / maxrt;
    double scaley = ((double) sfheight) / ((double) maxlvl+2);
 
    // clear surface before painting
@@ -163,39 +163,51 @@ void vgtk_draw_stacktimeline(
    for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
       unsigned int stackID = vfdtrace->fcalls[ifcall].stackID;
 
-      double x;
-      x = vfdtrace->fcalls[ifcall].entry_time;
-      x *= scalex;
+      if (vfdtrace->fcalls[ifcall].entry_time > tmax_stacktimeline_draw) {
+         // only draw until the first stacktimeline entry larger
+         // than the max_drawtime is encountered.
+         // They are sorted, thus no one should be forgotten.
+         break;
+      } else if (vfdtrace->fcalls[ifcall].exit_time > tmin_stacktimeline_draw*1.0e-6) {
+         // only draw if the exit time falls into the selected window
+         double width;
+         width = vfdtrace->fcalls[ifcall].exit_time;
+         width -= vfdtrace->fcalls[ifcall].entry_time;
+         width *= scalex;
 
-      double y;
-      y = maxlvl - vfdtrace->stacks[stackID].level+1;
-      y *= scaley;
+         // only draw the function if it is larger than one pixel
+         if (width >= 1.0) {
+            double x;
+            x = vfdtrace->fcalls[ifcall].entry_time;
+            x -= tmin_stacktimeline_draw;
+            x *= scalex;
 
-      double width;
-      width = vfdtrace->fcalls[ifcall].exit_time;
-      width -= vfdtrace->fcalls[ifcall].entry_time;
-      width *= scalex;
+            double y;
+            y = maxlvl - vfdtrace->stacks[stackID].level+1;
+            y *= scaley;
 
-      double height;
-      height = scaley;
-
-      vgtk_color_t col;
-      if (vfdtrace->stacks[stackID].visible_in_treeview) {
-         col = vfdtrace->stacks[stackID].drawcolor;
-      } else {
-         col = vgtk_color2grayscale(vfdtrace->stacks[stackID].drawcolor);
+            double height;
+            height = scaley;
+   
+            vgtk_color_t col;
+            if (vfdtrace->stacks[stackID].visible_in_treeview) {
+               col = vfdtrace->stacks[stackID].drawcolor;
+            } else {
+               col = vgtk_color2grayscale(vfdtrace->stacks[stackID].drawcolor);
+            }
+            cairo_set_source_rgba(cr,
+                                  col.red,
+                                  col.green,
+                                  col.blue,
+                                  col.alpha);
+   
+            cairo_rectangle(cr,
+                            x, y,
+                            width, height);
+   
+            cairo_fill(cr);
+         }
       }
-      cairo_set_source_rgba(cr,
-                            col.red,
-                            col.green,
-                            col.blue,
-                            col.alpha);
-
-      cairo_rectangle(cr,
-                      x, y,
-                      width, height);
-
-      cairo_fill(cr);
    }
 
    cairo_destroy(cr);
@@ -241,11 +253,17 @@ double get_tmax_stacktimeline_draw() {
 
 void set_tmin_stacktimeline_draw(double new_time) {
    tmin_stacktimeline_draw = new_time >= 0.0 ? new_time : 0.0;
+   set_tmin_stacktimeline_draw_label(tmin_stacktimeline_draw);
+   set_tcen_stacktimeline_draw_label(
+      0.5*(tmin_stacktimeline_draw+tmax_stacktimeline_draw));
 }
 
 void set_tmax_stacktimeline_draw(double new_time) {
    double tmptime = vfds_max_runtime();
    tmax_stacktimeline_draw = new_time <= tmptime ? new_time : tmptime; 
+   set_tmax_stacktimeline_draw_label(tmax_stacktimeline_draw);
+   set_tcen_stacktimeline_draw_label(
+      0.5*(tmin_stacktimeline_draw+tmax_stacktimeline_draw));
 }
 
 int get_hmax_stacktimeline_draw() {

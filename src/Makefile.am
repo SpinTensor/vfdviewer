@@ -45,6 +45,7 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_main_view.c \
 		     vgtk_main_view_gtkstack.c \
 		     vgtk_main_view_main_stacktimeline.c \
+		     vgtk_stacktimeline_spinner.c \
 		     vgtk_stacktimeline_entry.c \
 		     vgtk_colors.c \
 		     vgtk_surfaces.c

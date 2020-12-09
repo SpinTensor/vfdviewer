@@ -8,11 +8,13 @@
 
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_main_view_main_stacktimeline.h"
+#include "vgtk_stacktimeline_spinner.h"
 #include "vgtk_surfaces.h"
 #include "vgtk_colors.h"
 
 double tmin_stacktimeline_draw = 0.0;
 double tmax_stacktimeline_draw = 0.0;
+int hmax_stacktimeline_draw = 0;
 
 // Callback declarations
 static gboolean vgtk_stacktimeline_entry_configure_callback(
@@ -39,7 +41,7 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
    entry->drawing_area =
       GTK_DRAWING_AREA(gtk_drawing_area_new());
    // set a minimum width to the drawing area
-   gtk_widget_set_size_request(GTK_WIDGET(entry->drawing_area), 100, 100);
+   vgtk_set_drawing_area_size(entry->drawing_area);
 
    // connect the signals TODO
   /* Signals used to handle the backing surface */
@@ -203,6 +205,17 @@ void vgtk_draw_stacktimeline(
 
 }
 
+void vgtk_set_drawing_area_size(GtkDrawingArea *drawing_area) {
+
+   int maxlvl = vfds_max_maxlevel();
+
+   double yzoom = stacktimeline_yzoom_spinner_get_value();
+
+   gtk_widget_set_size_request(GTK_WIDGET(drawing_area),
+                               128,
+                               yzoom*maxlvl);
+}
+
 // loop over all vfdtraces and redraw the stacktimeline
 void vgtk_redraw_all_stacktimelines() {
    vfd_t *vfdtrace = first_vfd();
@@ -231,4 +244,13 @@ void set_tmin_stacktimeline_draw(double new_time) {
 void set_tmax_stacktimeline_draw(double new_time) {
    double tmptime = vfds_max_runtime();
    tmax_stacktimeline_draw = new_time <= tmptime ? new_time : tmptime; 
+}
+
+int get_hmax_stacktimeline_draw() {
+   return hmax_stacktimeline_draw;
+}
+
+void set_hmax_stacktimeline_draw(int new_height) {
+   int tmpheight = vfds_max_maxlevel() + 2;
+   hmax_stacktimeline_draw = new_height >= tmpheight ? new_height : tmpheight;
 }

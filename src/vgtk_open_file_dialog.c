@@ -15,7 +15,6 @@ void vgtk_build_open_file_dialog(GtkBuilder *builder) {
 }
 
 void run_open_file_dialog() {
-   printf("running open dialog\n");
    // show the open file dialog
    gtk_widget_show(GTK_WIDGET(vgtk_open_file_dialog));
    // run the open file logic

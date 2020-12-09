@@ -43,7 +43,6 @@ void on_stack_tree_toolbar_collapse_button_clicked(GtkToolButton *button) {
 // Callback function if add button is clicked
 void on_stack_tree_toolbar_add_button_clicked(GtkToolButton *button) {
    (void) button;
-   printf("clicked\n");
    run_open_file_dialog();
 }
 

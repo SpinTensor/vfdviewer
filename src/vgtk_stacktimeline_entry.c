@@ -220,6 +220,8 @@ void vgtk_set_drawing_area_size(GtkDrawingArea *drawing_area) {
 void vgtk_redraw_all_stacktimelines() {
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
+      vgtk_set_drawing_area_size(
+         vfdtrace->vgtk_handles->stackTimelineEntry->drawing_area);
       vgtk_draw_stacktimeline(
          vfdtrace->vgtk_handles->stackTimelineEntry->drawing_area,
          vfdtrace->vgtk_handles->stackTimelineEntry->surface,

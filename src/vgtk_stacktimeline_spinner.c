@@ -25,9 +25,7 @@ double stacktimeline_yzoom_spinner_get_value() {
    return gtk_spin_button_get_value(main_view_main_stacktimeline_yzoom_spinner);
 }
 
-
 // callback functions
-//
 // if the x-zoom spinner value is changed
 void on_main_view_main_stacktimeline_xzoom_spinner_value_changed(
    GtkSpinButton *spinbutton, gpointer userdata) {

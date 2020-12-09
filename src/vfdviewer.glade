@@ -12,8 +12,8 @@
   <object class="GtkAdjustment" id="main_view_main_stacktimeline_yzoom_spinner_adjustment">
     <property name="lower">1</property>
     <property name="upper">100</property>
-    <property name="value">10</property>
-    <property name="step_increment">0.10000000000000001</property>
+    <property name="value">8</property>
+    <property name="step_increment">0.5</property>
     <property name="page_increment">1</property>
   </object>
   <object class="GtkFileFilter" id="open_files_filetype_filter">

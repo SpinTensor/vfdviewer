@@ -5,45 +5,45 @@
 #include "vfd_list.h"
 #include "vgtk_stacktimeline_entry.h"
 
-GtkSpinButton *main_view_main_stacktimeline_xzoom_spinner = NULL;
-GtkSpinButton *main_view_main_stacktimeline_yzoom_spinner = NULL;
-double main_view_main_stacktimeline_xzoom_spinner_value = 1;
-double main_view_main_stacktimeline_yzoom_spinner_value = 1;
+GtkSpinButton *main_stacktimeline_xzoom_spinner = NULL;
+GtkSpinButton *main_stacktimeline_yzoom_spinner = NULL;
+double main_stacktimeline_xzoom_spinner_value = 1;
+double main_stacktimeline_yzoom_spinner_value = 1;
 
 void vgtk_build_main_stacktimeline_spinner(GtkBuilder *builder) {
-   main_view_main_stacktimeline_xzoom_spinner = GTK_SPIN_BUTTON(
-      gtk_builder_get_object(builder, "main_view_main_stacktimeline_xzoom_spinner"));
-   main_view_main_stacktimeline_yzoom_spinner = GTK_SPIN_BUTTON(
-      gtk_builder_get_object(builder, "main_view_main_stacktimeline_yzoom_spinner"));
+   main_stacktimeline_xzoom_spinner = GTK_SPIN_BUTTON(
+      gtk_builder_get_object(builder, "main_stacktimeline_xzoom_spinner"));
+   main_stacktimeline_yzoom_spinner = GTK_SPIN_BUTTON(
+      gtk_builder_get_object(builder, "main_stacktimeline_yzoom_spinner"));
 
-   main_view_main_stacktimeline_xzoom_spinner_value =
-      gtk_spin_button_get_value(main_view_main_stacktimeline_xzoom_spinner);
-   main_view_main_stacktimeline_yzoom_spinner_value =
-      gtk_spin_button_get_value(main_view_main_stacktimeline_yzoom_spinner);
+   main_stacktimeline_xzoom_spinner_value =
+      gtk_spin_button_get_value(main_stacktimeline_xzoom_spinner);
+   main_stacktimeline_yzoom_spinner_value =
+      gtk_spin_button_get_value(main_stacktimeline_yzoom_spinner);
 
    gtk_builder_connect_signals(builder, NULL);
 }
 
 double stacktimeline_xzoom_spinner_get_value() {
-   return main_view_main_stacktimeline_xzoom_spinner_value;
+   return main_stacktimeline_xzoom_spinner_value;
 }
 
 double stacktimeline_yzoom_spinner_get_value() {
-   return main_view_main_stacktimeline_yzoom_spinner_value;
+   return main_stacktimeline_yzoom_spinner_value;
 }
 
 // callback functions
 // if the x-zoom spinner value is changed
-void on_main_view_main_stacktimeline_xzoom_spinner_value_changed(
+void on_main_stacktimeline_xzoom_spinner_value_changed(
    GtkSpinButton *spinbutton, gpointer userdata) {
    (void) spinbutton;
    (void) userdata;
 
    // update the spinner value
-   main_view_main_stacktimeline_xzoom_spinner_value =
-      gtk_spin_button_get_value(main_view_main_stacktimeline_xzoom_spinner);
+   main_stacktimeline_xzoom_spinner_value =
+      gtk_spin_button_get_value(main_stacktimeline_xzoom_spinner);
 
-   double iscale = 1.0/main_view_main_stacktimeline_xzoom_spinner_value;
+   double iscale = 1.0/main_stacktimeline_xzoom_spinner_value;
    // update the drawing border of the timeaxis
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
@@ -59,14 +59,14 @@ void on_main_view_main_stacktimeline_xzoom_spinner_value_changed(
 }
 
 // if the y-zoom spinner value is changed
-void on_main_view_main_stacktimeline_yzoom_spinner_value_changed(
+void on_main_stacktimeline_yzoom_spinner_value_changed(
    GtkSpinButton *spinbutton, gpointer userdata) {
    (void) spinbutton;
    (void) userdata;
 
    // update the spinner value
-   main_view_main_stacktimeline_yzoom_spinner_value =
-      gtk_spin_button_get_value(main_view_main_stacktimeline_yzoom_spinner);
+   main_stacktimeline_yzoom_spinner_value =
+      gtk_spin_button_get_value(main_stacktimeline_yzoom_spinner);
 
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
@@ -78,6 +78,6 @@ void on_main_view_main_stacktimeline_yzoom_spinner_value_changed(
 }
 
 void stacktimeline_xzoom_spinner_set_value(double value) {
-   gtk_spin_button_set_value(main_view_main_stacktimeline_xzoom_spinner, value);
+   gtk_spin_button_set_value(main_stacktimeline_xzoom_spinner, value);
 }
 

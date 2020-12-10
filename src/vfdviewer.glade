@@ -2,14 +2,20 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkAdjustment" id="main_view_main_stacktimeline_xzoom_spinner_adjustment">
+  <object class="GtkAdjustment" id="main_stacktimeline_horizontal_scrollbar_adjustment">
+    <property name="upper">1</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">1</property>
+  </object>
+  <object class="GtkAdjustment" id="main_stacktimeline_xzoom_spinner_adjustment">
     <property name="lower">1</property>
     <property name="upper">10000</property>
-    <property name="value">100</property>
+    <property name="value">1</property>
     <property name="step_increment">0.10000000000000001</property>
     <property name="page_increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="main_view_main_stacktimeline_yzoom_spinner_adjustment">
+  <object class="GtkAdjustment" id="main_stacktimeline_yzoom_spinner_adjustment">
     <property name="lower">1</property>
     <property name="upper">100</property>
     <property name="value">8</property>
@@ -300,28 +306,27 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkBox" id="main_view_main_stacktimeline_box">
+                  <object class="GtkBox" id="main_stacktimeline_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkScrolledWindow" id="main_view_main_stacktimeline_scrolledwindow">
+                      <object class="GtkScrolledWindow" id="main_stacktimeline_scrolledwindow">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">always</property>
-                        <property name="vscrollbar_policy">always</property>
+                        <property name="hscrollbar_policy">never</property>
                         <property name="shadow_type">in</property>
                         <child>
-                          <object class="GtkViewport" id="main_view_main_stacktimeline_viewport">
+                          <object class="GtkViewport" id="main_stacktimeline_viewport">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkBox" id="main_view_main_stacktimeline_masterbox">
+                              <object class="GtkBox" id="main_stacktimeline_masterbox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="spacing">2</property>
                                 <child>
-                                  <object class="GtkBox" id="main_view_main_stacktimeline_timelineinfo_box">
+                                  <object class="GtkBox" id="main_stacktimeline_timelineinfo_box">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="orientation">vertical</property>
@@ -334,6 +339,7 @@
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes"> dummytext</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -362,7 +368,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="main_view_main_stacktimeline_timeline_box">
+                                  <object class="GtkBox" id="main_stacktimeline_timeline_box">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="orientation">vertical</property>
@@ -452,7 +458,19 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButtonBox" id="main_view_main_stacktimeline_buttonbox">
+                      <object class="GtkScrollbar" id="main_stacktimeline_horizontal_scrollbar">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <signal name="value-changed" handler="on_main_stacktimeline_horizontal_scrollbar_value_changed" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButtonBox" id="main_stacktimeline_buttonbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="spacing">4</property>
@@ -475,18 +493,18 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSpinButton" id="main_view_main_stacktimeline_xzoom_spinner">
+                              <object class="GtkSpinButton" id="main_stacktimeline_xzoom_spinner">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="xalign">1</property>
                                 <property name="input_purpose">number</property>
-                                <property name="adjustment">main_view_main_stacktimeline_xzoom_spinner_adjustment</property>
+                                <property name="adjustment">main_stacktimeline_xzoom_spinner_adjustment</property>
                                 <property name="climb_rate">0.10000000000000001</property>
                                 <property name="digits">1</property>
                                 <property name="numeric">True</property>
                                 <property name="update_policy">if-valid</property>
                                 <property name="value">1</property>
-                                <signal name="value-changed" handler="on_main_view_main_stacktimeline_xzoom_spinner_value_changed" swapped="no"/>
+                                <signal name="value-changed" handler="on_main_stacktimeline_xzoom_spinner_value_changed" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -519,14 +537,14 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSpinButton" id="main_view_main_stacktimeline_yzoom_spinner">
+                              <object class="GtkSpinButton" id="main_stacktimeline_yzoom_spinner">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">main_view_main_stacktimeline_yzoom_spinner_adjustment</property>
+                                <property name="adjustment">main_stacktimeline_yzoom_spinner_adjustment</property>
                                 <property name="climb_rate">0.10000000000000001</property>
                                 <property name="digits">1</property>
                                 <property name="numeric">True</property>
-                                <signal name="value-changed" handler="on_main_view_main_stacktimeline_yzoom_spinner_value_changed" swapped="no"/>
+                                <signal name="value-changed" handler="on_main_stacktimeline_yzoom_spinner_value_changed" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -545,7 +563,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>

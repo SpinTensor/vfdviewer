@@ -7,7 +7,7 @@
 #include "vfd_list.h"
 
 #include "vgtk_stacktimeline_entry.h"
-#include "vgtk_main_view_main_stacktimeline.h"
+#include "vgtk_main_stacktimeline.h"
 #include "vgtk_stacktimeline_spinner.h"
 #include "vgtk_surfaces.h"
 #include "vgtk_colors.h"
@@ -65,12 +65,12 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
 
 
    // add the new drawing area as a widget to the stacktimeline timeline box
-   gtk_box_pack_start(main_view_main_stacktimeline_timeline_box,
+   gtk_box_pack_start(main_stacktimeline_timeline_box,
                       GTK_WIDGET(entry->drawing_area),
                       FALSE,
                       FALSE,
                       2);
-   gtk_widget_show_all(GTK_WIDGET(main_view_main_stacktimeline_timeline_box));
+   gtk_widget_show_all(GTK_WIDGET(main_stacktimeline_timeline_box));
 }
 
 void free_stackTimelineEntry(vgtk_stackTimelineEntry_t **stackTimelineEntry_ptr) {

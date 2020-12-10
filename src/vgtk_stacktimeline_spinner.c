@@ -39,22 +39,18 @@ void on_main_view_main_stacktimeline_xzoom_spinner_value_changed(
    (void) spinbutton;
    (void) userdata;
 
-   // save old value to compute proper zoom.
-   double old_value = main_view_main_stacktimeline_xzoom_spinner_value;
    // update the spinner value
    main_view_main_stacktimeline_xzoom_spinner_value =
       gtk_spin_button_get_value(main_view_main_stacktimeline_xzoom_spinner);
 
-   double scale = main_view_main_stacktimeline_xzoom_spinner_value / old_value;
-   double iscale = 1.0/scale;
+   double iscale = 1.0/main_view_main_stacktimeline_xzoom_spinner_value;
    // update the drawing border of the timeaxis
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
    double tcen = 0.5*(tmin + tmax);
-   double deltat = tmax - tmin;
+   double deltat = vfds_max_runtime();
    double ntmin = tcen - 0.5*iscale*deltat;
    double ntmax = tcen + 0.5*iscale*deltat;
-   double ntcen = 0.5*(ntmin + ntmax);
 
    set_tmin_stacktimeline_draw(ntmin);
    set_tmax_stacktimeline_draw(ntmax);

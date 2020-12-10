@@ -5,4 +5,6 @@
 
 void vgtk_build_main_stacktimeline_horizontal_scrollbar(GtkBuilder *builder);
 
+void vgtk_adjust_main_stacktimeline_hscrollbar();
+
 #endif

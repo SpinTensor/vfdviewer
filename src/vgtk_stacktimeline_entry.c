@@ -111,8 +111,7 @@ static gboolean vgtk_stacktimeline_entry_configure_callback(
 
    vgtk_draw_stacktimeline(entry->drawing_area,
                            entry->surface,
-                           vfdtrace,
-                           0.0, vfdtrace->header->runtime);
+                           vfdtrace);
 
    return TRUE;
 }
@@ -138,8 +137,7 @@ static gboolean vgtk_stacktimeline_draw_callback(
 void vgtk_draw_stacktimeline(
    GtkDrawingArea *drawing_area,
    cairo_surface_t *surface,
-   vfd_t *vfdtrace,
-   double tstart, double tend) {
+   vfd_t *vfdtrace) {
 
    // get surface dimensions
    int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
@@ -237,8 +235,7 @@ void vgtk_redraw_all_stacktimelines() {
       vgtk_draw_stacktimeline(
          vfdtrace->vgtk_handles->stackTimelineEntry->drawing_area,
          vfdtrace->vgtk_handles->stackTimelineEntry->surface,
-         vfdtrace,
-         0.0, vfdtrace->header->runtime*1.0e6);
+         vfdtrace);
       vfdtrace = vfdtrace->next;
    }
 }

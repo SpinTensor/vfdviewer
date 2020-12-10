@@ -4,6 +4,7 @@
 #include "vfd_list.h"
 #include "vfd_load.h"
 #include "vgtk_stack_treeview.h"
+#include "vgtk_stacktimeline_hscrollbar.h"
 #include "vgtk_stacktimeline_entry.h"
 
 GtkFileChooser *vgtk_open_file_dialog = NULL;
@@ -40,6 +41,8 @@ void run_open_file_dialog() {
       set_tmin_stacktimeline_draw(0.0);
       set_tmax_stacktimeline_draw(vfds_max_runtime());
       vgtk_redraw_all_stacktimelines();
+
+      vgtk_adjust_main_stacktimeline_hscrollbar();
    }
 
 #ifdef _DEBUG

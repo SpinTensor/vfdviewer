@@ -4,6 +4,7 @@
 
 #include "vgtk_stack_treeview.h"
 #include "vgtk_open_file_dialog.h"
+#include "vgtk_stacktimeline_hscrollbar.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vfd_list.h"
 
@@ -65,5 +66,7 @@ void on_stack_tree_toolbar_remove_button_clicked(GtkToolButton *button) {
 
       // redraw all stacktimelines
       vgtk_redraw_all_stacktimelines();
+
+      vgtk_adjust_main_stacktimeline_hscrollbar();
    }
 }

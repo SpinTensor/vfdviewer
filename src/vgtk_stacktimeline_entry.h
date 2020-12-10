@@ -13,8 +13,7 @@ void free_stackTimelineEntry(vgtk_stackTimelineEntry_t **stackTimelineEntry_ptr)
 void vgtk_draw_stacktimeline(
    GtkDrawingArea *drawing_area,
    cairo_surface_t *surface,
-   vfd_t *vfdtrace,
-   double tstart, double tend);
+   vfd_t *vfdtrace);
 
 void vgtk_set_drawing_area_size(GtkDrawingArea *drawing_area);
 

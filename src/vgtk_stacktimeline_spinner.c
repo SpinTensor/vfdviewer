@@ -3,6 +3,7 @@
 #include "vfd_types.h"
 #include "vgtk_types.h"
 #include "vfd_list.h"
+#include "vgtk_stacktimeline_hscrollbar.h"
 #include "vgtk_stacktimeline_entry.h"
 
 GtkSpinButton *main_stacktimeline_xzoom_spinner = NULL;
@@ -43,19 +44,34 @@ void on_main_stacktimeline_xzoom_spinner_value_changed(
    main_stacktimeline_xzoom_spinner_value =
       gtk_spin_button_get_value(main_stacktimeline_xzoom_spinner);
 
+   double tmin_abs = 0.0;
+   double tmax_abs = vfds_max_runtime();
+
    double iscale = 1.0/main_stacktimeline_xzoom_spinner_value;
    // update the drawing border of the timeaxis
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
    double tcen = 0.5*(tmin + tmax);
-   double deltat = vfds_max_runtime();
-   double ntmin = tcen - 0.5*iscale*deltat;
-   double ntmax = tcen + 0.5*iscale*deltat;
+   double ntmin = tcen - 0.5*iscale*tmax_abs;
+   double ntmax = tcen + 0.5*iscale*tmax_abs;
+
+   // correct for border collisions
+   if (ntmin < tmin_abs) {
+      double diff = tmin_abs - ntmin;
+      ntmin = tmin_abs;
+      ntmax += diff;
+   } else if (ntmax > tmax_abs) {
+      double diff = ntmax - tmax_abs;
+      ntmax = tmax_abs;
+      ntmin -= diff;
+   }
 
    set_tmin_stacktimeline_draw(ntmin);
    set_tmax_stacktimeline_draw(ntmax);
 
    vgtk_redraw_all_stacktimelines();
+
+   vgtk_adjust_main_stacktimeline_hscrollbar();
 }
 
 // if the y-zoom spinner value is changed

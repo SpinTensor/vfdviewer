@@ -12,7 +12,7 @@
     <property name="lower">1</property>
     <property name="upper">10000</property>
     <property name="value">1</property>
-    <property name="step_increment">0.10000000000000001</property>
+    <property name="step_increment">0.5</property>
     <property name="page_increment">10</property>
   </object>
   <object class="GtkAdjustment" id="main_stacktimeline_yzoom_spinner_adjustment">
@@ -339,7 +339,6 @@
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes"> dummytext</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -461,6 +460,9 @@
                       <object class="GtkScrollbar" id="main_stacktimeline_horizontal_scrollbar">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="adjustment">main_stacktimeline_horizontal_scrollbar_adjustment</property>
+                        <property name="lower_stepper_sensitivity">on</property>
+                        <property name="upper_stepper_sensitivity">on</property>
                         <signal name="value-changed" handler="on_main_stacktimeline_horizontal_scrollbar_value_changed" swapped="no"/>
                       </object>
                       <packing>

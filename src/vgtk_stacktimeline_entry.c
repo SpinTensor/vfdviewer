@@ -25,6 +25,14 @@ static gboolean vgtk_stacktimeline_draw_callback(
    GtkWidget *widget,
    cairo_t *cr,
    gpointer data);
+void vgtk_stacktimeline_button_press_callback(
+   GtkWidget *widget,
+   GdkEventButton *event,
+   gpointer data);
+//void vgtk_stacktimeline_motion_notify_callback(
+//   GtkWidget *widget,
+//   GdkEventMotion *event,
+//   gpointer data);
 
 vgtk_stackTimelineEntry_t *new_stackTimelineEntry() {
    vgtk_stackTimelineEntry_t *stackTimelineEntry =
@@ -53,15 +61,20 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
                     "configure-event",
                     G_CALLBACK(vgtk_stacktimeline_entry_configure_callback),
                     (gpointer) vfdtrace);
-// 
-//   /* Event signals */
-//   g_signal_connect (drawing_area, "motion-notify-event",
-//                     G_CALLBACK (motion_notify_event_cb), NULL);
-//   g_signal_connect (drawing_area, "button-press-event",
-//                     G_CALLBACK (button_press_event_cb), NULL);
-//   gtk_widget_set_events (drawing_area, gtk_widget_get_events (drawing_area)
-//                          | GDK_BUTTON_PRESS_MASK
-//                          | GDK_POINTER_MOTION_MASK);
+ 
+   // Define non-standard widget events.
+//   g_signal_connect(entry->drawing_area,
+//                    "motion-notify-event",
+//                    G_CALLBACK(vgtk_stacktimeline_motion_notify_callback),
+//                    (gpointer) vfdtrace);
+   g_signal_connect(entry->drawing_area,
+                    "button-press-event",
+                    G_CALLBACK(vgtk_stacktimeline_button_press_callback),
+                    (gpointer) vfdtrace);
+   gtk_widget_set_events(GTK_WIDGET(entry->drawing_area),
+                         gtk_widget_get_events(GTK_WIDGET(entry->drawing_area))
+                            | GDK_BUTTON_PRESS_MASK);
+//                            | GDK_POINTER_MOTION_MASK);
 
 
    // add the new drawing area as a widget to the stacktimeline timeline box
@@ -166,7 +179,7 @@ void vgtk_draw_stacktimeline(
          // than the max_drawtime is encountered.
          // They are sorted, thus no one should be forgotten.
          break;
-      } else if (vfdtrace->fcalls[ifcall].exit_time > tmin_stacktimeline_draw*1.0e-6) {
+      } else if (vfdtrace->fcalls[ifcall].exit_time > tmin_stacktimeline_draw) {
          // only draw if the exit time falls into the selected window
          double width;
          width = vfdtrace->fcalls[ifcall].exit_time;
@@ -271,3 +284,35 @@ void set_hmax_stacktimeline_draw(int new_height) {
    int tmpheight = vfds_max_maxlevel() + 2;
    hmax_stacktimeline_draw = new_height >= tmpheight ? new_height : tmpheight;
 }
+
+void vgtk_stacktimeline_button_press_callback(
+   GtkWidget *widget,
+   GdkEventButton *event,
+   gpointer data) {
+
+   GtkDrawingArea *drawing_area = GTK_DRAWING_AREA(widget);
+   vfd_t *vfdtrace = (vfd_t*) data;
+
+   // get surface dimensions
+   int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
+   int sfheight = gtk_widget_get_allocated_height(GTK_WIDGET(drawing_area));
+
+   // get maximum level and max runtime to derive image scaling parameters
+   int maxlvl = vfds_max_maxlevel();
+   double maxrt = vfds_max_runtime();
+
+   int level = (int) ((maxlvl+2) * (1.0 - event->y / sfheight));
+   double time;
+   time = event->x / sfwidth;
+   time *= (tmax_stacktimeline_draw - tmin_stacktimeline_draw);
+   time += tmin_stacktimeline_draw;
+
+   printf("button press x=%f y=%f level=%d time=%f\n", event->x, event->y, level, time);
+}
+
+//void vgtk_stacktimeline_motion_notify_callback(
+//   GtkWidget *widget,
+//   GdkEventMotion *event,
+//   gpointer data) {
+//   printf("motion notify\n");
+//}

@@ -65,6 +65,8 @@ void on_stack_tree_toolbar_remove_button_clicked(GtkToolButton *button) {
       free_vfd(&vfd_trace);
 
       // redraw all stacktimelines
+      set_tmin_stacktimeline_draw(0.0);
+      set_tmax_stacktimeline_draw(vfds_max_runtime());
       vgtk_redraw_all_stacktimelines();
 
       vgtk_adjust_main_stacktimeline_hscrollbar();

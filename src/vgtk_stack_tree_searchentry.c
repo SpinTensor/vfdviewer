@@ -53,6 +53,9 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
    vgtk_stack_tree_refilter();
 #ifdef _DEBUG
    struct timespec t_end = current_time();
-   printf("Updated search entry in %10.3es\n", timediff(t_start, t_end));
+   fprintf(stderr, "\n");
+   fprintf(stderr, "Stack tree seach:\n");
+   fprintf(stderr, "   search for \"%s\"\n", search_text);
+   fprintf(stderr, "   updated in %10.3es\n", timediff(t_start, t_end));
 #endif
 }

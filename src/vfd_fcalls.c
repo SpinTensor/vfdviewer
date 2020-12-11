@@ -258,10 +258,9 @@ void free_vfd_fcalls(unsigned int nfcalls, vfd_fcall_t *fcalls) {
 
 void print_current_fcalls(int ilevel, vfd_fcall_t *curr_stack) {
    for (int jlevel=0; jlevel<=ilevel; jlevel++) {
-      printf("Start = %16.6fs, End = %16.6fs, StackID = %d\n",
-             curr_stack[jlevel].entry_time*1.0e-6,
-             curr_stack[jlevel].exit_time*1.0e-6,
-             curr_stack[jlevel].stackID);
+      fprintf(stderr, "Start = %16.6fs, ", curr_stack[jlevel].entry_time);
+      fprintf(stderr, "End = %16.6fs, ", curr_stack[jlevel].exit_time);
+      fprintf(stderr, "StackID = %d\n", curr_stack[jlevel].stackID);
    }
 }
 
@@ -269,9 +268,9 @@ void print_vfd_fcalls(vfd_header_t *header, vfd_fcall_t *fcalls) {
    fprintf(stderr, "VFD calling timeline:\n");
    unsigned int fcallscount = header->fcallscount;
    for (unsigned int ifcall=0; ifcall<fcallscount; ifcall++) {
-      fprintf(stderr, "%16.6lf", fcalls[ifcall].entry_time*1.0e-6);
+      fprintf(stderr, "%16.6lf", fcalls[ifcall].entry_time);
       fprintf(stderr, " Call StackID %d\n", fcalls[ifcall].stackID);
-      fprintf(stderr, "%16.6lf", fcalls[ifcall].exit_time*1.0e-6);
+      fprintf(stderr, "%16.6lf", fcalls[ifcall].exit_time);
       fprintf(stderr, " Exit StackID %d\n", fcalls[ifcall].stackID);
    }
 }

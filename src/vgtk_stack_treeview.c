@@ -222,11 +222,11 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
                                &vfd_stack);
 
 //#ifdef _DEBUG
-//   printf("Updating visibility for %s", vfd_file->filename);
+//   fprintf(stderr, "Updating visibility for %s", vfd_file->filename);
 //   for (int i=1; i<path_depth; i++) {
-//      printf(":%d", path_indices[i]);
+//      fprintf(stderr, ":%d", path_indices[i]);
 //   }
-//   printf("\n");
+//   fprintf(stderr, "\n");
 //#endif
 
    // free the newly created path
@@ -261,11 +261,11 @@ void on_stack_tree_treeview_row_activated(GtkTreeView *tree_view,
          &stack_tree_selected_treepath_depth);
 
 #ifdef _DEBUG
-   printf("Selected treepath: %d", stack_tree_selected_treepath[0]);
+   fprintf(stderr, "Selected treepath: %d", stack_tree_selected_treepath[0]);
    for (int i=1; i<stack_tree_selected_treepath_depth; i++) {
-      printf("->%d", stack_tree_selected_treepath[i]);
+      fprintf(stderr, "->%d", stack_tree_selected_treepath[i]);
    }
-   printf("\n");
+   fprintf(stderr, "\n");
 
    vfd_t *vfd_file = NULL;
    vfd_stack_entry_t *vfd_stack = NULL;
@@ -274,10 +274,10 @@ void on_stack_tree_treeview_row_activated(GtkTreeView *tree_view,
                                &vfd_file,
                                &vfd_stack);
    if (vfd_file != NULL) {
-      printf("selected vfdfile: %s\n", vfd_file->filename);
+      fprintf(stderr, "selected vfdfile: %s\n", vfd_file->filename);
    }
    if (vfd_stack != NULL) {
-      printf("selected Stack: ID=%d, name=%s\n", vfd_stack->ID, vfd_stack->name);
+      fprintf(stderr, "selected Stack: ID=%d, name=%s\n", vfd_stack->ID, vfd_stack->name);
    }
 #endif
 }

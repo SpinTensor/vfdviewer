@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <regex.h>
 
 #include "vfd_types.h"
 #include "vgtk_colors.h"
@@ -146,10 +147,10 @@ vfd_stack_entry_t *indexed_vfd_stack(int nidx, int*idx, vfd_t *vfdtrace) {
 // so that the actual visibility function
 // can simply lookup the value, instead
 // of computing it in exponential time.
-bool update_stack_visible_in_treeview(const char *search_entry,
+bool update_stack_visible_in_treeview(regex_t *regex,
                                       vfd_stack_entry_t *stack) {
    // a stack should only be visible if
-   // 1. its function name contains the search_entry
+   // 1. its function name matches the regular expression
    // OR
    // 2. one of its callees is visible
    stack->visible_in_treeview = false;
@@ -157,14 +158,14 @@ bool update_stack_visible_in_treeview(const char *search_entry,
    // check if any of the callees is visible
    for (int icallee=0; icallee<stack->ncallees; icallee++) {
       bool child_visible =
-         update_stack_visible_in_treeview(search_entry, stack->callees[icallee]);
+         update_stack_visible_in_treeview(regex, stack->callees[icallee]);
       stack->visible_in_treeview = child_visible || stack->visible_in_treeview;
    }
 
    // if it is not determined whether this stack will be visible
    // use lazy evaluation to prevent useless execution of strstr
    stack->visible_in_treeview = stack->visible_in_treeview ||
-      (strstr(stack->name, search_entry) != NULL);
+      (regexec(regex, stack->name, 0, NULL, 0) == 0);
 
    return stack->visible_in_treeview;
 }

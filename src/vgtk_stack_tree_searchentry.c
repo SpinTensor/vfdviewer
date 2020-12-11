@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <regex.h>
 
 #include <gtk/gtk.h>
 
@@ -36,6 +37,15 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
    // update the visibility of the tree with the search entry
    // first get the actual search entry text
    const gchar *search_text = vgtk_stack_tree_searchentry_get_text();
+
+   // compile a regular expression out of this
+   regex_t regex;
+   if (regcomp(&regex, search_text, 0) != 0) {
+      // compilation of regular expression failed
+      // no refiltering of the tree
+      return;
+   }
+
    // now loop over all vfd traces and
    // determine the visibility for all stack entries
    vfd_t *vfdptr = first_vfd();
@@ -45,7 +55,7 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
       // and is selfreferential,
       // thus leading to endless recursion
       vfdptr->stacks[1].visible_in_treeview =
-         update_stack_visible_in_treeview(search_text, vfdptr->stacks+1);
+         update_stack_visible_in_treeview(&regex, vfdptr->stacks+1);
 
       // set the visibility of the init function
       // to the same value as the the main function
@@ -60,7 +70,7 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
    struct timespec t_end = current_time();
    fprintf(stderr, "\n");
    fprintf(stderr, "Stack tree seach:\n");
-   fprintf(stderr, "   search for \"%s\"\n", search_text);
+   fprintf(stderr, "   matching \"%s\"\n", search_text);
    fprintf(stderr, "   updated in %10.3es\n", timediff(t_start, t_end));
 #endif
 }

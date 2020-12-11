@@ -2,6 +2,7 @@
 #define VFD_STACKS_H
 
 #include <stdio.h>
+#include <regex.h>
 
 #include "vfd_types.h"
 
@@ -16,7 +17,7 @@ vfd_stack_entry_t *indexed_vfd_stack(int nidx, int*idx, vfd_t *vfdtrace);
 // so that the actual visibility function
 // can simply lookup the value, instead
 // of computing it in exponential time.
-bool update_stack_visible_in_treeview(const char *search_entry,
+bool update_stack_visible_in_treeview(regex_t *regex,
                                       vfd_stack_entry_t *stack);
 
 void free_vfd_stacks(unsigned int nstacks, vfd_stack_entry_t *stacks);

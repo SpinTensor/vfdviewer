@@ -22,6 +22,14 @@ void store_vfcall(int *ilevel, vfd_fcall_t *curr_stack,
       *maxfcalls = newmaxfcalls;
    }
 
+#ifdef _DEBUG
+   fprintf(stderr, "Storing stacktimeline entry:\n");
+   fprintf(stderr, "   stackID=%d, level=%d, entry_time=%f, exit_time=%f\n",
+           curr_stack[*ilevel].stackID,
+           *ilevel,
+           curr_stack[*ilevel].entry_time,
+           curr_stack[*ilevel].exit_time);
+#endif
    // transfer the top of the current stack to the permanent storage
    (*fcalls)[*nfcalls] = curr_stack[*ilevel];
    (*nfcalls)++;
@@ -68,7 +76,7 @@ void dismantle_stack(int stackID, double t0,
                      int *ilevel, vfd_fcall_t *curr_stack,
                      int *nfcalls, int *maxfcalls, vfd_fcall_t **fcalls) {
 
-   // get the new level and 
+   // get the new level and
    int newilevel = stacks[stackID].level;
    int oldilevel = *ilevel;
 
@@ -91,7 +99,7 @@ void dismantle_stackhead(int stackID, double t1,
                          int *ilevel, vfd_fcall_t *curr_stack,
                          int *nfcalls, int *maxfcalls, vfd_fcall_t **fcalls) {
 
-   // get the new level and 
+   // get the new level and
    int newilevel = stacks[stackID].level;
 
    // fill in the exit time of the sampled function as t1
@@ -117,7 +125,7 @@ int closest_common_stack(vfd_stack_entry_t *stacks,
       stackID2 = stacks[stackID2].callerID;
    }
    // Now reduce the stack IDs in their level
-   // until they are equal. 
+   // until they are equal.
    // They will have found the closest common stack
    while (stackID1 != stackID2) {
       stackID1 = stacks[stackID1].callerID;
@@ -129,9 +137,9 @@ int closest_common_stack(vfd_stack_entry_t *stacks,
 
 void construct_vfd_fcalls(vfd_t *vfd) {
    // create the structure to hold the final callhistory
-   // might need to be reallocated. 
+   // might need to be reallocated.
    int maxfcalls = vfd->header->function_samplecount;
-   // needs to be at least 16 
+   // needs to be at least 16
    maxfcalls = maxfcalls < 16 ? 16 : maxfcalls;
    int nfcalls = 0;
    vfd_fcall_t *fcalls = (vfd_fcall_t*) malloc(maxfcalls*sizeof(vfd_fcall_t));
@@ -174,7 +182,7 @@ void construct_vfd_fcalls(vfd_t *vfd) {
    fprintf(stderr, " %s", sample.kind == fnct_entry ? "call" : "exit");
    fprintf(stderr, " stackID=%d\n", sample.stackID);
    print_current_fcalls(ilevel, curr_stack);
-#endif 
+#endif
 
    // save the last time for time estimates
    double lastsampletime = sample.sampletime*1.0e-6;
@@ -183,7 +191,7 @@ void construct_vfd_fcalls(vfd_t *vfd) {
       // current stack already has entries
       // get the next sample
       sample = stack_samples[isample];
-      // as it is not available estimate the time of events 
+      // as it is not available estimate the time of events
       // since the last sample
       double timeestimate;
       timeestimate = lastsampletime + sample.sampletime*1.0e-6;
@@ -198,7 +206,7 @@ void construct_vfd_fcalls(vfd_t *vfd) {
 
       // dismantle everything above the common stack.
       // if the closest common stack is the sampled stack itself,
-      // or the current stack head is the common stack, 
+      // or the current stack head is the common stack,
       // nothing will be done.
       dismantle_stack(ccstackID, timeestimate,
                       stacks, &ilevel, curr_stack,
@@ -211,7 +219,7 @@ void construct_vfd_fcalls(vfd_t *vfd) {
                     stacks, &ilevel, curr_stack);
 
       if (sample.kind == fnct_exit) {
-         // if the current stack head and the sampel stack are
+         // if the current stack head and the sample stack are
          // different the stack head needs to be constructed
          if (sample.stackID != curr_stack[ilevel].stackID) {
             buildup_stackhead(sample.stackID, timeestimate,

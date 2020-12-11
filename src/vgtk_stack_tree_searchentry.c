@@ -64,8 +64,8 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
       // go to next vfd trace
       vfdptr = vfdptr->next;
    }
-   vgtk_stack_tree_expand();
    vgtk_stack_tree_refilter();
+   vgtk_stack_tree_expand();
 #ifdef _DEBUG
    struct timespec t_end = current_time();
    fprintf(stderr, "\n");

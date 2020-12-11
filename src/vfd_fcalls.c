@@ -234,7 +234,6 @@ void construct_vfd_fcalls(vfd_t *vfd) {
          // identical first deconstruct the stack head before
          // constructing it newly
          if (sample.stackID == curr_stack[ilevel].stackID) {
-            fprintf(stderr, "@FU\n");
             dismantle_stackhead(sample.stackID,
                                 sample.sampletime*1.0e-6,
                                 stacks, &ilevel, curr_stack,

@@ -1,5 +1,5 @@
-AM_CFLAGS  = -I$(top_srcdir)/src/
-AM_LDFLAGS = -L$(top_builddir)/src/.libs -lvfd -lvutils
+AM_CFLAGS  = -I$(top_srcdir)/src/ @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
+AM_LDFLAGS = -L$(top_builddir)/src/.libs -lvfd -lvutils -lvgtk
 
 check_PROGRAMS = construct_fcalls1 \
 		 construct_fcalls2 \

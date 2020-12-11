@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 #include "vfd_types.h"
 #include "vfd_header.h"
@@ -9,6 +10,24 @@
 #include "vfd_samples.h"
 #include "vfd_fcalls.h"
 #include "vfd_sort.h"
+
+bool check_fcall(vfd_fcall_t fcall, int stackID, double entry_time, double exit_time) {
+   static const double deltat = 1.0e-6;
+   bool ok = true;
+   if (!(stackID == fcall.stackID)) {
+      fprintf(stderr, "Expected stackID %d, found %d\n", stackID, fcall.stackID);
+      ok = false;
+   }
+   if (!(fabs(entry_time - fcall.entry_time) < deltat)) {
+      fprintf(stderr, "Expected entry_time %f, found %f\n", entry_time, fcall.entry_time);
+      ok = false;
+   }
+   if (!(fabs(exit_time - fcall.exit_time) < deltat)) {
+      fprintf(stderr, "Expected exit_time %f, found %f\n", exit_time, fcall.exit_time);
+      ok = false;
+   }
+   return ok;
+}
 
 int main(int argc, char **argv) {
 
@@ -163,4 +182,10 @@ int main(int argc, char **argv) {
    // show constructed fcalls
    print_vfd_fcalls(vfd->header, vfd->fcalls);
 
+   check_fcall(vfd->fcalls[0], 1, 0.0,  9.0);
+   check_fcall(vfd->fcalls[1], 2, 0.0,  5.0);
+   check_fcall(vfd->fcalls[2], 0, 0.0, 11.0);
+   check_fcall(vfd->fcalls[3], 3, 3.0,  5.0);
+   check_fcall(vfd->fcalls[4], 4, 5.0,  9.0);
+   check_fcall(vfd->fcalls[5], 5, 7.0,  9.0);
 }

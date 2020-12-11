@@ -299,7 +299,6 @@ void vgtk_stacktimeline_button_press_callback(
 
    // get maximum level and max runtime to derive image scaling parameters
    int maxlvl = vfds_max_maxlevel();
-   double maxrt = vfds_max_runtime();
 
    int level = (int) ((maxlvl+2) * (1.0 - event->y / sfheight));
    double time;
@@ -307,7 +306,40 @@ void vgtk_stacktimeline_button_press_callback(
    time *= (tmax_stacktimeline_draw - tmin_stacktimeline_draw);
    time += tmin_stacktimeline_draw;
 
-   printf("button press x=%f y=%f level=%d time=%f\n", event->x, event->y, level, time);
+#ifdef _DEBUG
+   fprintf(stderr, "\n");
+   fprintf(stderr, "Stacktimeline click:\n");
+   fprintf(stderr, "   x=%f, y=%f\n", event->x, event->y);
+   fprintf(stderr, "   time=%f, level=%d\n", time, level);
+#endif
+
+   // search for the function call in the stacktimeline
+   // that fits the time and level of the click
+   bool found_funtion = false;
+   vfd_fcall_t fcall;
+   unsigned int stackID = -1;
+   for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
+      fcall = vfdtrace->fcalls[ifcall];
+      stackID = vfdtrace->fcalls[ifcall].stackID;
+
+      found_funtion = fcall.entry_time < time &&
+                      fcall.exit_time > time &&
+                      vfdtrace->stacks[stackID].level == level;
+      if (found_funtion) {break;}
+   }
+
+   if (found_funtion) {
+#ifdef _DEBUG
+      fprintf(stderr, "   stackID=%u\n", stackID);
+      fprintf(stderr, "   name=%s\n", vfdtrace->stacks[stackID].name);
+#endif
+
+
+#ifdef _DEBUG
+   } else {
+      fprintf(stderr, "   No matching stack\n");
+#endif
+   }
 }
 
 //void vgtk_stacktimeline_motion_notify_callback(

@@ -6,6 +6,7 @@
 #include "vfd_types.h"
 #include "vfd_list.h"
 
+#include "vgtk_stack_tree_searchentry.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_main_stacktimeline.h"
 #include "vgtk_stacktimeline_spinner.h"
@@ -333,8 +334,7 @@ void vgtk_stacktimeline_button_press_callback(
       fprintf(stderr, "   stackID=%u\n", stackID);
       fprintf(stderr, "   name=%s\n", vfdtrace->stacks[stackID].name);
 #endif
-
-
+      vgtk_stack_tree_searchentry_set_text(vfdtrace->stacks[stackID].name);
 #ifdef _DEBUG
    } else {
       fprintf(stderr, "   No matching stack\n");

@@ -22,6 +22,11 @@ const char *vgtk_stack_tree_searchentry_get_text() {
    return gtk_entry_get_text(GTK_ENTRY(stack_tree_searchentry));
 }
 
+void vgtk_stack_tree_searchentry_set_text(const char *text) {
+    gtk_entry_set_text(GTK_ENTRY(stack_tree_searchentry), text);
+}
+
+
 // Callback function if content of search entry is changed
 void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
 #ifdef _DEBUG

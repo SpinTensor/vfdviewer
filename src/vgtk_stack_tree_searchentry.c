@@ -31,7 +31,7 @@ void vgtk_stack_tree_searchentry_set_text(const char *text) {
 // Callback function if content of search entry is changed
 void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
 #ifdef _DEBUG
-   struct timespec t_start = current_time();
+   struct timespec t1 = current_time();
 #endif
    (void) entry;
    // update the visibility of the tree with the search entry
@@ -64,13 +64,26 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
       // go to next vfd trace
       vfdptr = vfdptr->next;
    }
+#ifdef _DEBUG
+   struct timespec t2 = current_time();
+#endif
+   vgtk_stack_tree_collapse();
+#ifdef _DEBUG
+   struct timespec t3 = current_time();
+#endif
    vgtk_stack_tree_refilter();
+#ifdef _DEBUG
+   struct timespec t4 = current_time();
+#endif
    vgtk_stack_tree_expand();
 #ifdef _DEBUG
-   struct timespec t_end = current_time();
+   struct timespec t5 = current_time();
    fprintf(stderr, "\n");
    fprintf(stderr, "Stack tree seach:\n");
    fprintf(stderr, "   matching \"%s\"\n", search_text);
-   fprintf(stderr, "   updated in %10.3es\n", timediff(t_start, t_end));
+   fprintf(stderr, "   updated stacks in %10.3es\n", timediff(t1, t2));
+   fprintf(stderr, "   collapse tree in  %10.3es\n", timediff(t2, t3));
+   fprintf(stderr, "   filtered tree in  %10.3es\n", timediff(t3, t4));
+   fprintf(stderr, "   expanded tree in  %10.3es\n", timediff(t4, t5));
 #endif
 }

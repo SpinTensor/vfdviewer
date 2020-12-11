@@ -62,7 +62,7 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
                     "configure-event",
                     G_CALLBACK(vgtk_stacktimeline_entry_configure_callback),
                     (gpointer) vfdtrace);
- 
+
    // Define non-standard widget events.
 //   g_signal_connect(entry->drawing_area,
 //                    "motion-notify-event",
@@ -167,7 +167,7 @@ void vgtk_draw_stacktimeline(
 
    // clear surface before painting
    clear_surface(surface);
-   
+
    // loop over all fcalls (TODO: more efficient) and draw
    cairo_t *cr;
    cr = cairo_create (surface);
@@ -200,7 +200,7 @@ void vgtk_draw_stacktimeline(
 
             double height;
             height = scaley;
-   
+
             vgtk_color_t col;
             if (vfdtrace->stacks[stackID].visible_in_treeview) {
                col = vfdtrace->stacks[stackID].drawcolor;
@@ -212,11 +212,11 @@ void vgtk_draw_stacktimeline(
                                   col.green,
                                   col.blue,
                                   col.alpha);
-   
+
             cairo_rectangle(cr,
                             x, y,
                             width, height);
-   
+
             cairo_fill(cr);
          }
       }
@@ -271,7 +271,7 @@ void set_tmin_stacktimeline_draw(double new_time) {
 
 void set_tmax_stacktimeline_draw(double new_time) {
    double tmptime = vfds_max_runtime();
-   tmax_stacktimeline_draw = new_time <= tmptime ? new_time : tmptime; 
+   tmax_stacktimeline_draw = new_time <= tmptime ? new_time : tmptime;
    set_tmax_stacktimeline_draw_label(tmax_stacktimeline_draw);
    set_tcen_stacktimeline_draw_label(
       0.5*(tmin_stacktimeline_draw+tmax_stacktimeline_draw));

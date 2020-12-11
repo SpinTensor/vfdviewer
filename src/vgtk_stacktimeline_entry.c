@@ -291,6 +291,12 @@ void vgtk_stacktimeline_button_press_callback(
    GdkEventButton *event,
    gpointer data) {
 
+   // a static string to hold a temporary version of a function name
+   // with "^" in the beginning and "$" in the end
+   // to enable precise function name matching
+   // with regular expressions
+   static char *precise_name_matcher = NULL;
+
    GtkDrawingArea *drawing_area = GTK_DRAWING_AREA(widget);
    vfd_t *vfdtrace = (vfd_t*) data;
 
@@ -334,7 +340,32 @@ void vgtk_stacktimeline_button_press_callback(
       fprintf(stderr, "   stackID=%u\n", stackID);
       fprintf(stderr, "   name=%s\n", vfdtrace->stacks[stackID].name);
 #endif
-      vgtk_stack_tree_searchentry_set_text(vfdtrace->stacks[stackID].name);
+
+      // prepare the name of the matched function
+      // for exact regular expression matching
+      int namelen = strlen(vfdtrace->stacks[stackID].name);
+      int lnamelen = namelen + 2; // "^","$"
+      // reallocate stringbuffer if required
+      if (precise_name_matcher == NULL) {
+         precise_name_matcher = (char*) malloc((lnamelen+1)*sizeof(char));
+      } else {
+         if ((size_t) lnamelen > strlen(precise_name_matcher)) {
+            free(precise_name_matcher);
+            precise_name_matcher = (char*) malloc((lnamelen+1)*sizeof(char));
+         }
+      }
+      // construct string
+      // first char needs to be "^" to mark beginning of text input for regex
+      precise_name_matcher[0] = '^';
+      // next the function name
+      strcpy(precise_name_matcher+1, vfdtrace->stacks[stackID].name);
+      // append a "$" char to indicate the end of the string input
+      precise_name_matcher[namelen+1] = '$';
+      // don't forget the null terminator
+      precise_name_matcher[namelen+2] = '\0';
+
+      // enter the regular expresion into the searchbar
+      vgtk_stack_tree_searchentry_set_text(precise_name_matcher);
 #ifdef _DEBUG
    } else {
       fprintf(stderr, "   No matching stack\n");

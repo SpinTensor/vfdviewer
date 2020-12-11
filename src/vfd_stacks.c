@@ -81,6 +81,8 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
       vfd_stack_entry_t *stack_ptr = stacks+istack;
       // if the function is precise
       stack_ptr->precise = stack_ptr->name[stack_ptr->namelen-1] == '*';
+      // remove the asterisk from the name
+      stack_ptr->name[stack_ptr->namelen-1] = '\0';
       // if the function should be visible in the treeview
       stack_ptr->visible_in_treeview = true;
       // who called this function?

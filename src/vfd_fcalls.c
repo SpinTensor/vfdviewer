@@ -230,6 +230,16 @@ void construct_vfd_fcalls(vfd_t *vfd) {
                              stacks, &ilevel, curr_stack,
                              &nfcalls, &maxfcalls, &fcalls);
       } else {
+         // if the current stack had and the sample are
+         // identical first deconstruct the stack head before
+         // constructing it newly
+         if (sample.stackID == curr_stack[ilevel].stackID) {
+            fprintf(stderr, "@FU\n");
+            dismantle_stackhead(sample.stackID,
+                                sample.sampletime*1.0e-6,
+                                stacks, &ilevel, curr_stack,
+                                &nfcalls, &maxfcalls, &fcalls);
+         }
          // if the sample is a function entry build new head stack
          buildup_stackhead(sample.stackID, sample.sampletime*1.0e-6,
                            stacks, &ilevel, curr_stack);

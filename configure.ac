@@ -1,7 +1,5 @@
 AC_INIT([vfdviewer], [0.0.1], [felix.uhl@emea.nec.com])
-: ${CFLAGS="-O2"}
-: ${CXXFLAGS="-O2"}
-: ${FCFLAGS="-O2"}
+: ${CFLAGS="-O3"}
 
 # Will be generated
 AC_CONFIG_HEADERS([config.h])

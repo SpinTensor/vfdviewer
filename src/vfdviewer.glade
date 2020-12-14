@@ -42,6 +42,7 @@
   <object class="GtkWindow" id="main_window">
     <property name="width_request">768</property>
     <property name="height_request">512</property>
+    <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="default_width">1024</property>
     <property name="default_height">576</property>
@@ -142,6 +143,10 @@
               <object class="GtkSearchEntry" id="stack_tree_searchentry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">Filter the stacktree for function names.
+Enter text to be searched for, or regular expressions.
+Some special characters in regular expressions need to be escaped
+e.g.: mpi_\|MPI_</property>
                 <property name="primary_icon_name">edit-find-symbolic</property>
                 <property name="primary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">False</property>
@@ -163,6 +168,7 @@
                   <object class="GtkTreeView" id="stack_tree_treeview">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">Stack tree: shows all encountered stacks during program execution. If stacks you expected are not present they might have been skipped due to a corse sample time.</property>
                     <property name="model">stack_tree_treefilter</property>
                     <property name="headers_visible">False</property>
                     <property name="headers_clickable">False</property>
@@ -201,7 +207,7 @@
                   <object class="GtkToolButton" id="stack_tree_toolbar_expand_button">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Expand all stack tree entries</property>
+                    <property name="tooltip_text" translatable="yes">Expand all stack tree entries.</property>
                     <property name="label" translatable="yes">expand</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-go-down</property>
@@ -216,7 +222,7 @@
                   <object class="GtkToolButton" id="stack_tree_toolbar_collapse_button">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Collapse all stacktree entries</property>
+                    <property name="tooltip_text" translatable="yes">Collapse all stack tree entries.</property>
                     <property name="label" translatable="yes">collapse</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-goto-top</property>
@@ -241,7 +247,7 @@
                   <object class="GtkToolButton" id="stack_tree_toolbar_add_button">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">add new vfd trace</property>
+                    <property name="tooltip_text" translatable="yes">Open additional vdf files.</property>
                     <property name="label" translatable="yes">add</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-add</property>
@@ -256,7 +262,7 @@
                   <object class="GtkToolButton" id="stack_tree_toolbar_remove_button">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">remove marked vfd trace</property>
+                    <property name="tooltip_text" translatable="yes">Remove marked vfd trace.</property>
                     <property name="label" translatable="yes">remove</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-remove</property>
@@ -498,6 +504,7 @@
                               <object class="GtkSpinButton" id="main_stacktimeline_xzoom_spinner">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Horizontal (time-axis) zoom factor the stack timeline (1-10000x).</property>
                                 <property name="xalign">1</property>
                                 <property name="input_purpose">number</property>
                                 <property name="adjustment">main_stacktimeline_xzoom_spinner_adjustment</property>
@@ -542,6 +549,7 @@
                               <object class="GtkSpinButton" id="main_stacktimeline_yzoom_spinner">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Vertical (stack-depth-axis) zoom factor the stack timeline (1-100x).</property>
                                 <property name="adjustment">main_stacktimeline_yzoom_spinner_adjustment</property>
                                 <property name="climb_rate">0.10000000000000001</property>
                                 <property name="digits">1</property>

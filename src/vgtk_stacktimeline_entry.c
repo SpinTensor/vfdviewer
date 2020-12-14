@@ -10,6 +10,7 @@
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_main_stacktimeline.h"
 #include "vgtk_stacktimeline_spinner.h"
+#include "vgtk_stacktimeline_checkbuttons.h"
 #include "vgtk_surfaces.h"
 #include "vgtk_colors.h"
 
@@ -172,6 +173,49 @@ void vgtk_draw_stacktimeline(
    cairo_t *cr;
    cr = cairo_create (surface);
 
+   // draw the mpi traffic indicators in the background
+   if (stacktimeline_show_mpi_traffic_checkbutton_checked()) {
+      unsigned int nmsg = vfdtrace->header->message_samplecount;
+      for (unsigned int imsg=0; imsg<nmsg; imsg++) {
+         if (vfdtrace->messages[imsg].dtstart_sec > tmax_stacktimeline_draw) {
+            // only draw until the first message entry larger
+            // than the max_drawtime is encountered.
+            // They are sorted, thus no one should be forgotten.
+            break;
+         } else if (vfdtrace->messages[imsg].dtend_sec > tmin_stacktimeline_draw) {
+            // only draw if the end time falls into the selected window
+            double width;
+            width = vfdtrace->messages[imsg].dtend_sec;
+            width -= vfdtrace->messages[imsg].dtstart_sec;
+            width *= scalex;
+
+            // only draw the message if it is larger than half a pixel
+            if (width >= 0.5) {
+               double x;
+               x = vfdtrace->messages[imsg].dtstart_sec;
+               x -= tmin_stacktimeline_draw;
+               x *= scalex;
+
+               double y = 0.0;
+
+               double height = sfheight;
+
+               cairo_set_source_rgba(cr,
+                                     130.0/255.0,
+                                     160.0/255.0,
+                                     255.0/255.0,
+                                     1.0);
+
+               cairo_rectangle(cr,
+                               x, y,
+                               width, height);
+
+               cairo_fill(cr);
+            }
+         }
+      }
+   }
+
    for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
       unsigned int stackID = vfdtrace->fcalls[ifcall].stackID;
 
@@ -187,8 +231,8 @@ void vgtk_draw_stacktimeline(
          width -= vfdtrace->fcalls[ifcall].entry_time;
          width *= scalex;
 
-         // only draw the function if it is larger than one pixel
-         if (width >= 1.0) {
+         // only draw the function if it is larger than half a pixel
+         if (width >= 0.5) {
             double x;
             x = vfdtrace->fcalls[ifcall].entry_time;
             x -= tmin_stacktimeline_draw;

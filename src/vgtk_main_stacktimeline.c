@@ -2,6 +2,7 @@
 
 #include "vfd_types.h"
 #include "vgtk_stacktimeline_spinner.h"
+#include "vgtk_stacktimeline_checkbuttons.h"
 #include "vgtk_stacktimeline_hscrollbar.h"
 
 GtkScrolledWindow *main_stacktimeline_scrolledwindow = NULL;
@@ -29,6 +30,7 @@ void vgtk_build_main_stacktimeline(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "tmax_stacktimeline_draw_label"));
 
    vgtk_build_main_stacktimeline_spinner(builder);
+   vgtk_build_main_stacktimeline_checkbuttons(builder);
    vgtk_build_main_stacktimeline_horizontal_scrollbar(builder);
 
    gtk_builder_connect_signals(builder, NULL);

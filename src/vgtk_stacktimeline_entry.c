@@ -195,7 +195,7 @@ void vgtk_draw_stacktimeline(
                   width *= scalex;
 
                   // only draw the message if it is larger than half a pixel
-                  if (width >= 0.5) {
+                  if (width > 1.0) {
                      double x;
                      x = vfdtrace->messages[imsg].dtstart_sec;
                      x -= tmin_stacktimeline_draw;
@@ -227,7 +227,7 @@ void vgtk_draw_stacktimeline(
                   width *= scalex;
 
                   // only draw the message if it is larger than half a pixel
-                  if (width >= 0.5) {
+                  if (width > 1.0) {
                      double x;
                      x = vfdtrace->messages[imsg].dtstart_sec;
                      x -= tmin_stacktimeline_draw;

@@ -47,6 +47,7 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_main_stacktimeline.c \
 		     vgtk_stacktimeline_spinner.c \
 		     vgtk_stacktimeline_checkbuttons.c \
+		     vgtk_stacktimeline_cursorpos_labels.c \
 		     vgtk_stacktimeline_hscrollbar.c \
 		     vgtk_stacktimeline_entry.c \
 		     vgtk_colors.c \

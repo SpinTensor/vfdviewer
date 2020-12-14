@@ -11,6 +11,7 @@
 #include "vgtk_main_stacktimeline.h"
 #include "vgtk_stacktimeline_spinner.h"
 #include "vgtk_stacktimeline_checkbuttons.h"
+#include "vgtk_stacktimeline_cursorpos_labels.h"
 #include "vgtk_surfaces.h"
 #include "vgtk_colors.h"
 
@@ -395,6 +396,8 @@ void vgtk_stacktimeline_button_press_callback(
    time = event->x / sfwidth;
    time *= (tmax_stacktimeline_draw - tmin_stacktimeline_draw);
    time += tmin_stacktimeline_draw;
+
+   set_stacktimeline_cursorpos_label(time, level);
 
 #ifdef _DEBUG
    fprintf(stderr, "\n");

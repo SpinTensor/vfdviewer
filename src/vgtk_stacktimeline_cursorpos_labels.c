@@ -5,11 +5,11 @@
 
 #include "vgtk_stacktimeline_entry.h"
 
-GtkLabel *stacktimeline_cursor_pos_label = NULL;
+GtkLabel *stacktimeline_cursorpos_label = NULL;
 
 void vgtk_build_main_stacktimeline_cursorpos_labels(GtkBuilder *builder) {
-   stacktimeline_cursor_pos_label = GTK_LABEL(
-      gtk_builder_get_object(builder, "stacktimeline_cursor_pos_label"));
+   stacktimeline_cursorpos_label = GTK_LABEL(
+      gtk_builder_get_object(builder, "stacktimeline_cursorpos_label"));
 
    gtk_builder_connect_signals(builder, NULL);
 }
@@ -58,5 +58,5 @@ void set_stacktimeline_cursorpos_label(double time, int level) {
             level_digits,
             level);
 
-   gtk_label_set_text(stacktimeline_cursor_pos_label, labelstring);
+   gtk_label_set_text(stacktimeline_cursorpos_label, labelstring);
 }

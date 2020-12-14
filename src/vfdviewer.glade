@@ -607,7 +607,7 @@ stack timeline where MPI send traffic occured.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="cursor_pos_stacktimeline_label">
+                              <object class="GtkLabel" id="stacktimeline_cursorpos_label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Displays the mouse cursor position in the stack timeline

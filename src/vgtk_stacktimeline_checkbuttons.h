@@ -3,9 +3,8 @@
 
 void vgtk_build_main_stacktimeline_checkbuttons(GtkBuilder *builder);
 
-bool stacktimeline_show_mpi_traffic_checkbutton_checked();
+bool stacktimeline_show_mpi_send_checkbutton_checked();
 
-void on_stacktimeline_show_mpi_traffic_checkbutton_toggled(
-   GtkCheckButton *checkbutton, gpointer userdata);
+bool stacktimeline_show_mpi_recv_checkbutton_checked();
 
 #endif 

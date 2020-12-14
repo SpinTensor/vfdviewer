@@ -174,7 +174,10 @@ void vgtk_draw_stacktimeline(
    cr = cairo_create (surface);
 
    // draw the mpi traffic indicators in the background
-   if (stacktimeline_show_mpi_traffic_checkbutton_checked()) {
+   bool show_send = stacktimeline_show_mpi_send_checkbutton_checked();
+   bool show_recv = stacktimeline_show_mpi_recv_checkbutton_checked();
+
+   if (show_send || show_recv) {
       unsigned int nmsg = vfdtrace->header->message_samplecount;
       for (unsigned int imsg=0; imsg<nmsg; imsg++) {
          if (vfdtrace->messages[imsg].dtstart_sec > tmax_stacktimeline_draw) {
@@ -183,34 +186,70 @@ void vgtk_draw_stacktimeline(
             // They are sorted, thus no one should be forgotten.
             break;
          } else if (vfdtrace->messages[imsg].dtend_sec > tmin_stacktimeline_draw) {
-            // only draw if the end time falls into the selected window
-            double width;
-            width = vfdtrace->messages[imsg].dtend_sec;
-            width -= vfdtrace->messages[imsg].dtstart_sec;
-            width *= scalex;
-
-            // only draw the message if it is larger than half a pixel
-            if (width >= 0.5) {
-               double x;
-               x = vfdtrace->messages[imsg].dtstart_sec;
-               x -= tmin_stacktimeline_draw;
-               x *= scalex;
-
-               double y = 0.0;
-
-               double height = sfheight;
-
-               cairo_set_source_rgba(cr,
-                                     130.0/255.0,
-                                     160.0/255.0,
-                                     255.0/255.0,
-                                     1.0);
-
-               cairo_rectangle(cr,
-                               x, y,
-                               width, height);
-
-               cairo_fill(cr);
+            if (vfdtrace->messages[imsg].dir == send) {
+               if (show_send) {
+                  // only draw if the end time falls into the selected window
+                  double width;
+                  width = vfdtrace->messages[imsg].dtend_sec;
+                  width -= vfdtrace->messages[imsg].dtstart_sec;
+                  width *= scalex;
+   
+                  // only draw the message if it is larger than half a pixel
+                  if (width >= 0.5) {
+                     double x;
+                     x = vfdtrace->messages[imsg].dtstart_sec;
+                     x -= tmin_stacktimeline_draw;
+                     x *= scalex;
+   
+                     double y = 0.0;
+   
+                     double height = sfheight;
+   
+                     cairo_set_source_rgba(cr,
+                                           130.0/255.0,
+                                           160.0/255.0,
+                                           255.0/255.0,
+                                           0.5);
+   
+                     cairo_rectangle(cr,
+                                     x, y,
+                                     width, height);
+   
+                     cairo_fill(cr);
+                  } 
+               }
+            } else {
+               if (show_recv) {
+                  // only draw if the end time falls into the selected window
+                  double width;
+                  width = vfdtrace->messages[imsg].dtend_sec;
+                  width -= vfdtrace->messages[imsg].dtstart_sec;
+                  width *= scalex;
+   
+                  // only draw the message if it is larger than half a pixel
+                  if (width >= 0.5) {
+                     double x;
+                     x = vfdtrace->messages[imsg].dtstart_sec;
+                     x -= tmin_stacktimeline_draw;
+                     x *= scalex;
+   
+                     double y = 0.0;
+   
+                     double height = sfheight;
+   
+                     cairo_set_source_rgba(cr,
+                                           255.0/255.0,
+                                           130.0/255.0,
+                                           160.0/255.0,
+                                           0.5);
+   
+                     cairo_rectangle(cr,
+                                     x, y,
+                                     width, height);
+   
+                     cairo_fill(cr);
+                  } 
+               }
             }
          }
       }

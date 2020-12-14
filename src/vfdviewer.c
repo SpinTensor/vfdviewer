@@ -31,7 +31,6 @@ int main(int argc, char **argv) {
       }
    }
 
-   vgtk_show_main_window();
    gtk_main();
    
    return 0;

@@ -39,10 +39,10 @@ void vgtk_build_main_stacktimeline(GtkBuilder *builder) {
 #define LABEL_CONTENT_LEN 16
 void set_tmin_stacktimeline_draw_label(double time) {
    static char labelcontent[LABEL_CONTENT_LEN];
-   
+
    if (tmin_stacktimeline_draw_label != NULL) {
       snprintf(labelcontent,
-               (size_t) (LABEL_CONTENT_LEN - 1), 
+               (size_t) (LABEL_CONTENT_LEN - 1),
                "%4.3les", time);
       gtk_label_set_text(tmin_stacktimeline_draw_label, labelcontent);
    }
@@ -53,7 +53,7 @@ void set_tcen_stacktimeline_draw_label(double time) {
 
    if (tcen_stacktimeline_draw_label != NULL) {
       snprintf(labelcontent,
-               (size_t) (LABEL_CONTENT_LEN - 1), 
+               (size_t) (LABEL_CONTENT_LEN - 1),
                "%4.3les", time);
       gtk_label_set_text(tcen_stacktimeline_draw_label, labelcontent);
    }
@@ -64,7 +64,7 @@ void set_tmax_stacktimeline_draw_label(double time) {
 
    if (tmax_stacktimeline_draw_label != NULL) {
       snprintf(labelcontent,
-               (size_t) (LABEL_CONTENT_LEN - 1), 
+               (size_t) (LABEL_CONTENT_LEN - 1),
                "%4.3les", time);
       gtk_label_set_text(tmax_stacktimeline_draw_label, labelcontent);
    }

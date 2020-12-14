@@ -22,7 +22,7 @@ void shellsort_messages(unsigned int nmsg, vfd_message_t *messages) {
          vfd_message_t tmpmsg = messages[imsg];
          // shift earlier gap-sorted elements up
          // until the correct location for a[i] is found
-         unsigned int jmsg=imsg; 
+         unsigned int jmsg=imsg;
          while (jmsg>=gap && messages[jmsg-gap].tstart_usec > tmpmsg.tstart_usec) {
             messages[jmsg] = messages[jmsg - gap];
             jmsg -= gap;
@@ -50,7 +50,7 @@ void shellsort_fcalls(unsigned int nfcalls, vfd_fcall_t *fcalls) {
          vfd_fcall_t tmpfcall = fcalls[ifcall];
          // shift earlier gap-sorted elements up
          // until the correct location for a[i] is found
-         unsigned int jfcalls=ifcall; 
+         unsigned int jfcalls=ifcall;
          while (jfcalls>=gap && fcalls[jfcalls-gap].entry_time > tmpfcall.entry_time) {
             fcalls[jfcalls] = fcalls[jfcalls - gap];
             jfcalls -= gap;

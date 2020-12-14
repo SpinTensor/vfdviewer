@@ -28,7 +28,7 @@ vfd_t *new_vfd(char *vfdpath) {
    // read the stack information
    read_vfd_stacks(vfd_handle, new_vfd->header,
                    &(new_vfd->stacks), &(new_vfd->maxlevel));
-   // read stack and message samples 
+   // read stack and message samples
    // they are wildly mixed so there is no chance
    // of reading them separately in one go
    read_vfd_samples(vfd_handle, new_vfd->header,
@@ -128,7 +128,7 @@ void prepend_vfd(vfd_t *new_vfd) {
    }
 }
 
-// append vfd trace to the vfd list 
+// append vfd trace to the vfd list
 void append_vfd(vfd_t *new_vfd) {
    if (g_vfd_list == NULL) {
       // list is empty
@@ -219,7 +219,7 @@ vfd_t *last_vfd() {
 vfd_t *nth_vfd(int n) {
    if (g_vfd_list == NULL) {
       return NULL;
-   } 
+   }
    if (n < 0) {
       // start from the back of the list
       n++;

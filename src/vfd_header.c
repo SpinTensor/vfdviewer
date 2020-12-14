@@ -150,7 +150,7 @@ void print_vfd_header(vfd_header_t *vfd_header) {
                                                        vfd_header->nthreads);
    fprintf(stderr, "   Sample interval: %.6le seconds\n", vfd_header->interval*1.0e-6);
    fprintf(stderr, "   Runtime:         %.3lf seconds\n", vfd_header->runtime);
-   fprintf(stderr, "   Samples:         %d\n", vfd_header->function_samplecount + 
+   fprintf(stderr, "   Samples:         %d\n", vfd_header->function_samplecount +
                                                vfd_header->message_samplecount);
    fprintf(stderr, "      Function:     %d\n", vfd_header->function_samplecount);
    fprintf(stderr, "      Messages:     %d\n", vfd_header->message_samplecount);

@@ -153,7 +153,7 @@ vfd_message_t read_vfd_message_sample(FILE *vfd_file) {
    }
    message.dtend_sec = message.tend_usec * 1.0e-6; // from microseconds to seconds
    message.rate_MiBs = message.count * message.typeSize /
-                       (message.dtend_sec - message.dtstart_sec) / 
+                       (message.dtend_sec - message.dtstart_sec) /
                        (1024.0 * 1024.0);
    read_elem = fread(&(message.callingStackID), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {

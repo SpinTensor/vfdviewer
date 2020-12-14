@@ -7,4 +7,4 @@ bool stacktimeline_show_mpi_send_checkbutton_checked();
 
 bool stacktimeline_show_mpi_recv_checkbutton_checked();
 
-#endif 
+#endif

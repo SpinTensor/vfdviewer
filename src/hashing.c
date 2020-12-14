@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 // jenkins 32bit hash implementation
-// Taken unchanged from wikipedia 
+// Taken unchanged from wikipedia
 //    (https://en.wikipedia.org/wiki/Jenkins_hash_function)
-// Published on wikipedia under the creative commons licence 
+// Published on wikipedia under the creative commons licence
 //    (https://creativecommons.org/licenses/by-sa/3.0/)
 uint32_t jenkins_32_hash(size_t length, const uint8_t* key) {
   uint32_t hash = 0;

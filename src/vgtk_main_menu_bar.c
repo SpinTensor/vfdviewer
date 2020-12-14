@@ -12,7 +12,7 @@ void vgtk_build_main_menu_bar(GtkBuilder *builder) {
    gtk_builder_connect_signals(builder, NULL);
 }
 
-// Callback function to be executed if 
+// Callback function to be executed if
 // File->Open is activated
 void on_main_menu_file_menu_open_item_activate(GtkMenuItem *menuitem) {
    (void) menuitem;

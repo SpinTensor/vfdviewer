@@ -13,7 +13,7 @@ vfd_stack_sample_t read_vfd_stack_sample(FILE *vfd_file);
 
 vfd_message_t read_vfd_message_sample(FILE *vfd_file);
 
-void free_vfd_stack_samples(unsigned int nstack_samples, 
+void free_vfd_stack_samples(unsigned int nstack_samples,
                             vfd_stack_sample_t *stack_samples);
 
 void free_vfd_messages(unsigned int nmessages, vfd_message_t *messages);

@@ -15,7 +15,7 @@ GtkBuilder *vgtk_builder = NULL;
 void vgtk_build_user_interface() {
    // _DATADIR is fed in throught -D_DATADIR=...
    // This two layer stringify is needed to make it into
-   // a literal string that can be combined with the 
+   // a literal string that can be combined with the
    // glade filename
 #define STRINGIFY_(x) #x
 #define STRINGIFY(x) STRINGIFY_(x)
@@ -52,6 +52,6 @@ void vgtk_build_user_interface() {
    // build main viewer area
    vgtk_build_main_view(vgtk_builder);
 
-   // connect all callback singals 
+   // connect all callback singals
    gtk_builder_connect_signals(vgtk_builder, NULL);
 }

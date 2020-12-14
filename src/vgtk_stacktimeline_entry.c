@@ -193,30 +193,30 @@ void vgtk_draw_stacktimeline(
                   width = vfdtrace->messages[imsg].dtend_sec;
                   width -= vfdtrace->messages[imsg].dtstart_sec;
                   width *= scalex;
-   
+
                   // only draw the message if it is larger than half a pixel
                   if (width >= 0.5) {
                      double x;
                      x = vfdtrace->messages[imsg].dtstart_sec;
                      x -= tmin_stacktimeline_draw;
                      x *= scalex;
-   
+
                      double y = 0.0;
-   
+
                      double height = sfheight;
-   
+
                      cairo_set_source_rgba(cr,
                                            130.0/255.0,
                                            160.0/255.0,
                                            255.0/255.0,
                                            0.5);
-   
+
                      cairo_rectangle(cr,
                                      x, y,
                                      width, height);
-   
+
                      cairo_fill(cr);
-                  } 
+                  }
                }
             } else {
                if (show_recv) {
@@ -225,30 +225,30 @@ void vgtk_draw_stacktimeline(
                   width = vfdtrace->messages[imsg].dtend_sec;
                   width -= vfdtrace->messages[imsg].dtstart_sec;
                   width *= scalex;
-   
+
                   // only draw the message if it is larger than half a pixel
                   if (width >= 0.5) {
                      double x;
                      x = vfdtrace->messages[imsg].dtstart_sec;
                      x -= tmin_stacktimeline_draw;
                      x *= scalex;
-   
+
                      double y = 0.0;
-   
+
                      double height = sfheight;
-   
+
                      cairo_set_source_rgba(cr,
                                            255.0/255.0,
                                            130.0/255.0,
                                            160.0/255.0,
                                            0.5);
-   
+
                      cairo_rectangle(cr,
                                      x, y,
                                      width, height);
-   
+
                      cairo_fill(cr);
-                  } 
+                  }
                }
             }
          }

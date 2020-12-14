@@ -24,7 +24,7 @@ double timediff(struct timespec time1, struct timespec time2) {
    //convert everything to double
    double d_delta_sec = (double) delta_sec;
    double d_delta_nsec = (double) delta_nsec;
-   
+
    // return the amount of seconds (rescaling the nsec counter on the fly)
    return d_delta_sec + d_delta_nsec * 1.0e-9;
 }

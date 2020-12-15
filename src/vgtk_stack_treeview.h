@@ -19,4 +19,7 @@ vfd_t *get_stack_tree_currently_selected_vfdtrace();
 
 void vgtk_stack_tree_refilter();
 
+// select a filtered tree entry based on a unfiltered index list
+void stack_tree_select_entry_from_indices(int nidx, int *indices);
+
 #endif

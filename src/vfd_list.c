@@ -250,7 +250,7 @@ vfd_t *nth_vfd(int n) {
 
 // returns a pointer to a vfd trace stack entry
 // based on a list of callee indices
-void indexed_vfd_trace_and_stack(int nidx, int*idx,
+void indexed_vfd_trace_and_stack(int nidx, int *idx,
                                  vfd_t **vfdtrace,
                                  vfd_stack_entry_t **vfd_stack) {
 
@@ -264,6 +264,58 @@ void indexed_vfd_trace_and_stack(int nidx, int*idx,
       // ommit the first index as it is not used for the stacks
       *vfd_stack = indexed_vfd_stack(nidx-1, idx+1, *vfdtrace);
    }
+}
+
+// returns a pointer to a list of callee indices
+// based on a vfd trace and the stack
+void indexlist_from_vfd_trace_and_stack(vfd_t *vfdtrace,
+                                        vfd_stack_entry_t *vfd_stack,
+                                        int *nidx_ptr, int **idx_ptr) {
+
+   if (vfd_stack->level == 0) {
+      *nidx_ptr = 0;
+      *idx_ptr = NULL;
+   }
+
+   // get the level of the stack entry
+   // and create the callee indices list
+   int nidx = vfd_stack->level+1;
+   *nidx_ptr = nidx;
+   int *idx = (int*) malloc(nidx*sizeof(int));
+   *idx_ptr = idx;
+   for (int iidx=0; iidx<nidx; iidx++) {
+      idx[iidx] = -1;
+   }
+
+   // fill the list from the back
+   for (int iidx=nidx-1; iidx>0; iidx--) {
+      vfd_stack_entry_t *caller_stack = vfd_stack->caller;
+      // go through all callees of the caller stack and compare the IDs
+      for (int icallee=0; icallee<caller_stack->ncallees; icallee++) {
+         if (caller_stack->callees[icallee]->ID == vfd_stack->ID) {
+            idx[iidx] = icallee;
+            vfd_stack = caller_stack;
+            break;
+         }
+      }
+   }
+
+   // second index is special as it is one less than determined
+   // as the self referential init stack is skipped.
+   idx[1]--;
+
+   // first index corresponds to the vfd trace position in the list
+   vfd_t *tmpvfd = first_vfd();
+   int ivfd = 0;
+   while (tmpvfd != NULL) {
+      if (vfdtrace == tmpvfd) {
+         tmpvfd = NULL;
+      } else {
+         tmpvfd = tmpvfd->next;
+         ivfd++;
+      }
+   }
+   idx[0] = ivfd;
 }
 
 // returns the maximum of all maxlevel

@@ -6,6 +6,7 @@
 #include "vfd_types.h"
 #include "vfd_list.h"
 
+#include "vgtk_stack_treeview.h"
 #include "vgtk_stack_tree_searchentry.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_main_stacktimeline.h"
@@ -420,6 +421,16 @@ void vgtk_stacktimeline_button_press_callback(
                       vfdtrace->stacks[stackID].level == level;
       if (found_funtion) {break;}
    }
+
+   // select the function in stack tree
+   // first get the index list
+   int *indices = NULL;
+   int nidx = 0;
+   indexlist_from_vfd_trace_and_stack(vfdtrace, (vfdtrace->stacks)+stackID,
+                                      &nidx, &indices);
+   // select a the function in the stack tree view
+   stack_tree_select_entry_from_indices(nidx, indices);
+   free(indices);
 
    if (found_funtion) {
 #ifdef _DEBUG

@@ -45,6 +45,12 @@ void indexed_vfd_trace_and_stack(int nidx, int*idx,
                                  vfd_t **vfdtrace,
                                  vfd_stack_entry_t **vfd_stack);
 
+// returns a pointer to a list of callee indices
+// based on a vfd trace and the stack
+void indexlist_from_vfd_trace_and_stack(vfd_t *vfdtrace,
+                                        vfd_stack_entry_t *vfd_stack,
+                                        int *nidx_ptr, int **idx_ptr);
+
 // returns the maximum of all maxlevel
 int vfds_max_maxlevel();
 

@@ -51,8 +51,6 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
                                       stack_tree_treeview_functionnames_text,
                                       "text", 0);
 
-   stack_tree_treeselection = gtk_tree_view_get_selection(stack_tree_treeview);
-
    gtk_tree_model_filter_set_visible_func(
       GTK_TREE_MODEL_FILTER(stack_tree_treefilter),
       (GtkTreeModelFilterVisibleFunc) stack_tree_determine_visibility,
@@ -192,6 +190,23 @@ void vgtk_stack_tree_refilter() {
    vgtk_redraw_all_stacktimelines();
 }
 
+// select a filtered tree entry based on a unfiltered index list
+void stack_tree_select_entry_from_indices(int nidx, int *indices) {
+   // make it into a path for the unfiltered model
+   GtkTreePath *unfiltered_path = gtk_tree_path_new_from_indicesv(indices, nidx);
+
+   // convert the unfiltered path to the filtered one
+   GtkTreePath *filtered_path =
+      gtk_tree_model_filter_convert_child_path_to_path(
+         stack_tree_treefilter, unfiltered_path);
+
+
+   gtk_tree_selection_select_path(stack_tree_treeselection, unfiltered_path);
+
+   gtk_tree_path_free(unfiltered_path);
+   gtk_tree_path_free(filtered_path);
+}
+
 // Function to determine the visibility of stack tree entries
 gboolean stack_tree_determine_visibility(GtkTreeModel *model,
                                          GtkTreeIter *iter,
@@ -261,7 +276,7 @@ void on_stack_tree_treeview_row_activated(GtkTreeView *tree_view,
          &stack_tree_selected_treepath_depth);
 
 #ifdef _DEBUG
-   fprintf(stderr, "Selected treepath: %d", stack_tree_selected_treepath[0]);
+   fprintf(stderr, "Activated treepath: %d", stack_tree_selected_treepath[0]);
    for (int i=1; i<stack_tree_selected_treepath_depth; i++) {
       fprintf(stderr, "->%d", stack_tree_selected_treepath[i]);
    }
@@ -274,10 +289,10 @@ void on_stack_tree_treeview_row_activated(GtkTreeView *tree_view,
                                &vfd_file,
                                &vfd_stack);
    if (vfd_file != NULL) {
-      fprintf(stderr, "selected vfdfile: %s\n", vfd_file->filename);
+      fprintf(stderr, "Activated vfdfile: %s\n", vfd_file->filename);
    }
    if (vfd_stack != NULL) {
-      fprintf(stderr, "selected Stack: ID=%d, name=%s\n", vfd_stack->ID, vfd_stack->name);
+      fprintf(stderr, "Activated Stack: ID=%d, name=%s\n", vfd_stack->ID, vfd_stack->name);
    }
 #endif
 }

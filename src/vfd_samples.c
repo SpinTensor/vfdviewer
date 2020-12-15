@@ -7,15 +7,15 @@
 
 void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
                       vfd_stack_sample_t **stack_samples_ptr,
-                      vfd_message_t **messages_ptr) {
+                      vfd_message_sample_t **message_samples_ptr) {
 
    vfd_stack_sample_t *stack_samples = (vfd_stack_sample_t*)
       malloc(header->function_samplecount*sizeof(vfd_stack_sample_t));
    *stack_samples_ptr = stack_samples;
 
-   vfd_message_t *messages = (vfd_message_t*)
-      malloc(header->message_samplecount*sizeof(vfd_message_t));
-   *messages_ptr = messages;
+   vfd_message_sample_t *message_samples = (vfd_message_sample_t*)
+      malloc(header->message_samplecount*sizeof(vfd_message_sample_t));
+   *message_samples_ptr = message_samples;
 
    unsigned int tot_samplecount;
    tot_samplecount = header->function_samplecount + header->message_samplecount;
@@ -35,7 +35,7 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
       }
 
       vfd_stack_sample_t *fsample_ptr;
-      vfd_message_t *msample_ptr;
+      vfd_message_sample_t *msample_ptr;
 
       switch (sample_kind) {
          case fnct_entry:
@@ -47,7 +47,7 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
             read_function_samplecount++;
             break;
          case mpi_message:
-            msample_ptr = messages + read_message_samplecount;
+            msample_ptr = message_samples + read_message_samplecount;
             *msample_ptr = read_vfd_message_sample(vfd_file);
             read_message_samplecount++;
             break;
@@ -64,7 +64,7 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
       exit(EXIT_FAILURE);
    }
    if (read_message_samplecount != header->message_samplecount) {
-      fprintf(stderr, "Expected %u messages but read %u\n",
+      fprintf(stderr, "Expected %u message samples but read %u\n",
               header->message_samplecount, read_message_samplecount);
       exit(EXIT_FAILURE);
    }
@@ -91,79 +91,79 @@ vfd_stack_sample_t read_vfd_stack_sample(FILE *vfd_file) {
    return stack_sample;
 }
 
-vfd_message_t read_vfd_message_sample(FILE *vfd_file) {
-   vfd_message_t message;
+vfd_message_sample_t read_vfd_message_sample(FILE *vfd_file) {
+   vfd_message_sample_t message_sample;
    size_t read_elem;
-   read_elem = fread(&(message.dir), sizeof(vfd_message_dir_enum), 1, vfd_file);
+   read_elem = fread(&(message_sample.dir), sizeof(vfd_message_dir_enum), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message direction\n"
+      fprintf(stderr, "Error in reading vfd-message sample direction\n"
                       "Expected 1 enum, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(message.rank), sizeof(int), 1, vfd_file);
+   read_elem = fread(&(message_sample.rank), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message rank\n"
+      fprintf(stderr, "Error in reading vfd-message sample rank\n"
                       "Expected 1 int, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(message.typeID), sizeof(int), 1, vfd_file);
+   read_elem = fread(&(message_sample.typeID), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message typeID\n"
+      fprintf(stderr, "Error in reading vfd-message sample typeID\n"
                       "Expected 1 int, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(message.count), sizeof(int), 1, vfd_file);
+   read_elem = fread(&(message_sample.count), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message count\n"
+      fprintf(stderr, "Error in reading vfd-message sample count\n"
                       "Expected 1 int, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(message.typeSize), sizeof(int), 1, vfd_file);
+   read_elem = fread(&(message_sample.typeSize), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message typeSize\n"
+      fprintf(stderr, "Error in reading vfd-message sample typeSize\n"
                       "Expected 1 int, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(message.tag), sizeof(int), 1, vfd_file);
+   read_elem = fread(&(message_sample.tag), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message tag\n"
+      fprintf(stderr, "Error in reading vfd-message sample tag\n"
                       "Expected 1 int, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(message.tstart_usec), sizeof(long long), 1, vfd_file);
+   read_elem = fread(&(message_sample.tstart_usec), sizeof(long long), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message tstart_usec\n"
+      fprintf(stderr, "Error in reading vfd-message sample tstart_usec\n"
                       "Expected 1 long long, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   message.dtstart_sec = message.tstart_usec * 1.0e-6; // from microseconds to seconds
-   read_elem = fread(&(message.tend_usec), sizeof(long long), 1, vfd_file);
+   message_sample.dtstart_sec = message_sample.tstart_usec * 1.0e-6; // from microseconds to seconds
+   read_elem = fread(&(message_sample.tend_usec), sizeof(long long), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message tend_usec\n"
+      fprintf(stderr, "Error in reading vfd-message sample tend_usec\n"
                       "Expected 1 long long, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   message.dtend_sec = message.tend_usec * 1.0e-6; // from microseconds to seconds
-   message.rate_MiBs = message.count * message.typeSize /
-                       (message.dtend_sec - message.dtstart_sec) /
+   message_sample.dtend_sec = message_sample.tend_usec * 1.0e-6; // from microseconds to seconds
+   message_sample.rate_MiBs = message_sample.count * message_sample.typeSize /
+                       (message_sample.dtend_sec - message_sample.dtstart_sec) /
                        (1024.0 * 1024.0);
-   read_elem = fread(&(message.callingStackID), sizeof(int), 1, vfd_file);
+   read_elem = fread(&(message_sample.callingStackID), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-message callingStackID\n"
+      fprintf(stderr, "Error in reading vfd-message sample callingStackID\n"
                       "Expected 1 int, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
 
-   return message;
+   return message_sample;
 }
 
 void free_vfd_stack_samples(unsigned int nstack_samples,
@@ -172,9 +172,10 @@ void free_vfd_stack_samples(unsigned int nstack_samples,
    free(stack_samples);
 }
 
-void free_vfd_messages(unsigned int nmessages, vfd_message_t *messages) {
-   (void) nmessages;
-   free(messages);
+void free_vfd_message_samples(unsigned int nmessage_samples,
+                              vfd_message_sample_t *message_samples) {
+   (void) nmessage_samples;
+   free(message_samples);
 }
 
 void print_vfd_stack_samples(vfd_header_t *header, vfd_stack_sample_t *samples) {
@@ -187,24 +188,25 @@ void print_vfd_stack_samples(vfd_header_t *header, vfd_stack_sample_t *samples) 
    }
 }
 
-void print_vfd_messages(vfd_header_t *header, vfd_message_t *messages) {
+void print_vfd_message_sampless(vfd_header_t *header,
+                                vfd_message_sample_t *message_samples) {
    fprintf(stderr, "VFD message samples:\n");
    unsigned int msgcount = header->message_samplecount;
    for (unsigned int imsg=0; imsg<msgcount; imsg++) {
-      fprintf(stderr, "%16.6f", messages[imsg].dtstart_sec);
-      fprintf(stderr, " %s", messages[imsg].dir ? "recv" : "send");
-      fprintf(stderr, " in stackID %d\n", messages[imsg].callingStackID);
+      fprintf(stderr, "%16.6f", message_samples[imsg].dtstart_sec);
+      fprintf(stderr, " %s", message_samples[imsg].dir ? "recv" : "send");
+      fprintf(stderr, " in stackID %d\n", message_samples[imsg].callingStackID);
 
       fprintf(stderr, "%16s", "");
-      fprintf(stderr, " count=%d", messages[imsg].count);
+      fprintf(stderr, " count=%d", message_samples[imsg].count);
       fprintf(stderr, " type=%s(%iBytes)",
-                      get_mpitype_string_from_idx(messages[imsg].typeID),
-                      messages[imsg].typeSize);
-      fprintf(stderr, " rate=%8.4lf MiB/s", messages[imsg].rate_MiBs);
-      fprintf(stderr, " peer=%d", messages[imsg].rank);
-      fprintf(stderr, " tag=%d\n", messages[imsg].tag);
+                      get_mpitype_string_from_idx(message_samples[imsg].typeID),
+                      message_samples[imsg].typeSize);
+      fprintf(stderr, " rate=%8.4lf MiB/s", message_samples[imsg].rate_MiBs);
+      fprintf(stderr, " peer=%d", message_samples[imsg].rank);
+      fprintf(stderr, " tag=%d\n", message_samples[imsg].tag);
 
-      fprintf(stderr, "%16.6lf", messages[imsg].dtend_sec);
-      fprintf(stderr, " %s end\n", messages[imsg].dir ? "recv" : "send");
+      fprintf(stderr, "%16.6lf", message_samples[imsg].dtend_sec);
+      fprintf(stderr, " %s end\n", message_samples[imsg].dir ? "recv" : "send");
    }
 }

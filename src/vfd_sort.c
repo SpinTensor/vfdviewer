@@ -5,7 +5,8 @@
 #define SHELL_NGAPS 8
 #define SHELL_GAPS {701,30,1132,57,23,10,4,1}
 
-void shellsort_messages(unsigned int nmsg, vfd_message_t *messages) {
+void shellsort_message_samples(unsigned int nmsg,
+                               vfd_message_sample_t *message_samples) {
    // Marcin Ciura's gap sequence
    const int ngaps = SHELL_NGAPS;
    const unsigned int gaps[SHELL_NGAPS] = SHELL_GAPS;
@@ -19,16 +20,16 @@ void shellsort_messages(unsigned int nmsg, vfd_message_t *messages) {
       for (unsigned int imsg=gap; imsg<nmsg; imsg++) {
          // add a[i] to the elements that have been gap sorted
          // save a[i] in temp and make a hole at position i
-         vfd_message_t tmpmsg = messages[imsg];
+         vfd_message_sample_t tmpmsg = message_samples[imsg];
          // shift earlier gap-sorted elements up
          // until the correct location for a[i] is found
          unsigned int jmsg=imsg;
-         while (jmsg>=gap && messages[jmsg-gap].tstart_usec > tmpmsg.tstart_usec) {
-            messages[jmsg] = messages[jmsg - gap];
+         while (jmsg>=gap && message_samples[jmsg-gap].tstart_usec > tmpmsg.tstart_usec) {
+            message_samples[jmsg] = message_samples[jmsg - gap];
             jmsg -= gap;
          }
          // put temp (the original a[i]) in its correct location
-         messages[jmsg] = tmpmsg;
+         message_samples[jmsg] = tmpmsg;
       }
    }
 }

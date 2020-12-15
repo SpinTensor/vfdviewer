@@ -79,7 +79,7 @@ typedef struct {
    double dtend_sec;
    double rate_MiBs;
    int callingStackID;
-} vfd_message_t;
+} vfd_message_sample_t;
 
 typedef struct vfd_type vfd_t;
 struct vfd_type {
@@ -89,7 +89,7 @@ struct vfd_type {
    int maxlevel;
    vfd_stack_sample_t *stack_samples;
    vfd_fcall_t *fcalls;
-   vfd_message_t *messages;
+   vfd_message_sample_t *message_samples;
    vfd_stack_entry_t *stacks;
    vgtk_handles_t *vgtk_handles;
    vfd_t *prev;

@@ -33,12 +33,12 @@ vfd_t *new_vfd(char *vfdpath) {
    // of reading them separately in one go
    read_vfd_samples(vfd_handle, new_vfd->header,
                     &(new_vfd->stack_samples),
-                    &(new_vfd->messages));
+                    &(new_vfd->message_samples));
    fclose(vfd_handle);
 
-   // sort the messages
-   shellsort_messages(new_vfd->header->message_samplecount,
-                      new_vfd->messages);
+   // sort the message samples
+   shellsort_message_samples(new_vfd->header->message_samplecount,
+                             new_vfd->message_samples);
 
    // construct the function calls timeline
    construct_vfd_fcalls(new_vfd);
@@ -71,7 +71,7 @@ vfd_t *new_vfd(char *vfdpath) {
    print_vfd_header(new_vfd->header);
    print_vfd_stacks(new_vfd->header, new_vfd->stacks);
    print_vfd_stack_samples(new_vfd->header, new_vfd->stack_samples);
-   print_vfd_messages(new_vfd->header, new_vfd->messages);
+   print_vfd_message_samples(new_vfd->header, new_vfd->message_samples);
    print_vfd_fcalls(new_vfd->header, new_vfd->fcalls);
 #endif
 
@@ -88,8 +88,8 @@ void free_vfd(vfd_t **vfd_ptr) {
    free_vfd_stacks(vfd->header->stackscount, vfd->stacks);
    vfd->stacks = NULL;
 
-   free_vfd_messages(vfd->header->message_samplecount, vfd->messages);
-   vfd->messages = NULL;
+   free_vfd_message_samples(vfd->header->message_samplecount, vfd->message_samples);
+   vfd->message_samples = NULL;
 
    free_vfd_stack_samples(vfd->header->function_samplecount, vfd->stack_samples);
    vfd->stack_samples = NULL;

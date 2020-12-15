@@ -182,24 +182,24 @@ void vgtk_draw_stacktimeline(
    if (show_send || show_recv) {
       unsigned int nmsg = vfdtrace->header->message_samplecount;
       for (unsigned int imsg=0; imsg<nmsg; imsg++) {
-         if (vfdtrace->messages[imsg].dtstart_sec > tmax_stacktimeline_draw) {
-            // only draw until the first message entry larger
+         if (vfdtrace->message_samples[imsg].dtstart_sec > tmax_stacktimeline_draw) {
+            // only draw until the first message sample larger
             // than the max_drawtime is encountered.
             // They are sorted, thus no one should be forgotten.
             break;
-         } else if (vfdtrace->messages[imsg].dtend_sec > tmin_stacktimeline_draw) {
-            if (vfdtrace->messages[imsg].dir == send) {
+         } else if (vfdtrace->message_samples[imsg].dtend_sec > tmin_stacktimeline_draw) {
+            if (vfdtrace->message_samples[imsg].dir == send) {
                if (show_send) {
                   // only draw if the end time falls into the selected window
                   double width;
-                  width = vfdtrace->messages[imsg].dtend_sec;
-                  width -= vfdtrace->messages[imsg].dtstart_sec;
+                  width = vfdtrace->message_samples[imsg].dtend_sec;
+                  width -= vfdtrace->message_samples[imsg].dtstart_sec;
                   width *= scalex;
 
-                  // only draw the message if it is larger than half a pixel
+                  // only draw the message sample if it is larger than half a pixel
                   if (width > 1.0) {
                      double x;
-                     x = vfdtrace->messages[imsg].dtstart_sec;
+                     x = vfdtrace->message_samples[imsg].dtstart_sec;
                      x -= tmin_stacktimeline_draw;
                      x *= scalex;
 
@@ -224,14 +224,14 @@ void vgtk_draw_stacktimeline(
                if (show_recv) {
                   // only draw if the end time falls into the selected window
                   double width;
-                  width = vfdtrace->messages[imsg].dtend_sec;
-                  width -= vfdtrace->messages[imsg].dtstart_sec;
+                  width = vfdtrace->message_samples[imsg].dtend_sec;
+                  width -= vfdtrace->message_samples[imsg].dtstart_sec;
                   width *= scalex;
 
-                  // only draw the message if it is larger than half a pixel
+                  // only draw the message sample if it is larger than half a pixel
                   if (width > 1.0) {
                      double x;
-                     x = vfdtrace->messages[imsg].dtstart_sec;
+                     x = vfdtrace->message_samples[imsg].dtstart_sec;
                      x -= tmin_stacktimeline_draw;
                      x *= scalex;
 

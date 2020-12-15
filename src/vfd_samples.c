@@ -188,8 +188,8 @@ void print_vfd_stack_samples(vfd_header_t *header, vfd_stack_sample_t *samples) 
    }
 }
 
-void print_vfd_message_sampless(vfd_header_t *header,
-                                vfd_message_sample_t *message_samples) {
+void print_vfd_message_samples(vfd_header_t *header,
+                               vfd_message_sample_t *message_samples) {
    fprintf(stderr, "VFD message samples:\n");
    unsigned int msgcount = header->message_samplecount;
    for (unsigned int imsg=0; imsg<msgcount; imsg++) {

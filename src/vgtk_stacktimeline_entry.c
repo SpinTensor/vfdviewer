@@ -176,87 +176,89 @@ void vgtk_draw_stacktimeline(
    cr = cairo_create (surface);
 
    // draw the mpi traffic indicators in the background
-   bool show_send = stacktimeline_show_mpi_send_checkbutton_checked();
-   bool show_recv = stacktimeline_show_mpi_recv_checkbutton_checked();
+   if (stacktimeline_show_mpi_send_checkbutton_checked()) {
+      cairo_set_source_rgba(cr,
+                            130.0/255.0,
+                            160.0/255.0,
+                            255.0/255.0,
+                            0.5);
 
-   if (show_send || show_recv) {
-      unsigned int nmsg = vfdtrace->header->message_samplecount;
+      unsigned int nmsg = vfdtrace->header->msgregsendcount;
       for (unsigned int imsg=0; imsg<nmsg; imsg++) {
-         if (vfdtrace->message_samples[imsg].dtstart_sec > tmax_stacktimeline_draw) {
-            // only draw until the first message sample larger
+         if (vfdtrace->msgregs_send[imsg].entry_time > tmax_stacktimeline_draw) {
+            // only draw until the first message region later
             // than the max_drawtime is encountered.
             // They are sorted, thus no one should be forgotten.
             break;
-         } else if (vfdtrace->message_samples[imsg].dtend_sec > tmin_stacktimeline_draw) {
-            if (vfdtrace->message_samples[imsg].dir == send) {
-               if (show_send) {
-                  // only draw if the end time falls into the selected window
-                  double width;
-                  width = vfdtrace->message_samples[imsg].dtend_sec;
-                  width -= vfdtrace->message_samples[imsg].dtstart_sec;
-                  width *= scalex;
+         } else if (vfdtrace->msgregs_send[imsg].exit_time > tmin_stacktimeline_draw) {
+            // only draw if the end time falls into the selected window
+            double width;
+            width = vfdtrace->msgregs_send[imsg].exit_time;
+            width -= vfdtrace->msgregs_send[imsg].entry_time;
+            width *= scalex;
 
-                  // only draw the message sample if it is larger than half a pixel
-                  if (width > 1.0) {
-                     double x;
-                     x = vfdtrace->message_samples[imsg].dtstart_sec;
-                     x -= tmin_stacktimeline_draw;
-                     x *= scalex;
+            // only draw the message sample if it is larger than half a pixel
+            if (width > 1.0) {
+               double x;
+               x = vfdtrace->msgregs_send[imsg].entry_time;
+               x -= tmin_stacktimeline_draw;
+               x *= scalex;
 
-                     double y = 0.0;
+               double y = 0.0;
 
-                     double height = sfheight;
+               double height = sfheight;
 
-                     cairo_set_source_rgba(cr,
-                                           130.0/255.0,
-                                           160.0/255.0,
-                                           255.0/255.0,
-                                           0.5);
+               cairo_rectangle(cr,
+                               x, y,
+                               width, height);
 
-                     cairo_rectangle(cr,
-                                     x, y,
-                                     width, height);
+               cairo_fill(cr);
+            }
+         }
+      }
+   }
+   if (stacktimeline_show_mpi_recv_checkbutton_checked()) {
+      cairo_set_source_rgba(cr,
+                            255.0/255.0,
+                            130.0/255.0,
+                            160.0/255.0,
+                            0.5);
+      unsigned int nmsg = vfdtrace->header->msgregrecvcount;
+      for (unsigned int imsg=0; imsg<nmsg; imsg++) {
+         if (vfdtrace->msgregs_recv[imsg].entry_time > tmax_stacktimeline_draw) {
+            // only draw until the first message region later
+            // than the max_drawtime is encountered.
+            // They are sorted, thus no one should be forgotten.
+            break;
+         } else if (vfdtrace->msgregs_recv[imsg].exit_time > tmin_stacktimeline_draw) {
+            // only draw if the end time falls into the selected window
+            double width;
+            width = vfdtrace->msgregs_recv[imsg].exit_time;
+            width -= vfdtrace->msgregs_recv[imsg].entry_time;
+            width *= scalex;
 
-                     cairo_fill(cr);
-                  }
-               }
-            } else {
-               if (show_recv) {
-                  // only draw if the end time falls into the selected window
-                  double width;
-                  width = vfdtrace->message_samples[imsg].dtend_sec;
-                  width -= vfdtrace->message_samples[imsg].dtstart_sec;
-                  width *= scalex;
+            // only draw the message sample if it is larger than half a pixel
+            if (width > 1.0) {
+               double x;
+               x = vfdtrace->msgregs_recv[imsg].entry_time;
+               x -= tmin_stacktimeline_draw;
+               x *= scalex;
 
-                  // only draw the message sample if it is larger than half a pixel
-                  if (width > 1.0) {
-                     double x;
-                     x = vfdtrace->message_samples[imsg].dtstart_sec;
-                     x -= tmin_stacktimeline_draw;
-                     x *= scalex;
+               double y = 0.0;
 
-                     double y = 0.0;
+               double height = sfheight;
 
-                     double height = sfheight;
+               cairo_rectangle(cr,
+                               x, y,
+                               width, height);
 
-                     cairo_set_source_rgba(cr,
-                                           255.0/255.0,
-                                           130.0/255.0,
-                                           160.0/255.0,
-                                           0.5);
-
-                     cairo_rectangle(cr,
-                                     x, y,
-                                     width, height);
-
-                     cairo_fill(cr);
-                  }
-               }
+               cairo_fill(cr);
             }
          }
       }
    }
 
+   // draw message samples
    for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
       unsigned int stackID = vfdtrace->fcalls[ifcall].stackID;
 

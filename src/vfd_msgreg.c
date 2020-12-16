@@ -83,10 +83,10 @@ void construct_vfd_msgregs(vfd_t *vfd) {
          cur_msgreg->exit_time = msgsample->dtend_sec;
       } else {
          // check if the sample overlaps with the current message region
-         // or if they are closer than 10usec
+         // or if they are closer than 0.1msec
          if (msgsample->dtstart_sec < cur_msgreg->exit_time ||
             // if so fuse them into one. 
-             fabs(msgsample->dtstart_sec-cur_msgreg->exit_time) < 1.0e-5) {
+             fabs(msgsample->dtstart_sec-cur_msgreg->exit_time) <= 1.0e-4) {
             cur_msgreg->exit_time = msgsample->dtend_sec;
          } else {
             // no overlap and no fuse potential

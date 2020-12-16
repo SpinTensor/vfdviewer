@@ -27,6 +27,7 @@ libvfd_la_SOURCES = vfd_header.c \
 		    vfd_stacks.c \
 		    vfd_samples.c \
 		    vfd_fcalls.c \
+		    vfd_msgreg.c \
 		    vfd_sort.c \
 		    vfd_list.c \
 		    vfd_load.c

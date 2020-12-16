@@ -7,6 +7,7 @@
 #include "vfd_stacks.h"
 #include "vfd_samples.h"
 #include "vfd_fcalls.h"
+#include "vfd_msgreg.h"
 #include "vfd_sort.h"
 
 #include "vgtk_handles.h"
@@ -40,6 +41,9 @@ vfd_t *new_vfd(char *vfdpath) {
    shellsort_message_samples(new_vfd->header->message_samplecount,
                              new_vfd->message_samples);
 
+   // construct message regions
+   construct_vfd_msgregs(new_vfd);
+
    // construct the function calls timeline
    construct_vfd_fcalls(new_vfd);
 
@@ -72,6 +76,9 @@ vfd_t *new_vfd(char *vfdpath) {
    print_vfd_stacks(new_vfd->header, new_vfd->stacks);
    print_vfd_stack_samples(new_vfd->header, new_vfd->stack_samples);
    print_vfd_message_samples(new_vfd->header, new_vfd->message_samples);
+   print_vfd_msgregs(new_vfd->header,
+                     new_vfd->msgregs_send,
+                     new_vfd->msgregs_recv);
    print_vfd_fcalls(new_vfd->header, new_vfd->fcalls);
 #endif
 
@@ -90,6 +97,11 @@ void free_vfd(vfd_t **vfd_ptr) {
 
    free_vfd_message_samples(vfd->header->message_samplecount, vfd->message_samples);
    vfd->message_samples = NULL;
+
+   free_vfd_msgregs(vfd->header->msgregsendcount, vfd->msgregs_send);
+   vfd->msgregs_send = NULL;
+   free_vfd_msgregs(vfd->header->msgregrecvcount, vfd->msgregs_recv);
+   vfd->msgregs_recv = NULL;
 
    free_vfd_stack_samples(vfd->header->function_samplecount, vfd->stack_samples);
    vfd->stack_samples = NULL;

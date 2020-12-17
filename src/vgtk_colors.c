@@ -293,23 +293,17 @@ vgtk_color_t vgtk_color_gradient(double value) {
 
    // Determine the two colors for mixing
    double scalevalue = value*(NCOLORS-1);
-   fprintf(stderr, "value: %lf -> %lf\n", value, scalevalue);
    int lidx = scalevalue;
-   fprintf(stderr, "lidx: %d\n", lidx);
    if (lidx == NCOLORS-1) {
       lidx--;
-      fprintf(stderr, "   (lidx: %d)\n", lidx);
    }
    int hidx = lidx + 1;
-   fprintf(stderr, "hidx: %d\n", hidx);
 
    double s = scalevalue - (double) lidx;
-   fprintf(stderr, "s = %lf, (1-s) = %lf\n", s, 1.0-s);
    vgtk_color_t color;
    color.red   = s*colors[hidx][0] + (1.0-s)*colors[lidx][0];
    color.green = s*colors[hidx][1] + (1.0-s)*colors[lidx][1];
    color.blue  = s*colors[hidx][2] + (1.0-s)*colors[lidx][2];
-   fprintf(stderr, "rgb = (%lf, %lf, %lf)\n\n", color.red, color.green, color.blue);
    color.alpha = 1.0;
 
    return color;

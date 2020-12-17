@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "vgtk_colors.h"
 
 #define CNORM 255.0
@@ -266,5 +268,53 @@ vgtk_color_t vgtk_color2grayscale(vgtk_color_t color) {
    greyscale.alpha = color.alpha;
    return greyscale;
 }
+
+#define NCOLORS 11
+const int vgtk_color_gradient_steps = NCOLORS;
+
+vgtk_color_t vgtk_color_gradient(double value) {
+   static const double colors[NCOLORS][3] = {
+      {254.0/CNORM,  39.0/CNORM,  18.0/CNORM},
+      {253.0/CNORM,  83.0/CNORM,   8.0/CNORM},
+      {251.0/CNORM, 153.0/CNORM,   2.0/CNORM},
+      {250.0/CNORM, 188.0/CNORM,   2.0/CNORM},
+      {254.0/CNORM, 254.0/CNORM,  51.0/CNORM},
+      {208.0/CNORM, 234.0/CNORM,  43.0/CNORM},
+      {102.0/CNORM, 176.0/CNORM,  50.0/CNORM},
+      {  3.0/CNORM, 146.0/CNORM, 206.0/CNORM},
+      {  2.0/CNORM,  71.0/CNORM, 254.0/CNORM},
+      { 61.0/CNORM,   1.0/CNORM, 164.0/CNORM},
+      {134.0/CNORM,   1.0/CNORM, 175.0/CNORM}
+   };
+
+   // ensure correct values for value
+   value = (value < 1.0) ? value : 1.0;
+   value = (value > 0.0) ? value : 0.0;
+
+   // Determine the two colors for mixing
+   double scalevalue = value*(NCOLORS-1);
+   fprintf(stderr, "value: %lf -> %lf\n", value, scalevalue);
+   int lidx = scalevalue;
+   fprintf(stderr, "lidx: %d\n", lidx);
+   if (lidx == NCOLORS-1) {
+      lidx--;
+      fprintf(stderr, "   (lidx: %d)\n", lidx);
+   }
+   int hidx = lidx + 1;
+   fprintf(stderr, "hidx: %d\n", hidx);
+
+   double s = scalevalue - (double) lidx;
+   fprintf(stderr, "s = %lf, (1-s) = %lf\n", s, 1.0-s);
+   vgtk_color_t color;
+   color.red   = s*colors[hidx][0] + (1.0-s)*colors[lidx][0];
+   color.green = s*colors[hidx][1] + (1.0-s)*colors[lidx][1];
+   color.blue  = s*colors[hidx][2] + (1.0-s)*colors[lidx][2];
+   fprintf(stderr, "rgb = (%lf, %lf, %lf)\n\n", color.red, color.green, color.blue);
+   color.alpha = 1.0;
+
+   return color;
+#undef NCOLORS
+}
+
 
 #undef CNORM

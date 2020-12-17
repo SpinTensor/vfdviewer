@@ -15,4 +15,7 @@ extern vgtk_color_t vgtk_color_list[];
 
 vgtk_color_t vgtk_color2grayscale(vgtk_color_t color);
 
+extern const int vgtk_color_gradient_steps;
+vgtk_color_t vgtk_color_gradient(double value);
+
 #endif

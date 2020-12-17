@@ -650,13 +650,11 @@ l=0</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">2</property>
                     <child>
-                      <object class="GtkGrid">
+                      <object class="GtkGrid" id="main_comm_matrix_grid">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkDrawingArea" id="comm_matrix_matrix_drawing_area">
-                            <property name="width_request">512</property>
-                            <property name="height_request">512</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                           </object>
@@ -742,12 +740,14 @@ l=0</property>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="spacing">2</property>
                             <child>
-                              <object class="GtkDrawingArea">
+                              <object class="GtkDrawingArea" id="comm_matrix_bw_legend_drawing_area">
                                 <property name="width_request">32</property>
-                                <property name="height_request">512</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <signal name="configure-event" handler="on_comm_matrix_bw_legend_drawing_area_configure_event" swapped="no"/>
+                                <signal name="draw" handler="on_comm_matrix_bw_legend_drawing_area_draw" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -762,10 +762,10 @@ l=0</property>
                                 <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="comm_matrix_bw_legend_max_label">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">label</property>
+                                    <property name="label" translatable="yes">1.234e-12</property>
                                     <property name="yalign">0</property>
                                   </object>
                                   <packing>
@@ -775,10 +775,10 @@ l=0</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="comm_matrix_bw_legend_mid_label">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">label</property>
+                                    <property name="label" translatable="yes">1.234e-12</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -787,10 +787,10 @@ l=0</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="comm_matrix_bw_legend_min_label">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">0.0</property>
+                                    <property name="label" translatable="yes">1.234e-12</property>
                                     <property name="yalign">1</property>
                                   </object>
                                   <packing>
@@ -829,13 +829,10 @@ l=0</property>
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="expand">True</property>
+                        <property name="fill">False</property>
                         <property name="position">0</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                   </object>
                   <packing>

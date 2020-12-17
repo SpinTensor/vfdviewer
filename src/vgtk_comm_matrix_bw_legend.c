@@ -113,8 +113,6 @@ gboolean on_comm_matrix_bw_legend_drawing_area_configure_event(
       gtk_widget_get_allocated_width(widget),
       gtk_widget_get_allocated_height(widget));
 
-   //vgtk_draw_comm_matrix_bw_legend();
-//printf("asdf\n");
    return TRUE;
 }
 

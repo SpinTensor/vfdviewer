@@ -18,4 +18,9 @@ typedef enum {
    cm_min
 } comm_matrix_mode_t;
 
+typedef enum {
+   cm_bw,
+   cm_size,
+   cm_count
+} comm_matrix_unit_t;
 #endif

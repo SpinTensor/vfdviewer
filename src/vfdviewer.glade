@@ -690,7 +690,7 @@ l=0</property>
                                         <property name="orientation">vertical</property>
                                         <property name="homogeneous">True</property>
                                         <child>
-                                          <object class="GtkLabel" id="comm_matrix_rec_maxproc_label">
+                                          <object class="GtkLabel" id="comm_matrix_recv_maxproc_label">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="label" translatable="yes">0</property>
@@ -807,12 +807,12 @@ l=0</property>
                                 <property name="can_focus">False</property>
                                 <property name="spacing">2</property>
                                 <child>
-                                  <object class="GtkDrawingArea" id="comm_matrix_bw_legend_drawing_area">
+                                  <object class="GtkDrawingArea" id="comm_matrix_legend_drawing_area">
                                     <property name="width_request">32</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <signal name="configure-event" handler="on_comm_matrix_bw_legend_drawing_area_configure_event" swapped="no"/>
-                                    <signal name="draw" handler="on_comm_matrix_bw_legend_drawing_area_draw" swapped="no"/>
+                                    <signal name="configure-event" handler="on_comm_matrix_legend_drawing_area_configure_event" swapped="no"/>
+                                    <signal name="draw" handler="on_comm_matrix_legend_drawing_area_draw" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">True</property>
@@ -827,7 +827,7 @@ l=0</property>
                                     <property name="orientation">vertical</property>
                                     <property name="homogeneous">True</property>
                                     <child>
-                                      <object class="GtkLabel" id="comm_matrix_bw_legend_max_label">
+                                      <object class="GtkLabel" id="comm_matrix_legend_max_label">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label" translatable="yes">1.234e-12</property>
@@ -840,7 +840,7 @@ l=0</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="comm_matrix_bw_legend_mid_label">
+                                      <object class="GtkLabel" id="comm_matrix_legend_mid_label">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label" translatable="yes">1.234e-12</property>
@@ -852,7 +852,7 @@ l=0</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="comm_matrix_bw_legend_min_label">
+                                      <object class="GtkLabel" id="comm_matrix_legend_min_label">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label" translatable="yes">1.234e-12</property>
@@ -878,7 +878,7 @@ l=0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="comm_matrix_legend_unit_label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">MiB/s</property>
@@ -904,19 +904,22 @@ l=0</property>
                             <property name="can_focus">False</property>
                             <property name="layout_style">start</property>
                             <child>
-                              <object class="GtkBox" id="comm_matrix_bw_metric_select_box">
+                              <object class="GtkBox" id="comm_matrix_unit_select_box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkRadioButton" id="comm_matrix_bw_metric_select_maxbw">
-                                    <property name="label" translatable="yes">max.BW</property>
+                                  <object class="GtkRadioButton" id="comm_matrix_unit_select_bw">
+                                    <property name="label" translatable="yes">bandwidth</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">display the bandwidth in MiB/s.
+(Message size / (t_end - t_start))</property>
+                                    <property name="halign">start</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
-                                    <signal name="toggled" handler="on_comm_matrix_bw_metric_select_maxbw_toggled" swapped="no"/>
+                                    <signal name="toggled" handler="on_comm_matrix_unit_select_bw_toggled" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -925,15 +928,17 @@ l=0</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="comm_matrix_bw_metric_select_avgbw">
-                                    <property name="label" translatable="yes">avg. BW</property>
+                                  <object class="GtkRadioButton" id="comm_matrix_unit_select_size">
+                                    <property name="label" translatable="yes">msg. size</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">display the message sizes in MiB</property>
+                                    <property name="halign">start</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
-                                    <property name="group">comm_matrix_bw_metric_select_maxbw</property>
-                                    <signal name="toggled" handler="on_comm_matrix_bw_metric_select_avgbw_toggled" swapped="no"/>
+                                    <property name="group">comm_matrix_unit_select_bw</property>
+                                    <signal name="toggled" handler="on_comm_matrix_unit_select_size_toggled" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -942,15 +947,17 @@ l=0</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkRadioButton" id="comm_matrix_bw_metric_select_minbw">
-                                    <property name="label" translatable="yes">min. BW</property>
+                                  <object class="GtkRadioButton" id="comm_matrix_unit_select_count">
+                                    <property name="label" translatable="yes">msg. count</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">display the amount of messages.</property>
+                                    <property name="halign">start</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
-                                    <property name="group">comm_matrix_bw_metric_select_maxbw</property>
-                                    <signal name="toggled" handler="on_comm_matrix_bw_metric_select_minbw_toggled" swapped="no"/>
+                                    <property name="group">comm_matrix_unit_select_bw</property>
+                                    <signal name="toggled" handler="on_comm_matrix_unit_select_count_toggled" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -966,10 +973,73 @@ l=0</property>
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
+                              <object class="GtkBox" id="comm_matrix_metric_select_box">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkRadioButton" id="comm_matrix_metric_select_max">
+                                    <property name="label" translatable="yes">maximum</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">display the maximum value from all recorded messages.</property>
+                                    <property name="halign">start</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="on_comm_matrix_metric_select_max_toggled" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="comm_matrix_metric_select_avg">
+                                    <property name="label" translatable="yes">average</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">display the average value from all recorded messages.
+For message count this option is undefined.</property>
+                                    <property name="halign">start</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">comm_matrix_metric_select_max</property>
+                                    <signal name="toggled" handler="on_comm_matrix_metric_select_avg_toggled" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkRadioButton" id="comm_matrix_metric_select_min">
+                                    <property name="label" translatable="yes">minimum</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">display the minimum value from all recorded messages.</property>
+                                    <property name="halign">start</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">True</property>
+                                    <property name="group">comm_matrix_metric_select_max</property>
+                                    <signal name="toggled" handler="on_comm_matrix_metric_select_min_toggled" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                           </object>
                           <packing>

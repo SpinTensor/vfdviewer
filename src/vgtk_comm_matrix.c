@@ -8,7 +8,7 @@
 #include "vgtk_colors.h"
 #include "vgtk_comm_matrix_grid.h"
 #include "vgtk_comm_matrix_mode_switcher.h"
-#include "vgtk_comm_matrix_bw_legend.h"
+#include "vgtk_comm_matrix_legend.h"
 #include "vgtk_stacktimeline_entry.h"
 
 GtkDrawingArea *comm_matrix_matrix_drawing_area = NULL;

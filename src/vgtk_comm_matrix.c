@@ -12,6 +12,7 @@
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_comm_matrix_update_bw.h"
 #include "vgtk_comm_matrix_update_size.h"
+#include "vgtk_comm_matrix_update_count.h"
 
 GtkDrawingArea *comm_matrix_matrix_drawing_area = NULL;
 cairo_surface_t *comm_matrix_matrix_drawing_surface = NULL;
@@ -72,6 +73,7 @@ void comm_matrix_update() {
          }
          break;
       case cm_count:
+         comm_matrix_update_count(comm_matrix_nprocs, comm_matrix_data);
          break;
    }
 

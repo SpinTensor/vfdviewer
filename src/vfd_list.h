@@ -57,6 +57,9 @@ int vfds_max_maxlevel();
 // returns the maximum of all runtimes
 double vfds_max_runtime();
 
+// returns the number of processes for the loaded vfd-files
+int vfds_nprocs();
+
 // remove every element in the vfd trace list
 // and free them
 void remove_and_free_vfd_list();

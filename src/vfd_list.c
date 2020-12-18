@@ -354,6 +354,17 @@ double vfds_max_runtime() {
    return maxrt;
 }
 
+// returns the number of processes for the loaded vfd-files
+int vfds_nprocs() {
+   vfd_t *vfd = first_vfd();
+   if (vfd == NULL) {
+      return 0;
+   } else {
+      return vfd->header->nprocs;
+   }
+}
+
+
 // remove every element in the vfd trace list
 // and free them
 void remove_and_free_vfd_list() {

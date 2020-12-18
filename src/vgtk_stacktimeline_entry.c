@@ -13,6 +13,7 @@
 #include "vgtk_stacktimeline_spinner.h"
 #include "vgtk_stacktimeline_checkbuttons.h"
 #include "vgtk_stacktimeline_cursorpos_labels.h"
+#include "vgtk_comm_matrix.h"
 #include "vgtk_surfaces.h"
 #include "vgtk_colors.h"
 
@@ -354,6 +355,11 @@ void set_tmin_stacktimeline_draw(double new_time) {
    set_tmin_stacktimeline_draw_label(tmin_stacktimeline_draw);
    set_tcen_stacktimeline_draw_label(
       0.5*(tmin_stacktimeline_draw+tmax_stacktimeline_draw));
+
+   // now the communication matrix needs to be redrawn.
+   // However, it is more efficient to invalidate the data
+   // and draw once it is displayed
+   comm_matrix_invalidate();
 }
 
 void set_tmax_stacktimeline_draw(double new_time) {
@@ -362,6 +368,11 @@ void set_tmax_stacktimeline_draw(double new_time) {
    set_tmax_stacktimeline_draw_label(tmax_stacktimeline_draw);
    set_tcen_stacktimeline_draw_label(
       0.5*(tmin_stacktimeline_draw+tmax_stacktimeline_draw));
+
+   // now the communication matrix needs to be redrawn.
+   // However, it is more efficient to invalidate the data
+   // and draw once it is displayed
+   comm_matrix_invalidate();
 }
 
 int get_hmax_stacktimeline_draw() {

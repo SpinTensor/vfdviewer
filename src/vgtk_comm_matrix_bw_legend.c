@@ -35,7 +35,7 @@ void set_comm_matrix_bw_label_max_value(double value) {
    if (comm_matrix_bw_legend_max_label != NULL) {
       snprintf(labelcontent,
                (size_t) (LABEL_CONTENT_LEN - 1),
-               "%4.3les", value);
+               "%4.3le", value);
       gtk_label_set_text(comm_matrix_bw_legend_max_label, labelcontent);
    }
 }
@@ -46,7 +46,7 @@ void set_comm_matrix_bw_label_mid_value(double value) {
    if (comm_matrix_bw_legend_mid_label != NULL) {
       snprintf(labelcontent,
                (size_t) (LABEL_CONTENT_LEN - 1),
-               "%4.3les", value);
+               "%4.3le", value);
       gtk_label_set_text(comm_matrix_bw_legend_mid_label, labelcontent);
    }
 }
@@ -56,7 +56,7 @@ void set_comm_matrix_bw_label_min_value(double value) {
    if (comm_matrix_bw_legend_min_label != NULL) {
       snprintf(labelcontent,
                (size_t) (LABEL_CONTENT_LEN - 1),
-               "%4.3les", value);
+               "%4.3le", value);
       gtk_label_set_text(comm_matrix_bw_legend_min_label, labelcontent);
    }
 }

@@ -360,7 +360,7 @@ int vfds_nprocs() {
    if (vfd == NULL) {
       return 0;
    } else {
-      return vfd->header->nprocs;
+      return vfd->header->nranks;
    }
 }
 

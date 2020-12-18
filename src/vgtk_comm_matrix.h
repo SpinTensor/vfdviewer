@@ -5,4 +5,6 @@
 
 void vgtk_build_comm_matrix(GtkBuilder *builder);
 
+void comm_matrix_invalidate();
+
 #endif

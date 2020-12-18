@@ -1,9 +1,17 @@
+#include <stdlib.h>
+#include <stdbool.h>
+
 #include <gtk/gtk.h>
 
+#include "vfd_list.h"
 #include "vgtk_colors.h"
 
 GtkDrawingArea *comm_matrix_matrix_drawing_area = NULL;
 cairo_surface_t *comm_matrix_matrix_drawing_surface = NULL;
+
+static int comm_matrix_nprocs = 0;
+bool comm_matrix_valid = false;
+double *comm_matrix_bandwidhts = NULL;
 
 void vgtk_build_comm_matrix(GtkBuilder *builder) {
    comm_matrix_matrix_drawing_area = GTK_DRAWING_AREA(
@@ -12,7 +20,38 @@ void vgtk_build_comm_matrix(GtkBuilder *builder) {
    gtk_builder_connect_signals(builder, NULL);
 }
 
-void vgtk_draw_comm_matrix(int nprocs, cairo_t *cr) {
+void comm_matrix_update() {
+   // Get the number of total processes
+   int nprocs = vfds_nprocs();
+
+   if (nprocs != comm_matrix_nprocs) {
+      // matrix size changed since last update
+      if (comm_matrix_bandwidhts != NULL) {
+         free(comm_matrix_bandwidhts);
+         comm_matrix_bandwidhts = NULL;
+      }
+      comm_matrix_bandwidhts = (double*) malloc(nprocs*nprocs*sizeof(double));
+      comm_matrix_nprocs = nprocs;
+   }
+
+   // Zero the bandwidth comm matrix
+   for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
+      comm_matrix_bandwidhts[iproc] = 0.0;
+   }
+
+   // validate comm matrix
+   comm_matrix_valid = true;
+}
+
+void vgtk_draw_comm_matrix(cairo_t *cr) {
+   // Get the number of total processes
+   int nprocs = vfds_nprocs();
+
+   // update the comm matrix if necessary
+   if (!comm_matrix_valid) {
+      comm_matrix_update();
+   }
+
    GtkDrawingArea *drawing_area = comm_matrix_matrix_drawing_area;
 
    // get surface dimensions
@@ -24,8 +63,16 @@ void vgtk_draw_comm_matrix(int nprocs, cairo_t *cr) {
 
    for (int icol=0; icol<nprocs; icol++) {
       for (int irow=0; irow<nprocs; irow++) {
-         double random = (double)rand() / (double)((unsigned)RAND_MAX + 1);
-         vgtk_color_t color = vgtk_color_gradient(random);
+         double bandwidth = comm_matrix_bandwidhts[irow*nprocs+icol];
+         vgtk_color_t color;
+         if (bandwidth > 0.0) {
+            color = vgtk_color_gradient(bandwidth);
+         } else {
+            color.red   = 195.0/255.0;
+            color.green = 195.0/255.0;
+            color.blue  = 195.0/255.0;
+            color.alpha = 1.0;
+         }
 
          cairo_set_source_rgba(cr,
                                color.red,
@@ -46,6 +93,10 @@ void vgtk_draw_comm_matrix(int nprocs, cairo_t *cr) {
 
       }
    }
+}
+
+void comm_matrix_invalidate() {
+   comm_matrix_valid = false;
 }
 
 // Callback functions for the communication matrix drawing area
@@ -74,8 +125,10 @@ gboolean on_comm_matrix_matrix_drawing_area_draw(
    GtkWidget *widget,
    cairo_t *cr,
    gpointer data) {
+   (void) widget;
+   (void) data;
 
-   vgtk_draw_comm_matrix(64, cr);
+   vgtk_draw_comm_matrix(cr);
 
    return TRUE;
 }

@@ -6,6 +6,7 @@
 #include "vgtk_open_file_dialog.h"
 #include "vgtk_stacktimeline_hscrollbar.h"
 #include "vgtk_stacktimeline_entry.h"
+#include "vgtk_comm_matrix.h"
 #include "vfd_list.h"
 
 GtkToolbar *stack_tree_toolbar = NULL;
@@ -70,5 +71,8 @@ void on_stack_tree_toolbar_remove_button_clicked(GtkToolButton *button) {
       vgtk_redraw_all_stacktimelines();
 
       vgtk_adjust_main_stacktimeline_hscrollbar();
+
+      // invalidate communication matrix
+      comm_matrix_invalidate();
    }
 }

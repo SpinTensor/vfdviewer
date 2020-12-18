@@ -6,6 +6,7 @@
 #include "vgtk_stack_treeview.h"
 #include "vgtk_stacktimeline_hscrollbar.h"
 #include "vgtk_stacktimeline_entry.h"
+#include "vgtk_comm_matrix.h"
 
 GtkFileChooser *vgtk_open_file_dialog = NULL;
 
@@ -46,6 +47,9 @@ void run_open_file_dialog() {
       vgtk_redraw_all_stacktimelines();
 
       vgtk_adjust_main_stacktimeline_hscrollbar();
+
+      // invalidate the communication matrix
+      comm_matrix_invalidate();
    }
 
 #ifdef _DEBUG

@@ -867,7 +867,7 @@ l=0</property>
                                 <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkRadioButton" id="comm_matrix_bw_metric_select_maxbw">
-                                    <property name="label" translatable="yes">MIN</property>
+                                    <property name="label" translatable="yes">min.BW</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>

@@ -50,6 +50,7 @@ void run_open_file_dialog() {
 
       // invalidate the communication matrix
       comm_matrix_invalidate();
+      comm_matrix_redraw();
    }
 
 #ifdef _DEBUG

@@ -74,5 +74,6 @@ void on_stack_tree_toolbar_remove_button_clicked(GtkToolButton *button) {
 
       // invalidate communication matrix
       comm_matrix_invalidate();
+      comm_matrix_redraw();
    }
 }

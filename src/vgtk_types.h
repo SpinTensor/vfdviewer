@@ -12,4 +12,10 @@ typedef struct {
    vgtk_stackTimelineEntry_t *stackTimelineEntry;
 } vgtk_handles_t;
 
+typedef enum {
+   cm_max,
+   cm_avg,
+   cm_min
+} comm_matrix_mode_t;
+
 #endif

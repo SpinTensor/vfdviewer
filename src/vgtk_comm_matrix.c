@@ -99,6 +99,12 @@ void comm_matrix_invalidate() {
    comm_matrix_valid = false;
 }
 
+void comm_matrix_redraw() {
+   cairo_t *cr;
+   cr = cairo_create (comm_matrix_matrix_drawing_surface);
+   vgtk_draw_comm_matrix(cr);
+}
+
 // Callback functions for the communication matrix drawing area
 gboolean on_comm_matrix_matrix_drawing_area_configure_event(
    GtkWidget *widget,

@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 
+#include "vgtk_types.h"
 #include "vgtk_surfaces.h"
 #include "vgtk_colors.h"
 
@@ -9,6 +10,8 @@ cairo_surface_t *comm_matrix_legend_drawing_surface = NULL;
 GtkLabel *comm_matrix_legend_max_label = NULL;
 GtkLabel *comm_matrix_legend_mid_label = NULL;
 GtkLabel *comm_matrix_legend_min_label = NULL;
+
+GtkLabel *comm_matrix_legend_unit_label = NULL;
 
 double comm_matrix_bw_label_max_value = 1.0;
 double comm_matrix_bw_label_mid_value = 0.5;
@@ -24,6 +27,9 @@ void vgtk_build_comm_matrix_legend(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "comm_matrix_legend_mid_label"));
    comm_matrix_legend_min_label = GTK_LABEL(
       gtk_builder_get_object(builder, "comm_matrix_legend_min_label"));
+
+   comm_matrix_legend_unit_label = GTK_LABEL(
+      gtk_builder_get_object(builder, "comm_matrix_legend_unit_label"));
 
    gtk_builder_connect_signals(builder, NULL);
 }
@@ -61,6 +67,23 @@ void set_comm_matrix_bw_label_min_value(double value) {
    }
 }
 #undef LABEL_CONTENT_LEN
+
+void set_comm_matrix_unit_label(comm_matrix_unit_t unit) {
+   switch(unit) {
+      case cm_bw:
+         gtk_label_set_text(comm_matrix_legend_unit_label, "MiB/s");
+         break;
+      case cm_size:
+         gtk_label_set_text(comm_matrix_legend_unit_label, "MiB");
+         break;
+      case cm_count:
+         gtk_label_set_text(comm_matrix_legend_unit_label, "---");
+         break;
+      default:
+         gtk_label_set_text(comm_matrix_legend_unit_label, "INVALID");
+         break;
+   }
+}
 
 void vgtk_draw_comm_matrix_legend(cairo_t *cr) {
    GtkDrawingArea *drawing_area = comm_matrix_legend_drawing_area;

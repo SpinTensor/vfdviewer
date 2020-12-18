@@ -11,6 +11,7 @@
 #include "vgtk_comm_matrix_legend.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_comm_matrix_update_bw.h"
+#include "vgtk_comm_matrix_update_size.h"
 
 GtkDrawingArea *comm_matrix_matrix_drawing_area = NULL;
 cairo_surface_t *comm_matrix_matrix_drawing_surface = NULL;
@@ -41,18 +42,39 @@ void comm_matrix_update() {
    }
 
    // update the data based on the selected metric
+   comm_matrix_unit_t unit = comm_matrix_get_unit();
    comm_matrix_mode_t metric = comm_matrix_get_metric_mode();
-   switch(metric) {
-      case cm_max:
-         comm_matrix_update_bw_max(comm_matrix_nprocs, comm_matrix_data);
+   switch(unit) {
+      case cm_bw:
+         switch(metric) {
+            case cm_max:
+               comm_matrix_update_bw_max(comm_matrix_nprocs, comm_matrix_data);
+               break;
+            case cm_avg:
+               comm_matrix_update_bw_avg(comm_matrix_nprocs, comm_matrix_data);
+               break;
+            case cm_min:
+               comm_matrix_update_bw_min(comm_matrix_nprocs, comm_matrix_data);
+               break;
+         }
          break;
-      case cm_avg:
-         comm_matrix_update_bw_avg(comm_matrix_nprocs, comm_matrix_data);
+      case cm_size:
+         switch(metric) {
+            case cm_max:
+               comm_matrix_update_size_max(comm_matrix_nprocs, comm_matrix_data);
+               break;
+            case cm_avg:
+               comm_matrix_update_size_avg(comm_matrix_nprocs, comm_matrix_data);
+               break;
+            case cm_min:
+               comm_matrix_update_size_min(comm_matrix_nprocs, comm_matrix_data);
+               break;
+         }
          break;
-      case cm_min:
-         comm_matrix_update_bw_min(comm_matrix_nprocs, comm_matrix_data);
+      case cm_count:
          break;
    }
+
 
    // validate comm matrix
    comm_matrix_valid = true;

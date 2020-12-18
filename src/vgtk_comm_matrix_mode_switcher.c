@@ -59,6 +59,10 @@ comm_matrix_mode_t comm_matrix_get_metric_mode() {
    return comm_matrix_mode;
 }
 
+comm_matrix_unit_t comm_matrix_get_unit() {
+   return comm_matrix_unit;
+}
+
 // callback functions for unit switching radio buttons
 void on_comm_matrix_unit_select_bw_toggled(
    GtkRadioButton *button,

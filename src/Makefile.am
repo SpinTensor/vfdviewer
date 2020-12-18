@@ -57,6 +57,7 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_comm_matrix_legend.c \
 		     vgtk_comm_matrix_mode_switcher.c \
 		     vgtk_comm_matrix_update_bw.c \
+		     vgtk_comm_matrix_update_size.c \
 		     vgtk_colors.c \
 		     vgtk_surfaces.c
 libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir)

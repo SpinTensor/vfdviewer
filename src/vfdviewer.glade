@@ -983,7 +983,8 @@ l=0</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">display the maximum value from all recorded messages.</property>
+                                    <property name="tooltip_text" translatable="yes">display the maximum value from all recorded messages.
+For message count this option has no effect.</property>
                                     <property name="halign">start</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
@@ -1002,7 +1003,7 @@ l=0</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="tooltip_text" translatable="yes">display the average value from all recorded messages.
-For message count this option is undefined.</property>
+For message count this option has no effect.</property>
                                     <property name="halign">start</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
@@ -1021,7 +1022,8 @@ For message count this option is undefined.</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">display the minimum value from all recorded messages.</property>
+                                    <property name="tooltip_text" translatable="yes">display the minimum value from all recorded messages.
+For message count this option has no effect.</property>
                                     <property name="halign">start</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>

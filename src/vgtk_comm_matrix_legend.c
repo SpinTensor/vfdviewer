@@ -13,9 +13,9 @@ GtkLabel *comm_matrix_legend_min_label = NULL;
 
 GtkLabel *comm_matrix_legend_unit_label = NULL;
 
-double comm_matrix_bw_label_max_value = 1.0;
-double comm_matrix_bw_label_mid_value = 0.5;
-double comm_matrix_bw_label_min_value = 0.0;
+double comm_matrix_label_max_value = 1.0;
+double comm_matrix_label_mid_value = 0.5;
+double comm_matrix_label_min_value = 0.0;
 
 void vgtk_build_comm_matrix_legend(GtkBuilder *builder) {
    comm_matrix_legend_drawing_area = GTK_DRAWING_AREA(
@@ -35,7 +35,7 @@ void vgtk_build_comm_matrix_legend(GtkBuilder *builder) {
 }
 
 #define LABEL_CONTENT_LEN 16
-void set_comm_matrix_bw_label_max_value(double value) {
+void set_comm_matrix_label_max_value(double value) {
    static char labelcontent[LABEL_CONTENT_LEN];
 
    if (comm_matrix_legend_max_label != NULL) {
@@ -46,7 +46,7 @@ void set_comm_matrix_bw_label_max_value(double value) {
    }
 }
 
-void set_comm_matrix_bw_label_mid_value(double value) {
+void set_comm_matrix_label_mid_value(double value) {
    static char labelcontent[LABEL_CONTENT_LEN];
 
    if (comm_matrix_legend_mid_label != NULL) {
@@ -56,7 +56,7 @@ void set_comm_matrix_bw_label_mid_value(double value) {
       gtk_label_set_text(comm_matrix_legend_mid_label, labelcontent);
    }
 }
-void set_comm_matrix_bw_label_min_value(double value) {
+void set_comm_matrix_label_min_value(double value) {
    static char labelcontent[LABEL_CONTENT_LEN];
 
    if (comm_matrix_legend_min_label != NULL) {
@@ -108,7 +108,7 @@ void vgtk_draw_comm_matrix_legend(cairo_t *cr) {
    }
    cairo_set_source(cr, color_gradient);
 
-   // fill the bw legend
+   // fill the legend
    cairo_rectangle(cr,
                    0.0, 0.0,
                    sfwidth, sfheight);

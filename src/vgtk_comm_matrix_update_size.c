@@ -3,7 +3,7 @@
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_comm_matrix_legend.h"
 
-void comm_matrix_update_bw_max(int nprocs, double *matrix) {
+void comm_matrix_update_size_max(int nprocs, double *matrix) {
    if (nprocs == 0) {return;}
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
@@ -13,7 +13,7 @@ void comm_matrix_update_bw_max(int nprocs, double *matrix) {
       matrix[iproc] = 0.0;
    }
 
-   double maxbw = 0.0;
+   double maxsize = 0.0;
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
@@ -45,13 +45,14 @@ void comm_matrix_update_bw_max(int nprocs, double *matrix) {
 
             // update the matrix entry
             int idx = irow*nprocs + icol;
+            double size = message.count * message.typeSize / 1024.0 / 1024.0;
             matrix[idx] = 
-               matrix[idx] > message.rate_MiBs ?
+               matrix[idx] > size ?
                   matrix[idx] :
-                  message.rate_MiBs;
+                  size;
 
             // update the maximum bandwidth for normalization
-            maxbw = maxbw > message.rate_MiBs ? maxbw : message.rate_MiBs;
+            maxsize = maxsize > size ? maxsize : size;
          }
       }
 
@@ -60,20 +61,20 @@ void comm_matrix_update_bw_max(int nprocs, double *matrix) {
    }
 
    // normalize the matrix
-   if (maxbw > 0.0) {
+   if (maxsize > 0.0) {
       for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-         matrix[iproc] /= maxbw;
+         matrix[iproc] /= maxsize;
       }
    } else {
-      maxbw = 1.0;
+      maxsize = 1.0;
    }
 
    // update the legend labels
-   set_comm_matrix_label_max_value(maxbw);
-   set_comm_matrix_label_mid_value(0.5*maxbw);
+   set_comm_matrix_label_max_value(maxsize);
+   set_comm_matrix_label_mid_value(0.5*maxsize);
    set_comm_matrix_label_min_value(0.0);
 }
-void comm_matrix_update_bw_avg(int nprocs, double *matrix) {
+void comm_matrix_update_size_avg(int nprocs, double *matrix) {
    if (nprocs == 0) {return;}
    unsigned int *count = (unsigned int*) malloc(nprocs*nprocs*sizeof(unsigned int));
    double tmin = get_tmin_stacktimeline_draw();
@@ -116,7 +117,8 @@ void comm_matrix_update_bw_avg(int nprocs, double *matrix) {
 
             // update the matrix entry
             int idx = irow*nprocs + icol;
-            matrix[idx] += message.rate_MiBs;
+            double size = message.count * message.typeSize / 1024.0 / 1024.0;
+            matrix[idx] += size;
             count[idx]++;
          }
       }
@@ -134,28 +136,28 @@ void comm_matrix_update_bw_avg(int nprocs, double *matrix) {
 
    // normalize the matrix
    // search for maximum bandwidth
-   double maxbw = matrix[0];
+   double maxsize = matrix[0];
    for (int iproc=1; iproc<nprocs*nprocs; iproc++) {
-      maxbw = maxbw > matrix[iproc] ?
-         maxbw : matrix[iproc];
+      maxsize = maxsize > matrix[iproc] ?
+         maxsize : matrix[iproc];
    }
-   if (maxbw > 0.0) {
+   if (maxsize > 0.0) {
       for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-         matrix[iproc] /= maxbw;
+         matrix[iproc] /= maxsize;
       }
    } else {
-      maxbw = 1.0;
+      maxsize = 1.0;
    }
 
    free(count);
    count = NULL;
 
    // update the legend labels
-   set_comm_matrix_label_max_value(maxbw);
-   set_comm_matrix_label_mid_value(0.5*maxbw);
+   set_comm_matrix_label_max_value(maxsize);
+   set_comm_matrix_label_mid_value(0.5*maxsize);
    set_comm_matrix_label_min_value(0.0);
 }
-void comm_matrix_update_bw_min(int nprocs, double *matrix) {
+void comm_matrix_update_size_min(int nprocs, double *matrix) {
    if (nprocs == 0) {return;}
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
@@ -196,13 +198,14 @@ void comm_matrix_update_bw_min(int nprocs, double *matrix) {
 
             // update the matrix entry
             int idx = irow*nprocs + icol;
+            double size = message.count * message.typeSize / 1024.0 / 1024.0;
             if (matrix[idx] < 0.0) {
-               matrix[idx] = message.rate_MiBs;
+               matrix[idx] = size;
             } else {
                matrix[idx] = 
-                  matrix[idx] < message.rate_MiBs ?
+                  matrix[idx] < size ?
                      matrix[idx] :
-                     message.rate_MiBs;
+                     size;
             }
          }
       }
@@ -213,25 +216,25 @@ void comm_matrix_update_bw_min(int nprocs, double *matrix) {
 
    // normalize the matrix
    // search for maximum bandwidth
-   double maxbw = matrix[0];
+   double maxsize = matrix[0];
    for (int iproc=1; iproc<nprocs*nprocs; iproc++) {
-      maxbw = maxbw > matrix[iproc] ?
-         maxbw : matrix[iproc];
+      maxsize = maxsize > matrix[iproc] ?
+         maxsize : matrix[iproc];
    }
-   if (maxbw > 0.0) {
+   if (maxsize > 0.0) {
       for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
          if (matrix[iproc] < 0.0) {
             matrix[iproc] = 0.0;
          } else {
-            matrix[iproc] /= maxbw;
+            matrix[iproc] /= maxsize;
          }
       }
    } else {
-      maxbw = 1.0;
+      maxsize = 1.0;
    }
 
    // update the legend labels
-   set_comm_matrix_label_max_value(maxbw);
-   set_comm_matrix_label_mid_value(0.5*maxbw);
+   set_comm_matrix_label_max_value(maxsize);
+   set_comm_matrix_label_mid_value(0.5*maxsize);
    set_comm_matrix_label_min_value(0.0);
 }

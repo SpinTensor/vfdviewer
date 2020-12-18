@@ -6,6 +6,7 @@
 #include "vfd_types.h"
 #include "vfd_list.h"
 #include "vgtk_colors.h"
+#include "vgtk_comm_matrix_grid.h"
 #include "vgtk_comm_matrix_mode_switcher.h"
 #include "vgtk_comm_matrix_bw_legend.h"
 #include "vgtk_stacktimeline_entry.h"
@@ -328,7 +329,7 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
                                color.blue,
                                color.alpha);
          cairo_rectangle(cr,
-                         icol*rect_width, irow*rect_height,
+                         icol*rect_width, (nprocs-irow-1)*rect_height,
                          rect_width, rect_height);
          cairo_fill_preserve(cr);
 
@@ -374,6 +375,8 @@ gboolean on_comm_matrix_matrix_drawing_area_configure_event(
       CAIRO_CONTENT_COLOR,
       gtk_widget_get_allocated_width(widget),
       gtk_widget_get_allocated_height(widget));
+
+   vgtk_comm_matrix_set_proc_labels(vfds_nprocs());
 
    return TRUE;
 }

@@ -5,6 +5,6 @@
 
 void vgtk_build_comm_matrix_grid(GtkBuilder *builder);
 
-void vgtk_comm_matrix_create_proc_labels(int nlabels);
+void vgtk_comm_matrix_set_proc_labels(int nprocs);
 
 #endif

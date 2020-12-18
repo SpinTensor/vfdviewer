@@ -2,39 +2,44 @@
 
 #include <gtk/gtk.h>
 
+#include "vfd_list.h"
+#include "vgtk_comm_matrix_grid.h"
+
 GtkGrid *main_comm_matrix_grid = NULL;
 
-static int comm_mat_maxlabels = 0;
-static int comm_mat_nlabels = 0;
-GtkBox *comm_matrix_send_proc_label_box = NULL;
-GtkLabel **comm_matrix_send_proc_labels = NULL;
-GtkBox *comm_matrix_recv_proc_label_box = NULL;
-GtkLabel **comm_matrix_recv_proc_labels = NULL;
+GtkLabel *comm_matrix_send_minproc_label = NULL;
+GtkLabel *comm_matrix_send_maxproc_label = NULL;
+GtkLabel *comm_matrix_recv_minproc_label = NULL;
+GtkLabel *comm_matrix_recv_maxproc_label = NULL;
 
 void vgtk_build_comm_matrix_grid(GtkBuilder *builder) {
    main_comm_matrix_grid = GTK_GRID(
       gtk_builder_get_object(builder, "main_comm_matrix_grid"));
 
-   comm_matrix_send_proc_label_box = GTK_BOX(
-      gtk_builder_get_object(builder, "comm_matrix_send_proc_label_box"));
-   comm_matrix_recv_proc_label_box = GTK_BOX(
-      gtk_builder_get_object(builder, "comm_matrix_recv_proc_label_box"));
+   comm_matrix_send_minproc_label = GTK_LABEL(
+      gtk_builder_get_object(builder, "comm_matrix_send_minproc_label"));
+   comm_matrix_send_maxproc_label = GTK_LABEL(
+      gtk_builder_get_object(builder, "comm_matrix_send_maxproc_label"));
+   comm_matrix_recv_minproc_label = GTK_LABEL(
+      gtk_builder_get_object(builder, "comm_matrix_recv_minproc_label"));
+   comm_matrix_recv_maxproc_label = GTK_LABEL(
+      gtk_builder_get_object(builder, "comm_matrix_recv_maxproc_label"));
 
    gtk_builder_connect_signals(builder, NULL);
 }
 
-void vgtk_comm_matrix_create_proc_labels(int nlabels) {
-   // assume that no one ever is crazy enough to
-   // profile something with 10^32 processes
-   char labelcontent[32];
-   
-   //// first check if a reallocation is required
-   //if (nlabels 
+void vgtk_comm_matrix_set_proc_labels(int nprocs) {
+   #define LABEL_CONTENT_LEN 16
+   char labelcontent[LABEL_CONTENT_LEN];
 
-   // allocate space for the labels
-   //comm_matrix_send_proc_labels = (GtkLabel**) malloc(sizeof(GtkLabel*)*nlabels);
-   //comm_matrix_recv_proc_labels = (GtkLabel**) malloc(sizeof(GtkLabel*)*nlabels);
-
-
-
+   snprintf(labelcontent,
+            (size_t) (LABEL_CONTENT_LEN - 1),
+            "p%d", 0);
+   gtk_label_set_text(comm_matrix_send_minproc_label, labelcontent);
+   gtk_label_set_text(comm_matrix_recv_minproc_label, labelcontent);
+   snprintf(labelcontent,
+            (size_t) (LABEL_CONTENT_LEN - 1),
+            "p%d", nprocs);
+   gtk_label_set_text(comm_matrix_send_maxproc_label, labelcontent);
+   gtk_label_set_text(comm_matrix_recv_maxproc_label, labelcontent);
 }

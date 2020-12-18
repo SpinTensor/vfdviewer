@@ -664,18 +664,6 @@ l=0</property>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">sending process</property>
-                                <property name="yalign">0</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">receiving process</property>
                                 <property name="angle">90</property>
                                 <property name="xalign">1</property>
@@ -686,18 +674,114 @@ l=0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="comm_matrix_recv_proc_label_box">
+                              <object class="GtkAspectFrame">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
+                                <property name="label_xalign">0</property>
+                                <property name="shadow_type">none</property>
                                 <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
+                                  <object class="GtkGrid">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <child>
+                                      <object class="GtkBox" id="comm_matrix_recv_proc_label_box">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="orientation">vertical</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="comm_matrix_rec_maxproc_label">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">0</property>
+                                            <property name="xalign">1</property>
+                                            <property name="yalign">0</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="comm_matrix_recv_minproc_label">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">0</property>
+                                            <property name="xalign">1</property>
+                                            <property name="yalign">1</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox" id="comm_matrix_send_proc_label_box">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="comm_matrix_send_minproc_label">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">0</property>
+                                            <property name="xalign">0</property>
+                                            <property name="yalign">0</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="comm_matrix_send_maxproc_label">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">0</property>
+                                            <property name="xalign">1</property>
+                                            <property name="yalign">0</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="top_attach">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkDrawingArea" id="comm_matrix_matrix_drawing_area">
+                                        <property name="width_request">100</property>
+                                        <property name="height_request">100</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="vexpand">True</property>
+                                        <signal name="configure-event" handler="on_comm_matrix_matrix_drawing_area_configure_event" swapped="no"/>
+                                        <signal name="draw" handler="on_comm_matrix_matrix_drawing_area_draw" swapped="no"/>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="top_attach">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </object>
                                 </child>
                               </object>
                               <packing>
@@ -706,32 +790,14 @@ l=0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="comm_matrix_send_proc_label_box">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">MiB/s</property>
+                                <property name="label" translatable="yes">sending process</property>
+                                <property name="yalign">0</property>
                               </object>
                               <packing>
-                                <property name="left_attach">3</property>
+                                <property name="left_attach">1</property>
                                 <property name="top_attach">1</property>
                               </packing>
                             </child>
@@ -807,43 +873,20 @@ l=0</property>
                                 </child>
                               </object>
                               <packing>
-                                <property name="left_attach">3</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkAspectFrame">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label_xalign">0</property>
-                                <property name="shadow_type">none</property>
-                                <child>
-                                  <object class="GtkDrawingArea" id="comm_matrix_matrix_drawing_area">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="vexpand">True</property>
-                                    <signal name="configure-event" handler="on_comm_matrix_matrix_drawing_area_configure_event" swapped="no"/>
-                                    <signal name="draw" handler="on_comm_matrix_matrix_drawing_area_draw" swapped="no"/>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
                                 <property name="left_attach">2</property>
                                 <property name="top_attach">0</property>
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">MiB/s</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="top_attach">1</property>
+                              </packing>
                             </child>
                             <child>
                               <placeholder/>

@@ -7,6 +7,7 @@
 #include "vgtk_stacktimeline_hscrollbar.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_comm_matrix.h"
+#include "vgtk_comm_matrix_grid.h"
 
 GtkFileChooser *vgtk_open_file_dialog = NULL;
 
@@ -51,6 +52,7 @@ void run_open_file_dialog() {
       // invalidate the communication matrix
       comm_matrix_invalidate();
       comm_matrix_redraw();
+      vgtk_comm_matrix_set_proc_labels(vfds_nprocs());
    }
 
 #ifdef _DEBUG

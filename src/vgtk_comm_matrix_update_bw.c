@@ -6,7 +6,7 @@
 #include "vgtk_comm_matrix_legend.h"
 #include "vgtk_comm_matrix_mode_switcher.h"
 
-void comm_matrix_update_bw_max(int nprocs, double *matrix) {
+void comm_matrix_update_bw_max(int nprocs, double *matrix, double *inorm) {
    if (nprocs == 0) {return;}
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
@@ -77,12 +77,15 @@ void comm_matrix_update_bw_max(int nprocs, double *matrix) {
       maxbw = 1.0;
    }
 
+   *inorm = maxbw;
+
    // update the legend labels
    set_comm_matrix_label_max_value(maxbw);
    set_comm_matrix_label_mid_value(0.5*maxbw);
    set_comm_matrix_label_min_value(0.0);
 }
-void comm_matrix_update_bw_avg(int nprocs, double *matrix) {
+
+void comm_matrix_update_bw_avg(int nprocs, double *matrix, double *inorm) {
    if (nprocs == 0) {return;}
    unsigned int *count = (unsigned int*) malloc(nprocs*nprocs*sizeof(unsigned int));
    double tmin = get_tmin_stacktimeline_draw();
@@ -165,12 +168,15 @@ void comm_matrix_update_bw_avg(int nprocs, double *matrix) {
    free(count);
    count = NULL;
 
+   *inorm = maxbw;
+
    // update the legend labels
    set_comm_matrix_label_max_value(maxbw);
    set_comm_matrix_label_mid_value(0.5*maxbw);
    set_comm_matrix_label_min_value(0.0);
 }
-void comm_matrix_update_bw_min(int nprocs, double *matrix) {
+
+void comm_matrix_update_bw_min(int nprocs, double *matrix, double *inorm) {
    if (nprocs == 0) {return;}
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
@@ -250,6 +256,8 @@ void comm_matrix_update_bw_min(int nprocs, double *matrix) {
    } else {
       maxbw = 1.0;
    }
+
+   *inorm = maxbw;
 
    // update the legend labels
    set_comm_matrix_label_max_value(maxbw);

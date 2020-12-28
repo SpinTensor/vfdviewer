@@ -13,6 +13,7 @@
 #include "vgtk_comm_matrix_update_bw.h"
 #include "vgtk_comm_matrix_update_size.h"
 #include "vgtk_comm_matrix_update_count.h"
+#include "vgtk_comm_matrix_cursorpos_labels.h"
 
 GtkDrawingArea *comm_matrix_matrix_drawing_area = NULL;
 cairo_surface_t *comm_matrix_matrix_drawing_surface = NULL;
@@ -20,10 +21,19 @@ cairo_surface_t *comm_matrix_matrix_drawing_surface = NULL;
 static int comm_matrix_nprocs = 0;
 bool comm_matrix_valid = false;
 double *comm_matrix_data = NULL;
+double comm_matrix_inorm = 0.0;
 
 void vgtk_build_comm_matrix(GtkBuilder *builder) {
    comm_matrix_matrix_drawing_area = GTK_DRAWING_AREA(
       gtk_builder_get_object(builder, "comm_matrix_matrix_drawing_area"));
+
+   vgtk_build_comm_matrix_cursorpos_labels(builder);
+
+   // allow button press events for drawing area
+   gtk_widget_set_events(GTK_WIDGET(comm_matrix_matrix_drawing_area),
+                         gtk_widget_get_events(GTK_WIDGET(
+                            comm_matrix_matrix_drawing_area))
+                         | GDK_BUTTON_PRESS_MASK);
 
    gtk_builder_connect_signals(builder, NULL);
 }
@@ -49,31 +59,45 @@ void comm_matrix_update() {
       case cm_bw:
          switch(metric) {
             case cm_max:
-               comm_matrix_update_bw_max(comm_matrix_nprocs, comm_matrix_data);
+               comm_matrix_update_bw_max(comm_matrix_nprocs,
+                                         comm_matrix_data,
+                                         &comm_matrix_inorm);
                break;
             case cm_avg:
-               comm_matrix_update_bw_avg(comm_matrix_nprocs, comm_matrix_data);
+               comm_matrix_update_bw_avg(comm_matrix_nprocs,
+                                         comm_matrix_data,
+                                         &comm_matrix_inorm);
                break;
             case cm_min:
-               comm_matrix_update_bw_min(comm_matrix_nprocs, comm_matrix_data);
+               comm_matrix_update_bw_min(comm_matrix_nprocs,
+                                         comm_matrix_data,
+                                         &comm_matrix_inorm);
                break;
          }
          break;
       case cm_size:
          switch(metric) {
             case cm_max:
-               comm_matrix_update_size_max(comm_matrix_nprocs, comm_matrix_data);
+               comm_matrix_update_size_max(comm_matrix_nprocs,
+                                           comm_matrix_data,
+                                           &comm_matrix_inorm);
                break;
             case cm_avg:
-               comm_matrix_update_size_avg(comm_matrix_nprocs, comm_matrix_data);
+               comm_matrix_update_size_avg(comm_matrix_nprocs,
+                                           comm_matrix_data,
+                                           &comm_matrix_inorm);
                break;
             case cm_min:
-               comm_matrix_update_size_min(comm_matrix_nprocs, comm_matrix_data);
+               comm_matrix_update_size_min(comm_matrix_nprocs,
+                                           comm_matrix_data,
+                                           &comm_matrix_inorm);
                break;
          }
          break;
       case cm_count:
-         comm_matrix_update_count(comm_matrix_nprocs, comm_matrix_data);
+         comm_matrix_update_count(comm_matrix_nprocs,
+                                  comm_matrix_data,
+                                  &comm_matrix_inorm);
          break;
    }
 
@@ -181,4 +205,32 @@ gboolean on_comm_matrix_matrix_drawing_area_draw(
    vgtk_draw_comm_matrix(cr);
 
    return TRUE;
+}
+
+// callback function for left mouse button press on drawing area
+void on_comm_matrix_matrix_drawing_area_button_press_event(
+   GtkWidget *widget,
+   GdkEventButton *event,
+   gpointer data) {
+
+   (void) widget;
+   (void) data;
+
+   GtkDrawingArea *drawing_area = comm_matrix_matrix_drawing_area;
+   // get surface dimensions
+   int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
+   int sfheight = gtk_widget_get_allocated_height(GTK_WIDGET(drawing_area));
+
+   // Get the number of total processes
+   int nprocs = comm_matrix_nprocs;
+   // get mouse cursor position
+   int send_rank = nprocs * (event->x / sfwidth);
+   int recv_rank = nprocs * (1.0 - (event->y / sfheight));
+
+   // get value from communication matrix
+   int idx = recv_rank*nprocs + send_rank;
+   double value = comm_matrix_data[idx] * comm_matrix_inorm;
+
+   // set the cursor pos label
+   set_comm_matrix_cursorpos_label(send_rank, recv_rank, value);
 }

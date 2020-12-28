@@ -6,7 +6,7 @@
 #include "vgtk_comm_matrix_legend.h"
 #include "vgtk_comm_matrix_mode_switcher.h"
 
-void comm_matrix_update_count(int nprocs, double *matrix) {
+void comm_matrix_update_count(int nprocs, double *matrix, double *inorm) {
    if (nprocs == 0) {return;}
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
@@ -75,6 +75,8 @@ void comm_matrix_update_count(int nprocs, double *matrix) {
    } else {
       maxcount = 1.0;
    }
+
+   *inorm = maxcount;
 
    // update the legend labels
    set_comm_matrix_label_max_value(maxcount);

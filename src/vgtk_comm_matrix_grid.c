@@ -39,7 +39,7 @@ void vgtk_comm_matrix_set_proc_labels(int nprocs) {
    gtk_label_set_text(comm_matrix_recv_minproc_label, labelcontent);
    snprintf(labelcontent,
             (size_t) (LABEL_CONTENT_LEN - 1),
-            "p%d", nprocs);
+            "p%d", nprocs-1);
    gtk_label_set_text(comm_matrix_send_maxproc_label, labelcontent);
    gtk_label_set_text(comm_matrix_recv_maxproc_label, labelcontent);
 }

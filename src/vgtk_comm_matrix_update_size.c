@@ -1,12 +1,18 @@
+#include <stdbool.h>
+
 #include "vfd_types.h"
 #include "vfd_list.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_comm_matrix_legend.h"
+#include "vgtk_comm_matrix_mode_switcher.h"
 
 void comm_matrix_update_size_max(int nprocs, double *matrix) {
    if (nprocs == 0) {return;}
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
+
+   bool show_send = comm_matrix_direction_send_checked();
+   bool show_recv = comm_matrix_direction_recv_checked();
 
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
@@ -33,26 +39,29 @@ void comm_matrix_update_size_max(int nprocs, double *matrix) {
             // only update matrix if the end time
             // falls into the selected time window
 
-            int icol;
-            int irow;
-            if (message.dir == send) {
-               icol = myrank;
-               irow = message.rank;
-            } else {
-               icol = message.rank;
-               irow = myrank;
+            if ((show_send && message.dir == send) ||
+                (show_recv && message.dir == recv)) {
+               int icol;
+               int irow;
+               if (message.dir == send) {
+                  icol = myrank;
+                  irow = message.rank;
+               } else {
+                  icol = message.rank;
+                  irow = myrank;
+               }
+
+               // update the matrix entry
+               int idx = irow*nprocs + icol;
+               double size = message.count * message.typeSize / 1024.0 / 1024.0;
+               matrix[idx] = 
+                  matrix[idx] > size ?
+                     matrix[idx] :
+                     size;
+
+               // update the maximum bandwidth for normalization
+               maxsize = maxsize > size ? maxsize : size;
             }
-
-            // update the matrix entry
-            int idx = irow*nprocs + icol;
-            double size = message.count * message.typeSize / 1024.0 / 1024.0;
-            matrix[idx] = 
-               matrix[idx] > size ?
-                  matrix[idx] :
-                  size;
-
-            // update the maximum bandwidth for normalization
-            maxsize = maxsize > size ? maxsize : size;
          }
       }
 
@@ -80,6 +89,9 @@ void comm_matrix_update_size_avg(int nprocs, double *matrix) {
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
 
+   bool show_send = comm_matrix_direction_send_checked();
+   bool show_recv = comm_matrix_direction_recv_checked();
+
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
       matrix[iproc] = 0.0;
@@ -105,21 +117,24 @@ void comm_matrix_update_size_avg(int nprocs, double *matrix) {
             // only update matrix if the end time
             // falls into the selected time window
 
-            int icol;
-            int irow;
-            if (message.dir == send) {
-               icol = myrank;
-               irow = message.rank;
-            } else {
-               icol = message.rank;
-               irow = myrank;
-            }
+            if ((show_send && message.dir == send) ||
+                (show_recv && message.dir == recv)) {
+               int icol;
+               int irow;
+               if (message.dir == send) {
+                  icol = myrank;
+                  irow = message.rank;
+               } else {
+                  icol = message.rank;
+                  irow = myrank;
+               }
 
-            // update the matrix entry
-            int idx = irow*nprocs + icol;
-            double size = message.count * message.typeSize / 1024.0 / 1024.0;
-            matrix[idx] += size;
-            count[idx]++;
+               // update the matrix entry
+               int idx = irow*nprocs + icol;
+               double size = message.count * message.typeSize / 1024.0 / 1024.0;
+               matrix[idx] += size;
+               count[idx]++;
+            }
          }
       }
 
@@ -162,6 +177,9 @@ void comm_matrix_update_size_min(int nprocs, double *matrix) {
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
 
+   bool show_send = comm_matrix_direction_send_checked();
+   bool show_recv = comm_matrix_direction_recv_checked();
+
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
       matrix[iproc] = -1.0;
@@ -186,26 +204,29 @@ void comm_matrix_update_size_min(int nprocs, double *matrix) {
             // only update matrix if the end time
             // falls into the selected time window
 
-            int icol;
-            int irow;
-            if (message.dir == send) {
-               icol = myrank;
-               irow = message.rank;
-            } else {
-               icol = message.rank;
-               irow = myrank;
-            }
+            if ((show_send && message.dir == send) ||
+                (show_recv && message.dir == recv)) {
+               int icol;
+               int irow;
+               if (message.dir == send) {
+                  icol = myrank;
+                  irow = message.rank;
+               } else {
+                  icol = message.rank;
+                  irow = myrank;
+               }
 
-            // update the matrix entry
-            int idx = irow*nprocs + icol;
-            double size = message.count * message.typeSize / 1024.0 / 1024.0;
-            if (matrix[idx] < 0.0) {
-               matrix[idx] = size;
-            } else {
-               matrix[idx] = 
-                  matrix[idx] < size ?
-                     matrix[idx] :
-                     size;
+               // update the matrix entry
+               int idx = irow*nprocs + icol;
+               double size = message.count * message.typeSize / 1024.0 / 1024.0;
+               if (matrix[idx] < 0.0) {
+                  matrix[idx] = size;
+               } else {
+                  matrix[idx] = 
+                     matrix[idx] < size ?
+                        matrix[idx] :
+                        size;
+               }
             }
          }
       }

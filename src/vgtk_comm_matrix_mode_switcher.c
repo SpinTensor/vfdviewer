@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include <gtk/gtk.h>
 
 #include "vgtk_types.h"
@@ -15,7 +17,11 @@ GtkRadioButton *comm_matrix_unit_select_bw = NULL;
 GtkRadioButton *comm_matrix_unit_select_size = NULL;
 GtkRadioButton *comm_matrix_unit_select_count = NULL;
 
+GtkCheckButton *comm_matrix_direction_select_send = NULL;
+GtkCheckButton *comm_matrix_direction_select_recv = NULL;
+
 void vgtk_build_comm_matrix_mode_switcher(GtkBuilder *builder) {
+   // Metric selection buttons
    comm_matrix_metric_select_max = GTK_RADIO_BUTTON(
       gtk_builder_get_object(builder, "comm_matrix_metric_select_max"));
    comm_matrix_metric_select_avg = GTK_RADIO_BUTTON(
@@ -23,6 +29,7 @@ void vgtk_build_comm_matrix_mode_switcher(GtkBuilder *builder) {
    comm_matrix_metric_select_min = GTK_RADIO_BUTTON(
       gtk_builder_get_object(builder, "comm_matrix_metric_select_min"));
 
+   // only activate one button
    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
       comm_matrix_metric_select_max),
       TRUE);
@@ -34,6 +41,7 @@ void vgtk_build_comm_matrix_mode_switcher(GtkBuilder *builder) {
       comm_matrix_metric_select_min),
       FALSE);
 
+   // unit selection buttons
    comm_matrix_unit_select_bw = GTK_RADIO_BUTTON(
       gtk_builder_get_object(builder, "comm_matrix_unit_select_bw"));
    comm_matrix_unit_select_size = GTK_RADIO_BUTTON(
@@ -41,6 +49,7 @@ void vgtk_build_comm_matrix_mode_switcher(GtkBuilder *builder) {
    comm_matrix_unit_select_count = GTK_RADIO_BUTTON(
       gtk_builder_get_object(builder, "comm_matrix_unit_select_count"));
 
+   // only activate one button
    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
       comm_matrix_unit_select_bw),
       TRUE);
@@ -51,7 +60,22 @@ void vgtk_build_comm_matrix_mode_switcher(GtkBuilder *builder) {
       comm_matrix_unit_select_count),
       FALSE);
 
-   // only activate one button
+   // direction activation buttons
+   comm_matrix_direction_select_send = GTK_CHECK_BUTTON(
+      gtk_builder_get_object(builder, "comm_matrix_direction_select_send"));
+   comm_matrix_direction_select_recv = GTK_CHECK_BUTTON(
+      gtk_builder_get_object(builder, "comm_matrix_direction_select_recv"));
+
+   // set default status of direction button to active
+   gtk_toggle_button_set_active(
+      GTK_TOGGLE_BUTTON(
+         comm_matrix_direction_select_send),
+      TRUE);
+   gtk_toggle_button_set_active(
+      GTK_TOGGLE_BUTTON(
+         comm_matrix_direction_select_recv),
+      TRUE);
+
    gtk_builder_connect_signals(builder, NULL);
 }
 
@@ -61,6 +85,18 @@ comm_matrix_mode_t comm_matrix_get_metric_mode() {
 
 comm_matrix_unit_t comm_matrix_get_unit() {
    return comm_matrix_unit;
+}
+
+bool comm_matrix_direction_send_checked() {
+   return gtk_toggle_button_get_active(
+      GTK_TOGGLE_BUTTON(
+         comm_matrix_direction_select_send));
+}
+
+bool comm_matrix_direction_recv_checked() {
+   return gtk_toggle_button_get_active(
+      GTK_TOGGLE_BUTTON(
+         comm_matrix_direction_select_recv));
 }
 
 // callback functions for unit switching radio buttons
@@ -159,4 +195,25 @@ void on_comm_matrix_metric_select_min_toggled(
       comm_matrix_invalidate();
       comm_matrix_redraw();
    }
+}
+
+// callback function for direction selection checkbuttons
+void on_comm_matrix_direction_select_send_toggled(
+   GtkCheckButton *checkbutton,
+   gpointer userdata) {
+   (void) checkbutton;
+   (void) userdata;
+
+   comm_matrix_invalidate();
+   comm_matrix_redraw();
+}
+
+void on_comm_matrix_direction_select_recv_toggled(
+   GtkCheckButton *checkbutton,
+   gpointer userdata) {
+   (void) checkbutton;
+   (void) userdata;
+
+   comm_matrix_invalidate();
+   comm_matrix_redraw();
 }

@@ -1,12 +1,18 @@
+#include <stdbool.h>
+
 #include "vfd_types.h"
 #include "vfd_list.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_comm_matrix_legend.h"
+#include "vgtk_comm_matrix_mode_switcher.h"
 
 void comm_matrix_update_bw_max(int nprocs, double *matrix) {
    if (nprocs == 0) {return;}
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
+
+   bool show_send = comm_matrix_direction_send_checked();
+   bool show_recv = comm_matrix_direction_recv_checked();
 
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
@@ -33,25 +39,28 @@ void comm_matrix_update_bw_max(int nprocs, double *matrix) {
             // only update matrix if the end time
             // falls into the selected time window
 
-            int icol;
-            int irow;
-            if (message.dir == send) {
-               icol = myrank;
-               irow = message.rank;
-            } else {
-               icol = message.rank;
-               irow = myrank;
+            if ((show_send && message.dir == send) ||
+                (show_recv && message.dir == recv)) {
+               int icol;
+               int irow;
+               if (message.dir == send) {
+                  icol = myrank;
+                  irow = message.rank;
+               } else {
+                  icol = message.rank;
+                  irow = myrank;
+               }
+   
+               // update the matrix entry
+               int idx = irow*nprocs + icol;
+               matrix[idx] = 
+                  matrix[idx] > message.rate_MiBs ?
+                     matrix[idx] :
+                     message.rate_MiBs;
+   
+               // update the maximum bandwidth for normalization
+               maxbw = maxbw > message.rate_MiBs ? maxbw : message.rate_MiBs;
             }
-
-            // update the matrix entry
-            int idx = irow*nprocs + icol;
-            matrix[idx] = 
-               matrix[idx] > message.rate_MiBs ?
-                  matrix[idx] :
-                  message.rate_MiBs;
-
-            // update the maximum bandwidth for normalization
-            maxbw = maxbw > message.rate_MiBs ? maxbw : message.rate_MiBs;
          }
       }
 
@@ -79,6 +88,9 @@ void comm_matrix_update_bw_avg(int nprocs, double *matrix) {
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
 
+   bool show_send = comm_matrix_direction_send_checked();
+   bool show_recv = comm_matrix_direction_recv_checked();
+
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
       matrix[iproc] = 0.0;
@@ -104,20 +116,23 @@ void comm_matrix_update_bw_avg(int nprocs, double *matrix) {
             // only update matrix if the end time
             // falls into the selected time window
 
-            int icol;
-            int irow;
-            if (message.dir == send) {
-               icol = myrank;
-               irow = message.rank;
-            } else {
-               icol = message.rank;
-               irow = myrank;
-            }
+            if ((show_send && message.dir == send) ||
+                (show_recv && message.dir == recv)) {
+               int icol;
+               int irow;
+               if (message.dir == send) {
+                  icol = myrank;
+                  irow = message.rank;
+               } else {
+                  icol = message.rank;
+                  irow = myrank;
+               }
 
-            // update the matrix entry
-            int idx = irow*nprocs + icol;
-            matrix[idx] += message.rate_MiBs;
-            count[idx]++;
+               // update the matrix entry
+               int idx = irow*nprocs + icol;
+               matrix[idx] += message.rate_MiBs;
+               count[idx]++;
+            }
          }
       }
 
@@ -160,6 +175,9 @@ void comm_matrix_update_bw_min(int nprocs, double *matrix) {
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
 
+   bool show_send = comm_matrix_direction_send_checked();
+   bool show_recv = comm_matrix_direction_recv_checked();
+
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
       matrix[iproc] = -1.0;
@@ -184,25 +202,28 @@ void comm_matrix_update_bw_min(int nprocs, double *matrix) {
             // only update matrix if the end time
             // falls into the selected time window
 
-            int icol;
-            int irow;
-            if (message.dir == send) {
-               icol = myrank;
-               irow = message.rank;
-            } else {
-               icol = message.rank;
-               irow = myrank;
-            }
+            if ((show_send && message.dir == send) ||
+                (show_recv && message.dir == recv)) {
+               int icol;
+               int irow;
+               if (message.dir == send) {
+                  icol = myrank;
+                  irow = message.rank;
+               } else {
+                  icol = message.rank;
+                  irow = myrank;
+               }
 
-            // update the matrix entry
-            int idx = irow*nprocs + icol;
-            if (matrix[idx] < 0.0) {
-               matrix[idx] = message.rate_MiBs;
-            } else {
-               matrix[idx] = 
-                  matrix[idx] < message.rate_MiBs ?
-                     matrix[idx] :
-                     message.rate_MiBs;
+               // update the matrix entry
+               int idx = irow*nprocs + icol;
+               if (matrix[idx] < 0.0) {
+                  matrix[idx] = message.rate_MiBs;
+               } else {
+                  matrix[idx] = 
+                     matrix[idx] < message.rate_MiBs ?
+                        matrix[idx] :
+                        message.rate_MiBs;
+               }
             }
          }
       }

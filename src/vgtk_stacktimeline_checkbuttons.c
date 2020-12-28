@@ -13,6 +13,16 @@ void vgtk_build_main_stacktimeline_checkbuttons(GtkBuilder *builder) {
    stacktimeline_show_mpi_recv_checkbutton = GTK_CHECK_BUTTON(
       gtk_builder_get_object(builder, "stacktimeline_show_mpi_recv_checkbutton"));
 
+   // deactivate buttons as default
+   gtk_toggle_button_set_active(
+      GTK_TOGGLE_BUTTON(
+         stacktimeline_show_mpi_send_checkbutton),
+      FALSE);
+   gtk_toggle_button_set_active(
+      GTK_TOGGLE_BUTTON(
+         stacktimeline_show_mpi_recv_checkbutton),
+      FALSE);
+
    gtk_builder_connect_signals(builder, NULL);
 }
 

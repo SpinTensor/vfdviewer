@@ -678,7 +678,7 @@ l=0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="main_comm_matrix_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -1093,6 +1093,7 @@ For message count this option has no effect.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">activate to display send messages in the communication matrix.</property>
                                         <property name="halign">start</property>
                                         <property name="draw_indicator">True</property>
                                         <signal name="toggled" handler="on_comm_matrix_direction_select_send_toggled" swapped="no"/>
@@ -1109,6 +1110,7 @@ For message count this option has no effect.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">activate to display received messages in the communication matrix.</property>
                                         <property name="halign">start</property>
                                         <property name="draw_indicator">True</property>
                                         <signal name="toggled" handler="on_comm_matrix_direction_select_recv_toggled" swapped="no"/>
@@ -1153,6 +1155,9 @@ For message count this option has no effect.</property>
                                   <object class="GtkLabel" id="comm_matrix_cursorpos_label">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
+                                    <property name="tooltip_text" translatable="yes">Displays the clicked on pair of processes
+in the communication matrix as well as the
+obtained value.</property>
                                     <property name="label" translatable="yes">send proc: 123
 recv proc: 123
 BW: 1.234e-12</property>

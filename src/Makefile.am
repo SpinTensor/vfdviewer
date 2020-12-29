@@ -13,7 +13,7 @@ bin_PROGRAMS = vfdviewer
 
 vfdviewer_SOURCES = vfdviewer.c
 vfdviewer_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
-vfdviewer_LDFLAGS = @GTK_LIBS@ -rdynamic 
+vfdviewer_LDFLAGS = @GTK_LIBS@ -rdynamic -lm
 vfdviewer_LDADD = libvfd.la \
 		  libvgtk.la \
 		  libvutils.la 
@@ -64,4 +64,4 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_surfaces.c
 libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir)
 libvgtk_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
-libvgtk_la_LDFLAGS = @GTK_LIBS@
+libvgtk_la_LDFLAGS = @GTK_LIBS@ -lm

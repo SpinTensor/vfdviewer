@@ -8,6 +8,7 @@
 
 comm_matrix_mode_t comm_matrix_mode = cm_max;
 comm_matrix_unit_t comm_matrix_unit = cm_bw;
+comm_matrix_plot_t comm_matrix_plot = cm_lin;
 
 GtkRadioButton *comm_matrix_metric_select_max = NULL;
 GtkRadioButton *comm_matrix_metric_select_avg = NULL;
@@ -16,6 +17,9 @@ GtkRadioButton *comm_matrix_metric_select_min = NULL;
 GtkRadioButton *comm_matrix_unit_select_bw = NULL;
 GtkRadioButton *comm_matrix_unit_select_size = NULL;
 GtkRadioButton *comm_matrix_unit_select_count = NULL;
+
+GtkRadioButton *comm_matrix_plot_select_linear = NULL;
+GtkRadioButton *comm_matrix_plot_select_log = NULL;
 
 GtkCheckButton *comm_matrix_direction_select_send = NULL;
 GtkCheckButton *comm_matrix_direction_select_recv = NULL;
@@ -60,6 +64,20 @@ void vgtk_build_comm_matrix_mode_switcher(GtkBuilder *builder) {
       comm_matrix_unit_select_count),
       FALSE);
 
+   // plot type selection buttons
+   comm_matrix_plot_select_linear = GTK_RADIO_BUTTON(
+      gtk_builder_get_object(builder, "comm_matrix_plot_select_linear"));
+   comm_matrix_plot_select_log = GTK_RADIO_BUTTON(
+      gtk_builder_get_object(builder, "comm_matrix_plot_select_log"));
+
+   // only activate one button
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+      comm_matrix_plot_select_linear),
+      TRUE);
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+      comm_matrix_plot_select_log),
+      FALSE);
+
    // direction activation buttons
    comm_matrix_direction_select_send = GTK_CHECK_BUTTON(
       gtk_builder_get_object(builder, "comm_matrix_direction_select_send"));
@@ -85,6 +103,10 @@ comm_matrix_mode_t comm_matrix_get_metric_mode() {
 
 comm_matrix_unit_t comm_matrix_get_unit() {
    return comm_matrix_unit;
+}
+
+comm_matrix_plot_t comm_matrix_get_plot() {
+   return comm_matrix_plot;
 }
 
 bool comm_matrix_direction_send_checked() {
@@ -192,6 +214,37 @@ void on_comm_matrix_metric_select_min_toggled(
    active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
    if (active) {
       comm_matrix_mode = cm_min;
+      comm_matrix_invalidate();
+      comm_matrix_redraw();
+   }
+}
+
+// callback functions for plot type switching radio buttons
+void on_comm_matrix_plot_select_linear_toggled(
+   GtkRadioButton *button,
+   gpointer data) {
+   (void) data;
+
+   // get radio button state
+   gboolean active;
+   active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+   if (active) {
+      comm_matrix_plot = cm_lin;
+      comm_matrix_invalidate();
+      comm_matrix_redraw();
+   }
+}
+
+void on_comm_matrix_plot_select_log_toggled(
+   GtkRadioButton *button,
+   gpointer data) {
+   (void) data;
+
+   // get radio button state
+   gboolean active;
+   active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+   if (active) {
+      comm_matrix_plot = cm_log;
       comm_matrix_invalidate();
       comm_matrix_redraw();
    }

@@ -1,5 +1,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <float.h>
+
+#include <math.h>
 
 #include <gtk/gtk.h>
 
@@ -118,39 +121,91 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
                          1.0);
    cairo_paint(cr);
 
-   GtkDrawingArea *drawing_area = comm_matrix_matrix_drawing_area;
+   if (comm_matrix.any_entry_valid) {
+      GtkDrawingArea *drawing_area = comm_matrix_matrix_drawing_area;
+   
+      // get surface dimensions
+      int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
+      int sfheight = gtk_widget_get_allocated_height(GTK_WIDGET(drawing_area));
+   
+      double rect_width = (double) sfwidth / ((double) nprocs);
+      double rect_height = (double) sfheight / ((double) nprocs);
+   
+      comm_matrix_plot_t plot_type = comm_matrix_get_plot();
+      double min;
+      double max;
+      double delta;
+      double maxpow = pow(10.0, -DBL_MAX_10_EXP);
+      switch (plot_type) {
+         case cm_lin:
+            min = comm_matrix.minval;
+            max = comm_matrix.maxval;
+            break;
+         case cm_log:
+            // prevent infinities from appearing
+            if (comm_matrix.minval > maxpow) {
+               min = log10(comm_matrix.minval);
+            } else {
+               min = -DBL_MAX_10_EXP;
+            }
+            if (comm_matrix.maxval > maxpow) {
+               max = log10(comm_matrix.maxval);
+            } else {
+               max = -DBL_MAX_10_EXP;
+            }
+            break;
+         default:
+            min = comm_matrix.minval;
+            max = comm_matrix.maxval;
+            break;
+      }
+      delta = max - min;
+      if (delta < 10*DBL_MIN) {
+         delta = 10*DBL_MIN;
+      }
 
-   // get surface dimensions
-   int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
-   int sfheight = gtk_widget_get_allocated_height(GTK_WIDGET(drawing_area));
+      for (int icol=0; icol<nprocs; icol++) {
+         for (int irow=0; irow<nprocs; irow++) {
+            if (comm_matrix.entry_valid[irow*nprocs+icol]) {
+               double value;
+               switch (plot_type) {
+                  case cm_lin:
+                     value = comm_matrix.data[irow*nprocs+icol];
+                     break;
+                  case cm_log:
+                     if (comm_matrix.data[irow*nprocs+icol] > maxpow) {
+                        value = log10(comm_matrix.data[irow*nprocs+icol]);
+                     } else {
+                        value = -DBL_MAX_10_EXP;
+                     }
+                     break;
+                  default:
+                     value = comm_matrix.data[irow*nprocs+icol];
+                     break;
+               }
+               value = (value - min) / delta;
 
-   double rect_width = (double) sfwidth / ((double) nprocs);
-   double rect_height = (double) sfheight / ((double) nprocs);
-
-   for (int icol=0; icol<nprocs; icol++) {
-      for (int irow=0; irow<nprocs; irow++) {
-         if (comm_matrix.entry_valid[irow*nprocs+icol]) {
-            double value = comm_matrix.data[irow*nprocs+icol]/comm_matrix.maxval;
-            vgtk_color_t color;
-            color = vgtk_color_gradient(value);
-
-            cairo_set_source_rgba(cr,
-                                  color.red,
-                                  color.green,
-                                  color.blue,
-                                  color.alpha);
-            cairo_rectangle(cr,
-                            icol*rect_width, (nprocs-irow-1)*rect_height,
-                            rect_width, rect_height);
-            cairo_fill_preserve(cr);
-
-            cairo_set_source_rgba(cr,
-                                  195.0/255.0,
-                                  195.0/255.0,
-                                  195.0/255.0,
-                                  0.5);
-            cairo_stroke(cr);
-
+               vgtk_color_t color;
+               color = vgtk_color_gradient(value);
+   
+               cairo_set_source_rgba(cr,
+                                     color.red,
+                                     color.green,
+                                     color.blue,
+                                     color.alpha);
+               cairo_rectangle(cr,
+                               icol*rect_width, (nprocs-irow-1)*rect_height,
+                               rect_width, rect_height);
+               cairo_fill_preserve(cr);
+   
+               cairo_set_source_rgba(cr,
+                                     195.0/255.0,
+                                     195.0/255.0,
+                                     195.0/255.0,
+                                     0.5);
+               cairo_stroke(cr);
+   
+            }
          }
       }
    }

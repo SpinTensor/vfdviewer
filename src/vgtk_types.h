@@ -26,6 +26,12 @@ typedef enum {
    cm_count
 } comm_matrix_unit_t;
 
+typedef enum {
+   cm_lin,
+   cm_log,
+   cm_inv
+} comm_matrix_plot_t;
+
 typedef struct {
    int nprocs;
    bool valid;

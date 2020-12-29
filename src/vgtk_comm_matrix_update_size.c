@@ -87,10 +87,12 @@ void comm_matrix_update_size_max(vgtk_comm_matrix_t *comm_matrix) {
       comm_matrix->minval = comm_matrix->data[first_valid];
 
       for (int idx=first_valid; idx<nprocs*nprocs; idx++) {
-         if (comm_matrix->data[idx] > comm_matrix->maxval) {
-            comm_matrix->maxval = comm_matrix->data[idx];
-         } else if (comm_matrix->data[idx] < comm_matrix->minval) {
-            comm_matrix->minval = comm_matrix->data[idx];
+         if (comm_matrix->entry_valid[idx]) {
+            if (comm_matrix->data[idx] > comm_matrix->maxval) {
+               comm_matrix->maxval = comm_matrix->data[idx];
+            } else if (comm_matrix->data[idx] < comm_matrix->minval) {
+               comm_matrix->minval = comm_matrix->data[idx];
+            }
          }
       }
    }
@@ -183,10 +185,12 @@ void comm_matrix_update_size_avg(vgtk_comm_matrix_t *comm_matrix) {
       comm_matrix->minval = comm_matrix->data[first_valid];
 
       for (int idx=first_valid; idx<nprocs*nprocs; idx++) {
-         if (comm_matrix->data[idx] > comm_matrix->maxval) {
-            comm_matrix->maxval = comm_matrix->data[idx];
-         } else if (comm_matrix->data[idx] < comm_matrix->minval) {
-            comm_matrix->minval = comm_matrix->data[idx];
+         if (comm_matrix->entry_valid[idx]) {
+            if (comm_matrix->data[idx] > comm_matrix->maxval) {
+               comm_matrix->maxval = comm_matrix->data[idx];
+            } else if (comm_matrix->data[idx] < comm_matrix->minval) {
+               comm_matrix->minval = comm_matrix->data[idx];
+            }
          }
       }
    }
@@ -280,10 +284,12 @@ void comm_matrix_update_size_min(vgtk_comm_matrix_t *comm_matrix) {
       comm_matrix->minval = comm_matrix->data[first_valid];
 
       for (int idx=first_valid; idx<nprocs*nprocs; idx++) {
-         if (comm_matrix->data[idx] > comm_matrix->maxval) {
-            comm_matrix->maxval = comm_matrix->data[idx];
-         } else if (comm_matrix->data[idx] < comm_matrix->minval) {
-            comm_matrix->minval = comm_matrix->data[idx];
+         if (comm_matrix->entry_valid[idx]) {
+            if (comm_matrix->data[idx] > comm_matrix->maxval) {
+               comm_matrix->maxval = comm_matrix->data[idx];
+            } else if (comm_matrix->data[idx] < comm_matrix->minval) {
+               comm_matrix->minval = comm_matrix->data[idx];
+            }
          }
       }
    }

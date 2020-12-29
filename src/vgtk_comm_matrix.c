@@ -228,7 +228,8 @@ void on_comm_matrix_matrix_drawing_area_button_press_event(
    // get value from communication matrix
    int idx = recv_rank*nprocs + send_rank;
    double value = comm_matrix.data[idx];
+   bool valid = comm_matrix.entry_valid[idx];
 
    // set the cursor pos label
-   set_comm_matrix_cursorpos_label(send_rank, recv_rank, value);
+   set_comm_matrix_cursorpos_label(send_rank, recv_rank, value, valid);
 }

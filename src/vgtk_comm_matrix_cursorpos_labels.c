@@ -15,7 +15,7 @@ void vgtk_build_comm_matrix_cursorpos_labels(GtkBuilder *builder) {
    gtk_builder_connect_signals(builder, NULL);
 }
 
-void set_comm_matrix_cursorpos_label(int send_rank, int recv_rank, double value) {
+void set_comm_matrix_cursorpos_label(int send_rank, int recv_rank, double value, bool valid) {
    // a static string to hold a temporary version of a label
    static char *labelstring = NULL;
 
@@ -91,14 +91,25 @@ void set_comm_matrix_cursorpos_label(int send_rank, int recv_rank, double value)
       }
    }
 
-   snprintf(labelstring,
-            labelstrlen-1,
-            "send proc=%*d\n"
-            "recv proc=%*d\n"
-            "%s%4.3le%s",
-            send_rank_digits, send_rank,
-            recv_rank_digits, recv_rank,
-            obs_string, value, unit_string);
+   if (valid) {
+      snprintf(labelstring,
+               labelstrlen-1,
+               "send proc=%*d\n"
+               "recv proc=%*d\n"
+               "%s%4.3le%s",
+               send_rank_digits, send_rank,
+               recv_rank_digits, recv_rank,
+               obs_string, value, unit_string);
+   } else {
+      snprintf(labelstring,
+               labelstrlen-1,
+               "send proc=%*d\n"
+               "recv proc=%*d\n"
+               "%s ---",
+               send_rank_digits, send_rank,
+               recv_rank_digits, recv_rank,
+               obs_string);
+   }
 
    gtk_label_set_text(comm_matrix_cursorpos_label, labelstring);
 }

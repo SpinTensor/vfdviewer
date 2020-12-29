@@ -416,7 +416,7 @@ e.g.: mpi_\|MPI_</property>
                     <child>
                       <object class="GtkScrollbar" id="main_stacktimeline_horizontal_scrollbar">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can_focus">True</property>
                         <property name="adjustment">main_stacktimeline_horizontal_scrollbar_adjustment</property>
                         <property name="lower_stepper_sensitivity">on</property>
                         <property name="upper_stepper_sensitivity">on</property>

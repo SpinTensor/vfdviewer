@@ -2,21 +2,23 @@
 
 #include "vfd_types.h"
 #include "vfd_list.h"
+#include "vgtk_types.h"
 #include "vgtk_stacktimeline_entry.h"
-#include "vgtk_comm_matrix_legend.h"
 #include "vgtk_comm_matrix_mode_switcher.h"
 
-void comm_matrix_update_count(int nprocs, double *matrix, double *inorm) {
-   if (nprocs == 0) {return;}
+void comm_matrix_update_count(vgtk_comm_matrix_t *comm_matrix) {
+   if (comm_matrix->nprocs == 0) {return;}
+   int nprocs = comm_matrix->nprocs;
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
 
    bool show_send = comm_matrix_direction_send_checked();
    bool show_recv = comm_matrix_direction_recv_checked();
 
-   // Zero the bandwidth comm matrix
+   // Zero the count comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-      matrix[iproc] = 0.0;
+      comm_matrix->data[iproc] = 0.0;
+      comm_matrix->entry_valid[iproc] = false;
    }
 
    // loop over all vfd-traces
@@ -52,7 +54,8 @@ void comm_matrix_update_count(int nprocs, double *matrix, double *inorm) {
    
                // update the matrix entry
                int idx = irow*nprocs + icol;
-               matrix[idx] += 1.0;
+               comm_matrix->data[idx] += 1.0;
+               comm_matrix->entry_valid[idx] = true;
             }
          }
       }
@@ -62,24 +65,30 @@ void comm_matrix_update_count(int nprocs, double *matrix, double *inorm) {
    }
 
    // normalize the matrix
-   // search for maximum count
-   double maxcount = matrix[0];
-   for (int iproc=1; iproc<nprocs*nprocs; iproc++) {
-      maxcount = maxcount > matrix[iproc] ?
-         maxcount : matrix[iproc];
-   }
-   if (maxcount > 0.0) {
-      for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-         matrix[iproc] /= maxcount;
+   // search for maximum / minimum count
+   //
+   // first find the first valid entry
+   comm_matrix->any_entry_valid = false;
+   int first_valid = -1;
+   for (int idx=0; idx<nprocs*nprocs; idx++) {
+      if (comm_matrix->entry_valid[idx]) {
+         comm_matrix->any_entry_valid = true;
+         first_valid = idx;
+         break;
       }
-   } else {
-      maxcount = 1.0;
    }
 
-   *inorm = maxcount;
+   // now start the actual search
+   if (comm_matrix->any_entry_valid) {
+      comm_matrix->maxval = comm_matrix->data[first_valid];
+      comm_matrix->minval = comm_matrix->data[first_valid];
 
-   // update the legend labels
-   set_comm_matrix_label_max_value(maxcount);
-   set_comm_matrix_label_mid_value(0.5*maxcount);
-   set_comm_matrix_label_min_value(0.0);
+      for (int idx=first_valid; idx<nprocs*nprocs; idx++) {
+         if (comm_matrix->data[idx] > comm_matrix->maxval) {
+            comm_matrix->maxval = comm_matrix->data[idx];
+         } else if (comm_matrix->data[idx] < comm_matrix->minval) {
+            comm_matrix->minval = comm_matrix->data[idx];
+         }
+      }
+   }
 }

@@ -2,12 +2,13 @@
 
 #include "vfd_types.h"
 #include "vfd_list.h"
+#include "vgtk_types.h"
 #include "vgtk_stacktimeline_entry.h"
-#include "vgtk_comm_matrix_legend.h"
 #include "vgtk_comm_matrix_mode_switcher.h"
 
-void comm_matrix_update_size_max(int nprocs, double *matrix, double *inorm) {
-   if (nprocs == 0) {return;}
+void comm_matrix_update_size_max(vgtk_comm_matrix_t *comm_matrix) {
+   if (comm_matrix->nprocs == 0) {return;}
+   int nprocs = comm_matrix->nprocs;
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
 
@@ -16,10 +17,10 @@ void comm_matrix_update_size_max(int nprocs, double *matrix, double *inorm) {
 
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-      matrix[iproc] = 0.0;
+      comm_matrix->data[iproc] = 0.0;
+      comm_matrix->entry_valid[iproc] = false;
    }
 
-   double maxsize = 0.0;
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
@@ -54,13 +55,11 @@ void comm_matrix_update_size_max(int nprocs, double *matrix, double *inorm) {
                // update the matrix entry
                int idx = irow*nprocs + icol;
                double size = message.count * message.typeSize / 1024.0 / 1024.0;
-               matrix[idx] = 
-                  matrix[idx] > size ?
-                     matrix[idx] :
+               comm_matrix->data[idx] =
+                  comm_matrix->data[idx] > size ?
+                     comm_matrix->data[idx] :
                      size;
-
-               // update the maximum bandwidth for normalization
-               maxsize = maxsize > size ? maxsize : size;
+               comm_matrix->entry_valid[idx] = true;
             }
          }
       }
@@ -69,25 +68,37 @@ void comm_matrix_update_size_max(int nprocs, double *matrix, double *inorm) {
       vfdtrace = vfdtrace->next;
    }
 
-   // normalize the matrix
-   if (maxsize > 0.0) {
-      for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-         matrix[iproc] /= maxsize;
+   // search for maximum / minimum count
+   //
+   // first find the first valid entry
+   comm_matrix->any_entry_valid = false;
+   int first_valid = -1;
+   for (int idx=0; idx<nprocs*nprocs; idx++) {
+      if (comm_matrix->entry_valid[idx]) {
+         comm_matrix->any_entry_valid = true;
+         first_valid = idx;
+         break;
       }
-   } else {
-      maxsize = 1.0;
    }
 
-   *inorm = maxsize;
+   // now start the actual search
+   if (comm_matrix->any_entry_valid) {
+      comm_matrix->maxval = comm_matrix->data[first_valid];
+      comm_matrix->minval = comm_matrix->data[first_valid];
 
-   // update the legend labels
-   set_comm_matrix_label_max_value(maxsize);
-   set_comm_matrix_label_mid_value(0.5*maxsize);
-   set_comm_matrix_label_min_value(0.0);
+      for (int idx=first_valid; idx<nprocs*nprocs; idx++) {
+         if (comm_matrix->data[idx] > comm_matrix->maxval) {
+            comm_matrix->maxval = comm_matrix->data[idx];
+         } else if (comm_matrix->data[idx] < comm_matrix->minval) {
+            comm_matrix->minval = comm_matrix->data[idx];
+         }
+      }
+   }
 }
 
-void comm_matrix_update_size_avg(int nprocs, double *matrix, double *inorm) {
-   if (nprocs == 0) {return;}
+void comm_matrix_update_size_avg(vgtk_comm_matrix_t *comm_matrix) {
+   if (comm_matrix->nprocs == 0) {return;}
+   int nprocs = comm_matrix->nprocs;
    unsigned int *count = (unsigned int*) malloc(nprocs*nprocs*sizeof(unsigned int));
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
@@ -97,7 +108,7 @@ void comm_matrix_update_size_avg(int nprocs, double *matrix, double *inorm) {
 
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-      matrix[iproc] = 0.0;
+      comm_matrix->data[iproc] = 0.0;
       count[iproc] = 0;
    }
 
@@ -135,7 +146,7 @@ void comm_matrix_update_size_avg(int nprocs, double *matrix, double *inorm) {
                // update the matrix entry
                int idx = irow*nprocs + icol;
                double size = message.count * message.typeSize / 1024.0 / 1024.0;
-               matrix[idx] += size;
+               comm_matrix->data[idx] += size;
                count[idx]++;
             }
          }
@@ -146,40 +157,47 @@ void comm_matrix_update_size_avg(int nprocs, double *matrix, double *inorm) {
    }
 
    // compute average from accumulated values
-   for (int iproc=1; iproc<nprocs*nprocs; iproc++) {
-      if (count[iproc] > 0) {
-         matrix[iproc] /= (double) count[iproc];
+   for (int idx=0; idx<nprocs*nprocs; idx++) {
+      if (count[idx] > 0) {
+         comm_matrix->entry_valid[idx] = true;
+         comm_matrix->data[idx] /= (double) count[idx];
       }
    }
 
-   // normalize the matrix
-   // search for maximum bandwidth
-   double maxsize = matrix[0];
-   for (int iproc=1; iproc<nprocs*nprocs; iproc++) {
-      maxsize = maxsize > matrix[iproc] ?
-         maxsize : matrix[iproc];
-   }
-   if (maxsize > 0.0) {
-      for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-         matrix[iproc] /= maxsize;
+   // search for maximum / minimum average bandwidth
+   //
+   // first find the first valid entry
+   comm_matrix->any_entry_valid = false;
+   int first_valid = -1;
+   for (int idx=0; idx<nprocs*nprocs; idx++ ){
+      if (comm_matrix->entry_valid[idx]) {
+         comm_matrix->any_entry_valid = true;
+         first_valid = idx;
+         break;
       }
-   } else {
-      maxsize = 1.0;
+   }
+
+   // now start the actual search
+   if (comm_matrix->any_entry_valid) {
+      comm_matrix->maxval = comm_matrix->data[first_valid];
+      comm_matrix->minval = comm_matrix->data[first_valid];
+
+      for (int idx=first_valid; idx<nprocs*nprocs; idx++) {
+         if (comm_matrix->data[idx] > comm_matrix->maxval) {
+            comm_matrix->maxval = comm_matrix->data[idx];
+         } else if (comm_matrix->data[idx] < comm_matrix->minval) {
+            comm_matrix->minval = comm_matrix->data[idx];
+         }
+      }
    }
 
    free(count);
    count = NULL;
-
-   *inorm = maxsize;
-
-   // update the legend labels
-   set_comm_matrix_label_max_value(maxsize);
-   set_comm_matrix_label_mid_value(0.5*maxsize);
-   set_comm_matrix_label_min_value(0.0);
 }
 
-void comm_matrix_update_size_min(int nprocs, double *matrix, double *inorm) {
-   if (nprocs == 0) {return;}
+void comm_matrix_update_size_min(vgtk_comm_matrix_t *comm_matrix) {
+   if (comm_matrix->nprocs == 0) {return;}
+   int nprocs = comm_matrix->nprocs;
    double tmin = get_tmin_stacktimeline_draw();
    double tmax = get_tmax_stacktimeline_draw();
 
@@ -188,7 +206,8 @@ void comm_matrix_update_size_min(int nprocs, double *matrix, double *inorm) {
 
    // Zero the bandwidth comm matrix
    for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-      matrix[iproc] = -1.0;
+      comm_matrix->data[iproc] = 0.0;
+      comm_matrix->entry_valid[iproc] = false;
    }
 
    // loop over all vfd-traces
@@ -225,13 +244,14 @@ void comm_matrix_update_size_min(int nprocs, double *matrix, double *inorm) {
                // update the matrix entry
                int idx = irow*nprocs + icol;
                double size = message.count * message.typeSize / 1024.0 / 1024.0;
-               if (matrix[idx] < 0.0) {
-                  matrix[idx] = size;
-               } else {
-                  matrix[idx] = 
-                     matrix[idx] < size ?
-                        matrix[idx] :
+               if (comm_matrix->entry_valid[idx]) {
+                  comm_matrix->data[idx] = 
+                     comm_matrix->data[idx] < size ?
+                        comm_matrix->data[idx] :
                         size;
+               } else {
+                  comm_matrix->data[idx] = size;
+                  comm_matrix->entry_valid[idx] = true;
                }
             }
          }
@@ -241,29 +261,30 @@ void comm_matrix_update_size_min(int nprocs, double *matrix, double *inorm) {
       vfdtrace = vfdtrace->next;
    }
 
-   // normalize the matrix
-   // search for maximum bandwidth
-   double maxsize = matrix[0];
-   for (int iproc=1; iproc<nprocs*nprocs; iproc++) {
-      maxsize = maxsize > matrix[iproc] ?
-         maxsize : matrix[iproc];
+   // search for maximum / minimum bandwidth
+   //
+   // first find the first valid entry
+   comm_matrix->any_entry_valid = false;
+   int first_valid = -1;
+   for (int idx=0; idx<nprocs*nprocs; idx++) {
+      if (comm_matrix->entry_valid[idx]) {
+         comm_matrix->any_entry_valid = true;
+         first_valid = idx;
+         break;
+      }
    }
-   if (maxsize > 0.0) {
-      for (int iproc=0; iproc<nprocs*nprocs; iproc++) {
-         if (matrix[iproc] < 0.0) {
-            matrix[iproc] = 0.0;
-         } else {
-            matrix[iproc] /= maxsize;
+
+   // now start the actual search
+   if (comm_matrix->any_entry_valid) {
+      comm_matrix->maxval = comm_matrix->data[first_valid];
+      comm_matrix->minval = comm_matrix->data[first_valid];
+
+      for (int idx=first_valid; idx<nprocs*nprocs; idx++) {
+         if (comm_matrix->data[idx] > comm_matrix->maxval) {
+            comm_matrix->maxval = comm_matrix->data[idx];
+         } else if (comm_matrix->data[idx] < comm_matrix->minval) {
+            comm_matrix->minval = comm_matrix->data[idx];
          }
       }
-   } else {
-      maxsize = 1.0;
    }
-
-   *inorm = maxsize;
-
-   // update the legend labels
-   set_comm_matrix_label_max_value(maxsize);
-   set_comm_matrix_label_mid_value(0.5*maxsize);
-   set_comm_matrix_label_min_value(0.0);
 }

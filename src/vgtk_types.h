@@ -1,6 +1,8 @@
 #ifndef VGTK_TYPES
 #define VGTK_TYPES
 
+#include <stdbool.h>
+
 #include <gtk/gtk.h>
 
 typedef struct {
@@ -23,4 +25,15 @@ typedef enum {
    cm_size,
    cm_count
 } comm_matrix_unit_t;
+
+typedef struct {
+   int nprocs;
+   bool valid;
+   double *data;
+   bool *entry_valid;
+   bool any_entry_valid;
+   double maxval;
+   double minval;
+} vgtk_comm_matrix_t;
+
 #endif

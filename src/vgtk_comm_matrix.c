@@ -134,12 +134,14 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
       comm_matrix_plot_t plot_type = comm_matrix_get_plot();
       double min;
       double max;
+      double mid;
       double delta;
       double maxpow = pow(10.0, -DBL_MAX_10_EXP);
       switch (plot_type) {
          case cm_lin:
             min = comm_matrix.minval;
             max = comm_matrix.maxval;
+            mid = 0.5*(min+max);
             break;
          case cm_log:
             // prevent infinities from appearing
@@ -153,16 +155,28 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
             } else {
                max = -DBL_MAX_10_EXP;
             }
+            mid = 0.5*(comm_matrix.minval+comm_matrix.maxval);
+            if (mid > maxpow) {
+               mid = log10(mid);
+            } else {
+               mid = -DBL_MAX_10_EXP;
+            }
             break;
          default:
             min = comm_matrix.minval;
             max = comm_matrix.maxval;
+            mid = 0.5*(min+max);
             break;
       }
       delta = max - min;
       if (delta < 10*DBL_MIN) {
          delta = 10*DBL_MIN;
       }
+
+      // set the legend label
+      set_comm_matrix_label_max_value(max);
+      set_comm_matrix_label_mid_value(mid);
+      set_comm_matrix_label_min_value(min);
 
       for (int icol=0; icol<nprocs; icol++) {
          for (int irow=0; irow<nprocs; irow++) {

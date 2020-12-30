@@ -1095,6 +1095,7 @@ For message count this option has no effect.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">color changes linear with the displayed value.</property>
                                         <property name="halign">start</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>
@@ -1112,6 +1113,7 @@ For message count this option has no effect.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">color changes logarithmicly with the displayed value.</property>
                                         <property name="halign">start</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>

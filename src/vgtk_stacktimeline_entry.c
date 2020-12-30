@@ -526,8 +526,18 @@ gboolean vgtk_stacktimeline_query_tooltip_callback(
    }
 
    if (found_funtion) {
+      int namelen = strlen(vfdtrace->stacks[stackID].name);
+#define LABEL_CONTENT_LEN 16
+      char *tooltipstr = (char*) malloc((namelen+LABEL_CONTENT_LEN)*sizeof(char));
+      snprintf(tooltipstr,
+               (size_t) (LABEL_CONTENT_LEN-1),
+               "%4.3les: ", time);
+      strcpy(tooltipstr+strlen(tooltipstr), vfdtrace->stacks[stackID].name);
       gtk_tooltip_set_text(tooltip,
-                           vfdtrace->stacks[stackID].name);
+                           tooltipstr);
+      free(tooltipstr);
+      tooltipstr = NULL;
+#undef LABEL_CONTENT_LEN
       return TRUE;
    } else {
       return FALSE;

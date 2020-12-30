@@ -526,13 +526,43 @@ gboolean vgtk_stacktimeline_query_tooltip_callback(
    }
 
    if (found_funtion) {
-      int namelen = strlen(vfdtrace->stacks[stackID].name);
+      // go through all functions down the stack
+      // and record their length
+      int sumnamelen = 0;
+      int tmpstackID = stackID;
+      while (tmpstackID != 0) {
+         // add function name length
+         sumnamelen += strlen(vfdtrace->stacks[tmpstackID].name);
+         // add one char for newline characters
+         sumnamelen++;
+         tmpstackID = vfdtrace->stacks[tmpstackID].callerID;
+      }
+      // add lowest element by hand (with stackID == 0)
+      sumnamelen += strlen(vfdtrace->stacks[tmpstackID].name);
+      // add one char for newline characters
+      sumnamelen++;
+
 #define LABEL_CONTENT_LEN 16
-      char *tooltipstr = (char*) malloc((namelen+LABEL_CONTENT_LEN)*sizeof(char));
+      char *tooltipstr = (char*) malloc((sumnamelen+LABEL_CONTENT_LEN)*sizeof(char));
       snprintf(tooltipstr,
                (size_t) (LABEL_CONTENT_LEN-1),
-               "%4.3les: ", time);
-      strcpy(tooltipstr+strlen(tooltipstr), vfdtrace->stacks[stackID].name);
+               "%4.3les:", time);
+      // go through all the functions down the stack
+      // and add the name to the tooltip string
+      tmpstackID = stackID;
+      while (tmpstackID != 0) {
+         int tooltipstrlen = strlen(tooltipstr);
+         tooltipstr[tooltipstrlen] = '\n';
+         tooltipstrlen++;
+         strcpy(tooltipstr+tooltipstrlen, vfdtrace->stacks[tmpstackID].name);
+         tmpstackID = vfdtrace->stacks[tmpstackID].callerID;
+      }
+      // add lowest stack element by hand
+      int tooltipstrlen = strlen(tooltipstr);
+      tooltipstr[tooltipstrlen] = '\n';
+      tooltipstrlen++;
+      strcpy(tooltipstr+tooltipstrlen, vfdtrace->stacks[tmpstackID].name);
+
       gtk_tooltip_set_text(tooltip,
                            tooltipstr);
       free(tooltipstr);

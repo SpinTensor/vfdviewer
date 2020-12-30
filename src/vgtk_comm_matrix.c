@@ -46,6 +46,14 @@ void vgtk_build_comm_matrix(GtkBuilder *builder) {
    gtk_builder_connect_signals(builder, NULL);
 }
 
+double vgtk_comm_matrix_get_maxval() {
+   return comm_matrix.maxval;
+}
+
+double vgtk_comm_matrix_get_minval() {
+   return comm_matrix.minval;
+}
+
 void comm_matrix_update() {
    // Get the number of total processes
    int nprocs = vfds_nprocs();

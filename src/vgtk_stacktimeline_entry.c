@@ -34,10 +34,12 @@ void vgtk_stacktimeline_button_press_callback(
    GtkWidget *widget,
    GdkEventButton *event,
    gpointer data);
-//void vgtk_stacktimeline_motion_notify_callback(
-//   GtkWidget *widget,
-//   GdkEventMotion *event,
-//   gpointer data);
+gboolean vgtk_stacktimeline_query_tooltip_callback(
+   GtkWidget *widget,
+   gint x, gint y,
+   gboolean keyboard,
+   GtkTooltip *tooltip,
+   gpointer data);
 
 vgtk_stackTimelineEntry_t *new_stackTimelineEntry() {
    vgtk_stackTimelineEntry_t *stackTimelineEntry =
@@ -56,8 +58,7 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
    // set a minimum width to the drawing area
    vgtk_set_drawing_area_size(entry->drawing_area);
 
-   // connect the signals TODO
-  /* Signals used to handle the backing surface */
+   // Signals used to handle the backing surface
    g_signal_connect(entry->drawing_area,
                     "draw",
                     G_CALLBACK(vgtk_stacktimeline_draw_callback),
@@ -68,10 +69,6 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
                     (gpointer) vfdtrace);
 
    // Define non-standard widget events.
-//   g_signal_connect(entry->drawing_area,
-//                    "motion-notify-event",
-//                    G_CALLBACK(vgtk_stacktimeline_motion_notify_callback),
-//                    (gpointer) vfdtrace);
    g_signal_connect(entry->drawing_area,
                     "button-press-event",
                     G_CALLBACK(vgtk_stacktimeline_button_press_callback),
@@ -79,8 +76,13 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
    gtk_widget_set_events(GTK_WIDGET(entry->drawing_area),
                          gtk_widget_get_events(GTK_WIDGET(entry->drawing_area))
                             | GDK_BUTTON_PRESS_MASK);
-//                            | GDK_POINTER_MOTION_MASK);
 
+   // define the tooltip
+   gtk_widget_set_has_tooltip(GTK_WIDGET(entry->drawing_area), TRUE);
+   g_signal_connect(entry->drawing_area,
+                    "query-tooltip",
+                    G_CALLBACK(vgtk_stacktimeline_query_tooltip_callback),
+                    (gpointer) vfdtrace);
 
    // add the new drawing area as a widget to the stacktimeline timeline box
    gtk_box_pack_start(main_stacktimeline_timeline_box,
@@ -483,9 +485,51 @@ void vgtk_stacktimeline_button_press_callback(
    }
 }
 
-//void vgtk_stacktimeline_motion_notify_callback(
-//   GtkWidget *widget,
-//   GdkEventMotion *event,
-//   gpointer data) {
-//   printf("motion notify\n");
-//}
+gboolean vgtk_stacktimeline_query_tooltip_callback(
+   GtkWidget *widget,
+   gint x, gint y,
+   gboolean keyboard,
+   GtkTooltip *tooltip,
+   gpointer data) {
+
+   (void) keyboard;
+
+   GtkDrawingArea *drawing_area = GTK_DRAWING_AREA(widget);
+   vfd_t *vfdtrace = (vfd_t*) data;
+
+   // get surface dimensions
+   int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
+   int sfheight = gtk_widget_get_allocated_height(GTK_WIDGET(drawing_area));
+
+   // get maximum level and max runtime to derive image scaling parameters
+   int maxlvl = vfds_max_maxlevel();
+
+   int level = (int) ((maxlvl+2) * (1.0 - ((double) y) / ((double) sfheight)));
+   double time;
+   time = ((double) x) / ((double) sfwidth);
+   time *= (tmax_stacktimeline_draw - tmin_stacktimeline_draw);
+   time += tmin_stacktimeline_draw;
+
+   // search for the function call in the stacktimeline
+   // that fits the time and level of the click
+   bool found_funtion = false;
+   vfd_fcall_t fcall;
+   unsigned int stackID = -1;
+   for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
+      fcall = vfdtrace->fcalls[ifcall];
+      stackID = vfdtrace->fcalls[ifcall].stackID;
+
+      found_funtion = fcall.entry_time < time &&
+                      fcall.exit_time > time &&
+                      vfdtrace->stacks[stackID].level == level;
+      if (found_funtion) {break;}
+   }
+
+   if (found_funtion) {
+      gtk_tooltip_set_text(tooltip,
+                           vfdtrace->stacks[stackID].name);
+      return TRUE;
+   } else {
+      return FALSE;
+   }
+}

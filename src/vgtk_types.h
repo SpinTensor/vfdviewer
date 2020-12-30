@@ -8,6 +8,7 @@
 typedef struct {
    cairo_surface_t *surface;
    GtkDrawingArea *drawing_area;
+   GtkTooltip *tooltip;
 } vgtk_stackTimelineEntry_t;
 
 typedef struct {

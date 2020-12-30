@@ -155,12 +155,8 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
             } else {
                max = -DBL_MAX_10_EXP;
             }
-            mid = 0.5*(comm_matrix.minval+comm_matrix.maxval);
-            if (mid > maxpow) {
-               mid = log10(mid);
-            } else {
-               mid = -DBL_MAX_10_EXP;
-            }
+            mid = 0.5*(min+max);
+            mid = pow(10.0,mid);
             break;
          default:
             min = comm_matrix.minval;
@@ -174,9 +170,9 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
       }
 
       // set the legend label
-      set_comm_matrix_label_max_value(max);
+      set_comm_matrix_label_max_value(comm_matrix.maxval);
       set_comm_matrix_label_mid_value(mid);
-      set_comm_matrix_label_min_value(min);
+      set_comm_matrix_label_min_value(comm_matrix.minval);
 
       for (int icol=0; icol<nprocs; icol++) {
          for (int irow=0; irow<nprocs; irow++) {

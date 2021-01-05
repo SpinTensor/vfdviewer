@@ -17,7 +17,15 @@ GtkTreeStore *stack_tree_treestore = NULL;
 GtkTreeView *stack_tree_treeview = NULL;
 
 GtkTreeViewColumn *stack_tree_treeview_functionnames_column = NULL;
-GtkCellRenderer *stack_tree_treeview_functionnames_text = NULL;
+GtkCellRenderer   *stack_tree_treeview_functionnames_text = NULL;
+GtkTreeViewColumn *stack_tree_treeview_called_column = NULL;
+GtkCellRenderer   *stack_tree_treeview_called_text = NULL;
+GtkTreeViewColumn *stack_tree_treeview_children_called_column = NULL;
+GtkCellRenderer   *stack_tree_treeview_children_called_text = NULL;
+GtkTreeViewColumn *stack_tree_treeview_exclusive_time_column = NULL;
+GtkCellRenderer   *stack_tree_treeview_exclusive_time_text = NULL;
+GtkTreeViewColumn *stack_tree_treeview_inclusive_time_column = NULL;
+GtkCellRenderer   *stack_tree_treeview_inclusive_time_text = NULL;
 
 GtkTreeSelection *stack_tree_treeselection = NULL;
 
@@ -36,26 +44,61 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
    stack_tree_treeview = GTK_TREE_VIEW(
       gtk_builder_get_object(builder, "stack_tree_treeview"));
 
-   stack_tree_treeview_functionnames_column = GTK_TREE_VIEW_COLUMN(
-      gtk_builder_get_object(builder, "stack_tree_treeview_functionnames_column"));
-   stack_tree_treeview_functionnames_text = GTK_CELL_RENDERER(
-      gtk_builder_get_object(builder, "stack_tree_treeview_functionnames_text"));
-
    stack_tree_treeselection = GTK_TREE_SELECTION(
       gtk_builder_get_object(builder, "stack_tree_treeselection"));
 
    stack_tree_treefilter = GTK_TREE_MODEL_FILTER(
       gtk_builder_get_object(builder, "stack_tree_treefilter"));
 
+   // function name column
+   stack_tree_treeview_functionnames_column = GTK_TREE_VIEW_COLUMN(
+      gtk_builder_get_object(builder, "stack_tree_treeview_functionnames_column"));
+   stack_tree_treeview_functionnames_text = GTK_CELL_RENDERER(
+      gtk_builder_get_object(builder, "stack_tree_treeview_functionnames_text"));
    gtk_tree_view_column_add_attribute(stack_tree_treeview_functionnames_column,
                                       stack_tree_treeview_functionnames_text,
                                       "text", 0);
+
+   // exclusive stack time column
+   stack_tree_treeview_exclusive_time_column = GTK_TREE_VIEW_COLUMN(
+      gtk_builder_get_object(builder, "stack_tree_treeview_exclusive_time_column"));
+   stack_tree_treeview_exclusive_time_text = GTK_CELL_RENDERER(
+      gtk_builder_get_object(builder, "stack_tree_treeview_exclusive_time_text"));
+   gtk_tree_view_column_add_attribute(stack_tree_treeview_exclusive_time_column,
+                                      stack_tree_treeview_exclusive_time_text,
+                                      "text", 1);
+
+   // inclusive stack time column
+   stack_tree_treeview_inclusive_time_column = GTK_TREE_VIEW_COLUMN(
+      gtk_builder_get_object(builder, "stack_tree_treeview_inclusive_time_column"));
+   stack_tree_treeview_inclusive_time_text = GTK_CELL_RENDERER(
+      gtk_builder_get_object(builder, "stack_tree_treeview_inclusive_time_text"));
+   gtk_tree_view_column_add_attribute(stack_tree_treeview_inclusive_time_column,
+                                      stack_tree_treeview_inclusive_time_text,
+                                      "text", 2);
+
+   // number of stack calls column
+   stack_tree_treeview_called_column = GTK_TREE_VIEW_COLUMN(
+      gtk_builder_get_object(builder, "stack_tree_treeview_called_column"));
+   stack_tree_treeview_called_text = GTK_CELL_RENDERER(
+      gtk_builder_get_object(builder, "stack_tree_treeview_called_text"));
+   gtk_tree_view_column_add_attribute(stack_tree_treeview_called_column,
+                                      stack_tree_treeview_called_text,
+                                      "text", 3);
+
+   // number of stack call children calls column
+   stack_tree_treeview_children_called_column = GTK_TREE_VIEW_COLUMN(
+      gtk_builder_get_object(builder, "stack_tree_treeview_children_called_column"));
+   stack_tree_treeview_children_called_text = GTK_CELL_RENDERER(
+      gtk_builder_get_object(builder, "stack_tree_treeview_children_called_text"));
+   gtk_tree_view_column_add_attribute(stack_tree_treeview_children_called_column,
+                                      stack_tree_treeview_children_called_text,
+                                      "text", 4);
 
    gtk_tree_model_filter_set_visible_func(
       GTK_TREE_MODEL_FILTER(stack_tree_treefilter),
       (GtkTreeModelFilterVisibleFunc) stack_tree_determine_visibility,
       NULL, NULL);
-
 
    gtk_builder_connect_signals(builder, NULL);
 
@@ -77,6 +120,15 @@ void vgtk_stack_tree_add_level(GtkTreeIter *parentIter, vfd_stack_entry_t *stack
    gtk_tree_store_append(stack_tree_treestore, &iter, parentIter);
    gtk_tree_store_set(stack_tree_treestore, &iter,
                       0, stacklevel->name, -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      1, stacklevel->excl_time, -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      2, stacklevel->incl_time, -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      3, stacklevel->num_called, -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      4, stacklevel->num_calls, -1);
+
    // recuresively go through all callees fo this function
    for (int icallee=0; icallee<stacklevel->ncallees; icallee++) {
       vgtk_stack_tree_add_level(&iter, stacklevel->callees[icallee]);
@@ -90,6 +142,14 @@ void vgtk_stack_tree_add_vfdtrace(vfd_t *vfdtrace) {
    gtk_tree_store_append(stack_tree_treestore, &iter, NULL);
    gtk_tree_store_set(stack_tree_treestore, &iter,
                       0, vfdtrace->filename, -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      1, vfdtrace->header->runtime, -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      2, vfdtrace->header->runtime, -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      3, 1, -1);
+   gtk_tree_store_set(stack_tree_treestore, &iter,
+                      4, 1, -1);
 
    // add all stack entries recursively
    // skip init as it has no additional information

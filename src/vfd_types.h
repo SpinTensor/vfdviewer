@@ -48,6 +48,10 @@ struct vdf_stack_entry_type{
    int namelen;
    char *name;
    vgtk_color_t drawcolor;
+   unsigned int num_called;
+   unsigned int num_calls;
+   double excl_time;
+   double incl_time;
    bool visible_in_treeview;
 };
 

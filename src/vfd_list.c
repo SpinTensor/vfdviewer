@@ -9,6 +9,7 @@
 #include "vfd_fcalls.h"
 #include "vfd_msgreg.h"
 #include "vfd_sort.h"
+#include "vfd_statistics.h"
 
 #include "vgtk_handles.h"
 
@@ -63,6 +64,10 @@ vfd_t *new_vfd(char *vfdpath) {
       // not start on '/' but after it
       new_vfd->filename++;
    }
+
+   // compute addtional statistics
+   vfd_create_stack_statistics(new_vfd->header->fcallscount, new_vfd->fcalls,
+                               new_vfd->stacks);
 
    // create the storage space for gtk handles for the vfd-trace
    new_vfd->vgtk_handles = new_vgtk_handles();

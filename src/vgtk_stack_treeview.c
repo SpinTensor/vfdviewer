@@ -67,6 +67,8 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
    gtk_tree_view_column_add_attribute(stack_tree_treeview_exclusive_time_column,
                                       stack_tree_treeview_exclusive_time_text,
                                       "text", 1);
+   gtk_cell_renderer_set_alignment(stack_tree_treeview_exclusive_time_text,
+                                   1.0, 0.5);
 
    // inclusive stack time column
    stack_tree_treeview_inclusive_time_column = GTK_TREE_VIEW_COLUMN(
@@ -76,6 +78,8 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
    gtk_tree_view_column_add_attribute(stack_tree_treeview_inclusive_time_column,
                                       stack_tree_treeview_inclusive_time_text,
                                       "text", 2);
+   gtk_cell_renderer_set_alignment(stack_tree_treeview_inclusive_time_text,
+                                   1.0, 0.5);
 
    // number of stack calls column
    stack_tree_treeview_called_column = GTK_TREE_VIEW_COLUMN(
@@ -85,6 +89,8 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
    gtk_tree_view_column_add_attribute(stack_tree_treeview_called_column,
                                       stack_tree_treeview_called_text,
                                       "text", 3);
+   gtk_cell_renderer_set_alignment(stack_tree_treeview_called_text,
+                                   1.0, 0.5);
 
    // number of stack call children calls column
    stack_tree_treeview_children_called_column = GTK_TREE_VIEW_COLUMN(
@@ -94,6 +100,8 @@ void vgtk_build_stack_treeview(GtkBuilder *builder) {
    gtk_tree_view_column_add_attribute(stack_tree_treeview_children_called_column,
                                       stack_tree_treeview_children_called_text,
                                       "text", 4);
+   gtk_cell_renderer_set_alignment(stack_tree_treeview_children_called_text,
+                                   1.0, 0.5);
 
    gtk_tree_model_filter_set_visible_func(
       GTK_TREE_MODEL_FILTER(stack_tree_treefilter),

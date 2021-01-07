@@ -8,7 +8,6 @@ noinst_LTLIBRARIES = libvfd.la \
 		     libvgtk.la \
 		     libvutils.la
 
-
 bin_PROGRAMS = vfdviewer
 
 vfdviewer_SOURCES = vfdviewer.c
@@ -16,7 +15,10 @@ vfdviewer_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 vfdviewer_LDFLAGS = @GTK_LIBS@ -rdynamic -lm
 vfdviewer_LDADD = libvfd.la \
 		  libvgtk.la \
-		  libvutils.la 
+		  libvutils.la
+# external libraries
+vfdviewer_LDADD += ${top_builddir}/external/libslope.la \
+		   ${top_builddir}/external/libtinyexpr.la
 
 libvutils_la_SOURCES = mpi_types.c \
 		       v_timer.c \

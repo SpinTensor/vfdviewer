@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "vfd_types.h"
+
 void print_current_fcalls(int ilevel, vfd_fcall_t *curr_stack);
 
 void store_vfcall(int *ilevel, vfd_fcall_t *curr_stack,

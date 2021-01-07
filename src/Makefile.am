@@ -42,7 +42,6 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_main_window.c \
 		     vgtk_main_menu_bar.c \
 		     vgtk_open_file_dialog.c \
-		     vgtk_font_chooser_dialog.c \
 		     vgtk_about_dialog.c \
 		     vgtk_stack_treeview.c \
 		     vgtk_stack_tree_searchentry.c \

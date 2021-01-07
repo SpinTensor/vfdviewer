@@ -4,7 +4,6 @@
 
 #include "vgtk_main_window.h"
 #include "vgtk_open_file_dialog.h"
-#include "vgtk_font_chooser_dialog.h"
 #include "vgtk_about_dialog.h"
 #include "vgtk_main_menu_bar.h"
 #include "vgtk_stack_treeview.h"
@@ -43,9 +42,6 @@ void vgtk_build_user_interface() {
 
    // assign the pointer to the file chooser dialog
    vgtk_build_open_file_dialog(vgtk_builder);
-
-   // assign the pointer to the font chooser dialog
-   vgtk_build_font_chooser_dialog(vgtk_builder);
 
    // assign the pointer to the about dialog
    vgtk_build_about_dialog(vgtk_builder);

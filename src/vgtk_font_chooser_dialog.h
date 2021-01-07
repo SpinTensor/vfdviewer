@@ -5,7 +5,7 @@
 
 void vgtk_build_font_chooser_dialog(GtkBuilder *builder);
 
-char *vgtk_get_selected_font();
+char* vgtk_get_selected_font();
 
 int vgtk_get_selected_font_size();
 

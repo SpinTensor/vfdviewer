@@ -312,6 +312,15 @@ void vgtk_draw_stacktimeline(
       }
    }
 
+   // write the vfd-filename in the top left corner
+   cairo_set_source_rgba(cr, 0.1, 0.1, 0.1, 1.0);
+
+   const double font_size = 12;
+   cairo_set_font_size(cr, font_size);
+   cairo_move_to(cr, 0, font_size);
+   cairo_show_text(cr, vfdtrace->filename);
+
+   // destroy cairo
    cairo_destroy(cr);
 
    // actually draw the queued actions

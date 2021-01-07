@@ -10,15 +10,17 @@ void vgtk_build_font_chooser_dialog(GtkBuilder *builder) {
 }
 
 char *vgtk_get_selected_font() {
-   return gtk_font_chooser_get_font(
+   char *tmpfont = gtk_font_chooser_get_font(
       GTK_FONT_CHOOSER(
          vgtk_font_chooser_dialog));
+   return tmpfont;
 }
 
 int vgtk_get_selected_font_size() {
-   return gtk_font_chooser_get_font_size(
+   int tmpsize = gtk_font_chooser_get_font_size(
       GTK_FONT_CHOOSER(
          vgtk_font_chooser_dialog));
+   return tmpsize;
 }
 
 void run_font_chooser_dialog() {

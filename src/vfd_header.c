@@ -133,7 +133,6 @@ void free_vfd_header(vfd_header_t *vfd_header) {
    vfd_header->stackscount = 0;
    vfd_header->stacksoffset = 0;
    vfd_header->sampleoffset = 0;
-   vfd_header->nhwc = 0;
 
    free(vfd_header);
 }

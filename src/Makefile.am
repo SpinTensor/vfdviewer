@@ -26,6 +26,7 @@ libvutils_la_SOURCES = mpi_types.c \
 libvutils_la_CFLAGS = -g -Wall -Wextra -Wpedantic
 
 libvfd_la_SOURCES = vfd_header.c \
+		    vfd_hwc_header.c \
 		    vfd_stacks.c \
 		    vfd_samples.c \
 		    vfd_fcalls.c \

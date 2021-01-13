@@ -27,7 +27,6 @@ typedef struct {
    unsigned int stackscount;
    long stacksoffset;
    long sampleoffset;
-   int nhwc;
 } vfd_header_t;
 
 typedef enum {
@@ -92,11 +91,27 @@ typedef struct {
    int callingStackID;
 } vfd_message_sample_t;
 
+typedef struct {
+   int n_hw_obs;
+   int n_formulae;
+   char **hw_obs_names;
+   char **te_var_names;
+   char **scen_expr_names;
+   char **scen_expr_formulae;
+   bool *scen_expr_integrated;
+} vfd_hwc_header_t;
+
+typedef struct {
+   double **observables;
+   double **scenarios;
+} vfd_hwc_sample_t;
+
 typedef struct vfd_type vfd_t;
 struct vfd_type {
    char *filepath;
    char *filename;
    vfd_header_t *header;
+   vfd_hwc_header_t *hwc_header;
    int maxlevel;
    vfd_stack_sample_t *stack_samples;
    vfd_fcall_t *fcalls;
@@ -104,6 +119,7 @@ struct vfd_type {
    vfd_msgreg_t *msgregs_recv;
    vfd_message_sample_t *message_samples;
    vfd_stack_entry_t *stacks;
+   vfd_hwc_sample_t *hwc_samples;
    vgtk_handles_t *vgtk_handles;
    vfd_t *prev;
    vfd_t *next;

@@ -6,12 +6,26 @@
 #include "vfd_samples.h"
 
 void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
+                      vfd_hwc_header_t *hwc_header,
                       vfd_stack_sample_t **stack_samples_ptr,
-                      vfd_message_sample_t **message_samples_ptr) {
+                      vfd_message_sample_t **message_samples_ptr,
+                      vfd_hwc_sample_t **hwc_samples_ptr) {
 
    vfd_stack_sample_t *stack_samples = (vfd_stack_sample_t*)
       malloc(header->function_samplecount*sizeof(vfd_stack_sample_t));
    *stack_samples_ptr = stack_samples;
+
+   vfd_hwc_sample_t *hwc_samples = (vfd_hwc_sample_t*)
+      malloc(sizeof(vfd_hwc_sample_t));
+   if (hwc_header->n_hw_obs > 0) {
+      hwc_samples->observables = (double**)
+         malloc(hwc_header->n_hw_obs*sizeof(double*));
+      for (int i=0; i<hwc_header->n_hw_obs; i++) {
+         hwc_samples->observables[i] = (double*)
+            malloc(header->function_samplecount*sizeof(double));
+      }
+   }
+   *hwc_samples_ptr = hwc_samples;
 
    vfd_message_sample_t *message_samples = (vfd_message_sample_t*)
       malloc(header->message_samplecount*sizeof(vfd_message_sample_t));
@@ -44,6 +58,20 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
             fsample_ptr = stack_samples + read_function_samplecount;
             *fsample_ptr = read_vfd_stack_sample(vfd_file);
             fsample_ptr->kind = sample_kind;
+            // read hardware observables
+            for (int i_hwc_obs=0; i_hwc_obs<hwc_header->n_hw_obs; i_hwc_obs++) {
+               read_elem = fread(&(hwc_samples->observables[i_hwc_obs][read_function_samplecount]),
+                  sizeof(double), 1, vfd_file);
+               if (read_elem != 1) {
+                  fprintf(stderr, "Error in reading hardware counter value %s"
+                                  " in sample %u\n"
+                                  "Expected 1 double, read %ld\n",
+                                  hwc_header->hw_obs_names[i_hwc_obs],
+                                  read_function_samplecount,
+                                  read_elem);
+                  exit(EXIT_FAILURE);
+               }
+            }
             read_function_samplecount++;
             break;
          case mpi_message:
@@ -176,6 +204,29 @@ void free_vfd_message_samples(unsigned int nmessage_samples,
                               vfd_message_sample_t *message_samples) {
    (void) nmessage_samples;
    free(message_samples);
+}
+
+void free_vfd_hwc_samples(unsigned int nstack_samples,
+                          int n_hwc_obs, int n_formulae,
+                          vfd_hwc_sample_t *hwc_samples) {
+   (void) nstack_samples;
+   if (n_hwc_obs > 0) {
+      for (int i=0; i< n_hwc_obs; i++) {
+         free(hwc_samples->observables[i]);
+         hwc_samples->observables[i] = NULL;
+      }
+      free(hwc_samples->observables);
+      hwc_samples->observables = NULL;
+   }
+   if (n_formulae > 0) {
+      for (int i=0; i< n_hwc_obs; i++) {
+         free(hwc_samples->scenarios[i]);
+         hwc_samples->scenarios[i] = NULL;
+      }
+      free(hwc_samples->scenarios);
+      hwc_samples->scenarios = NULL;
+   }
+   free(hwc_samples);
 }
 
 void print_vfd_stack_samples(vfd_header_t *header, vfd_stack_sample_t *samples) {

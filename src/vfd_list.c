@@ -4,6 +4,7 @@
 
 #include "vfd_types.h"
 #include "vfd_header.h"
+#include "vfd_hwc_header.h"
 #include "vfd_stacks.h"
 #include "vfd_samples.h"
 #include "vfd_fcalls.h"
@@ -27,6 +28,10 @@ vfd_t *new_vfd(char *vfdpath) {
 
    // read the header information
    read_vfd_header(vfd_handle, &(new_vfd->header));
+
+   // read the hardware counter header information
+   read_vfd_hwc_header(vfd_handle, &(new_vfd->hwc_header));
+
    // read the stack information
    read_vfd_stacks(vfd_handle, new_vfd->header,
                    &(new_vfd->stacks), &(new_vfd->maxlevel));
@@ -34,8 +39,10 @@ vfd_t *new_vfd(char *vfdpath) {
    // they are wildly mixed so there is no chance
    // of reading them separately in one go
    read_vfd_samples(vfd_handle, new_vfd->header,
+                    new_vfd->hwc_header,
                     &(new_vfd->stack_samples),
-                    &(new_vfd->message_samples));
+                    &(new_vfd->message_samples),
+                    &(new_vfd->hwc_samples));
    fclose(vfd_handle);
 
    // sort the message samples
@@ -78,6 +85,7 @@ vfd_t *new_vfd(char *vfdpath) {
 
 #ifdef _DEBUG
    print_vfd_header(new_vfd->header);
+   print_vfd_hwc_header(new_vfd->hwc_header);
    print_vfd_stacks(new_vfd->header, new_vfd->stacks);
    print_vfd_stack_samples(new_vfd->header, new_vfd->stack_samples);
    print_vfd_message_samples(new_vfd->header, new_vfd->message_samples);
@@ -110,6 +118,12 @@ void free_vfd(vfd_t **vfd_ptr) {
 
    free_vfd_stack_samples(vfd->header->function_samplecount, vfd->stack_samples);
    vfd->stack_samples = NULL;
+
+   free_vfd_hwc_samples(vfd->header->function_samplecount,
+                        vfd->hwc_header->n_hw_obs,
+                        vfd->hwc_header->n_formulae,
+                        vfd->hwc_samples);
+   vfd->hwc_samples = NULL;
 
    free_vfd_fcalls(vfd->header->function_samplecount, vfd->fcalls);
    vfd->fcalls = NULL;

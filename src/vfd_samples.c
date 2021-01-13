@@ -207,8 +207,7 @@ void free_vfd_message_samples(unsigned int nmessage_samples,
 }
 
 void free_vfd_hwc_samples(unsigned int nstack_samples,
-                          int n_hwc_obs, int n_formulae,
-                          vfd_hwc_sample_t *hwc_samples) {
+                          int n_hwc_obs, vfd_hwc_sample_t *hwc_samples) {
    (void) nstack_samples;
    if (n_hwc_obs > 0) {
       for (int i=0; i< n_hwc_obs; i++) {
@@ -217,14 +216,6 @@ void free_vfd_hwc_samples(unsigned int nstack_samples,
       }
       free(hwc_samples->observables);
       hwc_samples->observables = NULL;
-   }
-   if (n_formulae > 0) {
-      for (int i=0; i< n_hwc_obs; i++) {
-         free(hwc_samples->scenarios[i]);
-         hwc_samples->scenarios[i] = NULL;
-      }
-      free(hwc_samples->scenarios);
-      hwc_samples->scenarios = NULL;
    }
    free(hwc_samples);
 }

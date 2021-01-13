@@ -18,8 +18,7 @@ vfd_message_sample_t read_vfd_message_sample(FILE *vfd_file);
 void free_vfd_stack_samples(unsigned int nstack_samples,
                             vfd_stack_sample_t *stack_samples);
 void free_vfd_hwc_samples(unsigned int nstack_samples,
-                          int n_hwc_obs, int n_formulae,
-                          vfd_hwc_sample_t *hwc_samples);
+                          int n_hwc_obs, vfd_hwc_sample_t *hwc_samples);
 
 void free_vfd_message_samples(unsigned int nmessage_samples,
                               vfd_message_sample_t *message_samples);

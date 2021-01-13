@@ -103,7 +103,6 @@ typedef struct {
 
 typedef struct {
    double **observables;
-   double **scenarios;
 } vfd_hwc_sample_t;
 
 typedef struct vfd_type vfd_t;

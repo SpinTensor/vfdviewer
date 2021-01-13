@@ -121,7 +121,6 @@ void free_vfd(vfd_t **vfd_ptr) {
 
    free_vfd_hwc_samples(vfd->header->function_samplecount,
                         vfd->hwc_header->n_hw_obs,
-                        vfd->hwc_header->n_formulae,
                         vfd->hwc_samples);
    vfd->hwc_samples = NULL;
 

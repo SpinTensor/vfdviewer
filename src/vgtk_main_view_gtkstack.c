@@ -2,6 +2,7 @@
 
 #include "vgtk_main_stacktimeline.h"
 #include "vgtk_main_comm_matrix.h"
+#include "vgtk_main_hwc_plot.h"
 
 GtkStack *main_view_gtkstack = NULL;
 
@@ -18,6 +19,9 @@ void vgtk_build_main_view_gtkstack(GtkBuilder *builder) {
 
    // build the communication matrix
    vgtk_build_main_comm_matrix(builder);
+
+   // build the performance counter plotting
+   vgtk_build_main_hwc_plot(builder);
 
    gtk_builder_connect_signals(builder, NULL);
 }

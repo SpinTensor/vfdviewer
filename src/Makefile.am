@@ -1,3 +1,4 @@
+
 # install directory for glade file
 # without specific choice it is
 # $(prefix)/share/vfdviewer/
@@ -64,8 +65,13 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_comm_matrix_update_size.c \
 		     vgtk_comm_matrix_update_count.c \
 		     vgtk_comm_matrix_cursorpos_labels.c \
+		     vgtk_main_hwc_plot.c \
+		     vgtk_hwc_plot.c \
 		     vgtk_colors.c \
 		     vgtk_surfaces.c
-libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir)
+libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir) \
+		     -I$(top_srcdir)/external/tinyexpr/ \
+		     -I$(top_srcdir)/external/slope/slope/include/ \
+		     -I$(top_srcdir)/external/slope/slope/include/slope
 libvgtk_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 libvgtk_la_LDFLAGS = @GTK_LIBS@ -lm

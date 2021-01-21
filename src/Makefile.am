@@ -1,3 +1,7 @@
+# define the include path to the external libraries
+external_includes = -I$(top_srcdir)/external/tinyexpr/ \
+		    -I$(top_srcdir)/external/slope/slope/include/ \
+		    -I$(top_srcdir)/external/slope/slope/include/slope
 
 # install directory for glade file
 # without specific choice it is
@@ -12,6 +16,7 @@ noinst_LTLIBRARIES = libvfd.la \
 bin_PROGRAMS = vfdviewer
 
 vfdviewer_SOURCES = vfdviewer.c
+vfdviewer_CPPFLAGS = ${external_includes}
 vfdviewer_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 vfdviewer_LDFLAGS = @GTK_LIBS@ -rdynamic -lm
 vfdviewer_LDADD = libvfd.la \
@@ -36,6 +41,7 @@ libvfd_la_SOURCES = vfd_header.c \
 		    vfd_sort.c \
 		    vfd_list.c \
 		    vfd_load.c
+libvfd_la_CPPFLAGS = ${external_includes}
 libvfd_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 
 
@@ -67,11 +73,10 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_comm_matrix_cursorpos_labels.c \
 		     vgtk_main_hwc_plot.c \
 		     vgtk_hwc_plot.c \
+		     vgtk_hwc_plot_entry.c \
 		     vgtk_colors.c \
 		     vgtk_surfaces.c
 libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir) \
-		     -I$(top_srcdir)/external/tinyexpr/ \
-		     -I$(top_srcdir)/external/slope/slope/include/ \
-		     -I$(top_srcdir)/external/slope/slope/include/slope
+		     ${external_includes}
 libvgtk_la_CFLAGS = @GTK_CFLAGS@ -g -Wall -Wextra -Wpedantic
 libvgtk_la_LDFLAGS = @GTK_LIBS@ -lm

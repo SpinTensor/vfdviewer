@@ -5,4 +5,8 @@
 
 void vgtk_build_hwc_plot(GtkBuilder *builder);
 
+void vgtk_hwc_plot_update();
+
+void vgtk_hwc_plot_add_slopeitem(SlopeItem *item);
+
 #endif

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include <gtk/gtk.h>
+#include <slope.h>
 
 typedef struct {
    cairo_surface_t *surface;
@@ -12,7 +13,15 @@ typedef struct {
 } vgtk_stackTimelineEntry_t;
 
 typedef struct {
+   unsigned int ndata;
+   double *xcoords;
+   double *ycoords;
+   SlopeItem *slopeitem;
+} vgtk_hwcPlotEntry_t;
+
+typedef struct {
    vgtk_stackTimelineEntry_t *stackTimelineEntry;
+   vgtk_hwcPlotEntry_t *hwcPlotEntry;
 } vgtk_handles_t;
 
 typedef enum {

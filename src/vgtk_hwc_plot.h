@@ -2,6 +2,7 @@
 #define VGTK_HWC_PLOT_H
 
 #include <gtk/gtk.h>
+#include <slope.h>
 
 void vgtk_build_hwc_plot(GtkBuilder *builder);
 

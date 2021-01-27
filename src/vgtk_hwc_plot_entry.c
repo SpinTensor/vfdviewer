@@ -2,6 +2,7 @@
 
 #include <gtk/gtk.h>
 #include <slope.h>
+#include <tinyexpr.h>
 
 #include "vfd_types.h"
 #include "vgtk_types.h"
@@ -61,4 +62,43 @@ void free_hwcPlotEntry(vgtk_hwcPlotEntry_t **hwcPlotEntry_ptr) {
    free(hwcPlotEntry->ycoords);
    hwcPlotEntry->ycoords = NULL;
 
+}
+
+void evaluate_hwc_expression(vfd_t *vfdtrace, const char *expression) {
+   int nhwc = vfdtrace->hwc_header->n_hw_obs;
+printf("%d\n", rand());
+
+   double *tmp_var_storage = (double*) malloc((nhwc+1)*sizeof(double));
+
+   te_variable *vars = (te_variable*) malloc((nhwc+1)*sizeof(te_variable));
+   for (int ivar=0; ivar<nhwc; ivar++) {
+      vars[ivar].name = vfdtrace->hwc_header->te_var_names[ivar];
+      vars[ivar].address = tmp_var_storage+ivar;
+   }
+   // add sampling time as extra variable
+   vars[nhwc].name = "stime";
+   vars[nhwc].address = tmp_var_storage+nhwc;
+
+   int err;
+   te_expr *expr = te_compile(expression, vars, nhwc+1, &err);
+   printf("err = %d\n", err);
+   vgtk_hwcPlotEntry_t *entry = vfdtrace->vgtk_handles->hwcPlotEntry;
+   for (unsigned int i=0; i<entry->ndata; i++) {
+      printf("%d:", i);
+      for (int ivar=0; ivar<nhwc; ivar++) {
+         printf(" %f", vfdtrace->hwc_samples->observables[ivar][i]);
+      }
+      printf("\n");
+   }
+   for (unsigned int i=0; i<entry->ndata; i++) {
+      for (int ivar=0; ivar<nhwc; ivar++) {
+         tmp_var_storage[ivar] = vfdtrace->hwc_samples->observables[ivar][i];
+      }
+      tmp_var_storage[nhwc] = entry->xcoords[i];
+      entry->ycoords[i] = te_eval(expr);
+   }
+
+   te_free(expr);
+   free(vars);
+   free(tmp_var_storage);
 }

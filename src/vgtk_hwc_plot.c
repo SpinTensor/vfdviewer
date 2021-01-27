@@ -6,6 +6,7 @@
 #include "vfd_types.h"
 #include "vgtk_types.h"
 #include "vgtk_hwc_plot.h"
+#include "vgtk_hwc_plot_entry.h"
 #include "vfd_list.h"
 
 GtkBox *main_hwc_plot_box = NULL;
@@ -40,6 +41,13 @@ void vgtk_build_hwc_plot(GtkBuilder *builder) {
 }
 
 void vgtk_hwc_plot_update() {
+   vfd_t *vfdtrace = first_vfd();
+
+   while (vfdtrace != NULL) {
+      evaluate_hwc_expression(vfdtrace, "4*sin(stime)");
+      vfdtrace = vfdtrace->next;
+   }
+
    slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
 }
 

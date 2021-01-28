@@ -44,7 +44,7 @@ void vgtk_hwc_plot_update() {
    vfd_t *vfdtrace = first_vfd();
 
    while (vfdtrace != NULL) {
-      evaluate_hwc_expression(vfdtrace, "4*sin(stime)");
+      evaluate_hwc_expression(vfdtrace, "1.5*sin(stime)+1.5");
       vfdtrace = vfdtrace->next;
    }
 

@@ -60,17 +60,19 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
             fsample_ptr->kind = sample_kind;
             // read hardware observables
             for (int i_hwc_obs=0; i_hwc_obs<hwc_header->n_hw_obs; i_hwc_obs++) {
-               read_elem = fread(&(hwc_samples->observables[i_hwc_obs][read_function_samplecount]),
-                  sizeof(double), 1, vfd_file);
+               long long tmp_hwc_obs;
+               read_elem = fread(&tmp_hwc_obs, sizeof(long long), 1, vfd_file);
                if (read_elem != 1) {
                   fprintf(stderr, "Error in reading hardware counter value %s"
                                   " in sample %u\n"
-                                  "Expected 1 double, read %ld\n",
+                                  "Expected 1 long long, read %ld\n",
                                   hwc_header->hw_obs_names[i_hwc_obs],
                                   read_function_samplecount,
                                   read_elem);
                   exit(EXIT_FAILURE);
                }
+               hwc_samples->observables[i_hwc_obs][read_function_samplecount] = 
+                  tmp_hwc_obs;
             }
             read_function_samplecount++;
             break;
@@ -80,7 +82,8 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
             read_message_samplecount++;
             break;
          default:
-            fprintf(stderr, "Unknown sample kind while reading vfd samples\n");
+            fprintf(stderr, "Unknown sample kind (%d) while reading vfd samples\n",
+                  sample_kind);
             exit(EXIT_FAILURE);
             break;
       }
@@ -210,7 +213,7 @@ void free_vfd_hwc_samples(unsigned int nstack_samples,
                           int n_hwc_obs, vfd_hwc_sample_t *hwc_samples) {
    (void) nstack_samples;
    if (n_hwc_obs > 0) {
-      for (int i=0; i< n_hwc_obs; i++) {
+      for (int i=0; i< n_hwc_obs-1; i++) {
          free(hwc_samples->observables[i]);
          hwc_samples->observables[i] = NULL;
       }

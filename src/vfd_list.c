@@ -28,13 +28,22 @@ vfd_t *new_vfd(char *vfdpath) {
 
    // read the header information
    read_vfd_header(vfd_handle, &(new_vfd->header));
+#ifdef _DEBUG
+   print_vfd_header(new_vfd->header);
+#endif
 
    // read the hardware counter header information
    read_vfd_hwc_header(vfd_handle, &(new_vfd->hwc_header));
+#ifdef _DEBUG
+   print_vfd_hwc_header(new_vfd->hwc_header);
+#endif
 
    // read the stack information
    read_vfd_stacks(vfd_handle, new_vfd->header,
                    &(new_vfd->stacks), &(new_vfd->maxlevel));
+#ifdef _DEBUG
+   print_vfd_stacks(new_vfd->header, new_vfd->stacks);
+#endif
    // read stack and message samples
    // they are wildly mixed so there is no chance
    // of reading them separately in one go
@@ -43,6 +52,10 @@ vfd_t *new_vfd(char *vfdpath) {
                     &(new_vfd->stack_samples),
                     &(new_vfd->message_samples),
                     &(new_vfd->hwc_samples));
+#ifdef _DEBUG
+   print_vfd_stack_samples(new_vfd->header, new_vfd->stack_samples);
+   print_vfd_message_samples(new_vfd->header, new_vfd->message_samples);
+#endif
    fclose(vfd_handle);
 
    // sort the message samples
@@ -51,13 +64,20 @@ vfd_t *new_vfd(char *vfdpath) {
 
    // construct message regions
    construct_vfd_msgregs(new_vfd);
+#ifdef _DEBUG
+   print_vfd_msgregs(new_vfd->header,
+                     new_vfd->msgregs_send,
+                     new_vfd->msgregs_recv);
+#endif
 
    // construct the function calls timeline
    construct_vfd_fcalls(new_vfd);
-
    // sort the fcalls
    shellsort_fcalls(new_vfd->header->fcallscount,
                     new_vfd->fcalls);
+#ifdef _DEBUG
+   print_vfd_fcalls(new_vfd->header, new_vfd->fcalls);
+#endif
 
    // find the last occurence of '/',
    // which marks the end of the filepath
@@ -82,18 +102,6 @@ vfd_t *new_vfd(char *vfdpath) {
    // initialize the linked list connectors
    new_vfd->next = NULL;
    new_vfd->prev = NULL;
-
-#ifdef _DEBUG
-   print_vfd_header(new_vfd->header);
-   print_vfd_hwc_header(new_vfd->hwc_header);
-   print_vfd_stacks(new_vfd->header, new_vfd->stacks);
-   print_vfd_stack_samples(new_vfd->header, new_vfd->stack_samples);
-   print_vfd_message_samples(new_vfd->header, new_vfd->message_samples);
-   print_vfd_msgregs(new_vfd->header,
-                     new_vfd->msgregs_send,
-                     new_vfd->msgregs_recv);
-   print_vfd_fcalls(new_vfd->header, new_vfd->fcalls);
-#endif
 
    return new_vfd;
 }

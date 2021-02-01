@@ -1397,6 +1397,7 @@ BW: 1.234e-12</property>
                                   <object class="GtkEntry">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="width_chars">16</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1408,6 +1409,7 @@ BW: 1.234e-12</property>
                                   <object class="GtkEntry">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="width_chars">16</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1444,23 +1446,29 @@ BW: 1.234e-12</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <child>
-                                      <object class="GtkSpinButton">
+                                      <object class="GtkEntry" id="hwc_plot_xrange_min_entry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="width_chars">8</property>
+                                        <property name="input_purpose">number</property>
+                                        <signal name="activate" handler="on_hwc_plot_xrange_min_entry_activate" swapped="no"/>
                                       </object>
                                       <packing>
-                                        <property name="expand">False</property>
+                                        <property name="expand">True</property>
                                         <property name="fill">True</property>
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkSpinButton">
+                                      <object class="GtkEntry" id="hwc_plot_xrange_max_entry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="width_chars">8</property>
+                                        <property name="input_purpose">number</property>
+                                        <signal name="activate" handler="on_hwc_plot_xrange_max_entry_activate" swapped="no"/>
                                       </object>
                                       <packing>
-                                        <property name="expand">False</property>
+                                        <property name="expand">True</property>
                                         <property name="fill">True</property>
                                         <property name="position">1</property>
                                       </packing>
@@ -1489,23 +1497,29 @@ BW: 1.234e-12</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <child>
-                                      <object class="GtkSpinButton">
+                                      <object class="GtkEntry" id="hwc_plot_yrange_min_entry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="width_chars">8</property>
+                                        <property name="input_purpose">number</property>
+                                        <signal name="activate" handler="on_hwc_plot_yrange_min_entry_activate" swapped="no"/>
                                       </object>
                                       <packing>
-                                        <property name="expand">False</property>
+                                        <property name="expand">True</property>
                                         <property name="fill">True</property>
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkSpinButton">
+                                      <object class="GtkEntry" id="hwc_plot_yrange_max_entry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="width_chars">8</property>
+                                        <property name="input_purpose">number</property>
+                                        <signal name="activate" handler="on_hwc_plot_yrange_max_entry_activate" swapped="no"/>
                                       </object>
                                       <packing>
-                                        <property name="expand">False</property>
+                                        <property name="expand">True</property>
                                         <property name="fill">True</property>
                                         <property name="position">1</property>
                                       </packing>

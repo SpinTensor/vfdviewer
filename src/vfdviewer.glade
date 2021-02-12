@@ -1308,114 +1308,116 @@ BW: 1.234e-12</property>
                       <placeholder/>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="hwc_plot_toolbar_box">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="margin_left">2</property>
+                        <property name="margin_right">2</property>
+                        <property name="margin_top">2</property>
+                        <property name="margin_bottom">2</property>
+                        <property name="spacing">4</property>
                         <child>
-                          <object class="GtkButtonBox">
+                          <object class="GtkBox" id="hwc_plot_derived_counters_box">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="spacing">4</property>
-                            <property name="layout_style">start</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkLabel" id="hwc_plot_derived_counters_header_label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Available Counter</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkScrolledWindow">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="shadow_type">in</property>
-                                    <child>
-                                      <object class="GtkViewport">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <child>
-                                          <object class="GtkListBox">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
+                                <property name="label" translatable="yes">Derived Counters</property>
                               </object>
                               <packing>
-                                <property name="expand">True</property>
+                                <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkComboBox" id="hwc_plot_derived_counters_select_counter_combobox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="hwc_plot_derived_counters_formula_entry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="width_chars">16</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="hwc_plot_derived_counters_observablename_entry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="width_chars">16</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">3</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="hwc_plot_available_traces_box">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkLabel" id="hwc_plot_available_traces_header_label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">VFD traces</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="shadow_type">in</property>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkViewport">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Derived Counters</property>
+                                    <child>
+                                      <object class="GtkBox" id="hwc_plot_available_traces_list_box">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                      </object>
+                                    </child>
                                   </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="width_chars">16</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="width_chars">16</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">3</property>
-                                  </packing>
                                 </child>
                               </object>
                               <packing>
@@ -1424,191 +1426,26 @@ BW: 1.234e-12</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">x-range</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkEntry" id="hwc_plot_xrange_min_entry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="width_chars">8</property>
-                                        <property name="input_purpose">number</property>
-                                        <signal name="activate" handler="on_hwc_plot_xrange_min_entry_activate" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkEntry" id="hwc_plot_xrange_max_entry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="width_chars">8</property>
-                                        <property name="input_purpose">number</property>
-                                        <signal name="activate" handler="on_hwc_plot_xrange_max_entry_activate" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">y-range</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkEntry" id="hwc_plot_yrange_min_entry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="width_chars">8</property>
-                                        <property name="input_purpose">number</property>
-                                        <signal name="activate" handler="on_hwc_plot_yrange_min_entry_activate" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkEntry" id="hwc_plot_yrange_max_entry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="width_chars">8</property>
-                                        <property name="input_purpose">number</property>
-                                        <signal name="activate" handler="on_hwc_plot_yrange_max_entry_activate" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">3</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">VFD traces</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkScrolledWindow">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="shadow_type">in</property>
-                                    <child>
-                                      <object class="GtkViewport">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <child>
-                                          <object class="GtkListBox">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="test_replot_button">
-                                <property name="label" translatable="yes">replto</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <signal name="clicked" handler="on_test_replot_button_clicked" swapped="no"/>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">4</property>
-                              </packing>
-                            </child>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
-                            <property name="position">0</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                         <child>
-                          <placeholder/>
+                          <object class="GtkButton" id="test_replot_button">
+                            <property name="label" translatable="yes">replto</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="clicked" handler="on_test_replot_button_clicked" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">3</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>

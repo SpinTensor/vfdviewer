@@ -10,4 +10,6 @@ void vgtk_hwc_plot_update();
 
 void vgtk_hwc_plot_add_slopeitem(SlopeItem *item);
 
+void vgtk_hwc_plot_remove_slopeitem(SlopeItem *item);
+
 #endif

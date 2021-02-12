@@ -56,3 +56,11 @@ void vgtk_hwc_plot_add_slopeitem(SlopeItem *item) {
 
    vgtk_hwc_plot_update();
 }
+
+void vgtk_hwc_plot_remove_slopeitem(SlopeItem *item) {
+   slope_scale_remove_item(hwc_plot_scale, item);
+
+   vgtk_hwc_plot_update();
+}
+
+

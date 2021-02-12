@@ -75,7 +75,7 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_hwc_plot.c \
 		     vgtk_hwc_plot_entry.c \
 		     vgtk_hwc_plot_test_button.c \
-		     vgtk_hwc_plot_range_select.c \
+		     vgtk_hwc_plot_trace_list.c \
 		     vgtk_colors.c \
 		     vgtk_surfaces.c
 libvgtk_la_CPPFLAGS= -D_DATADIR=$(pkgdatadir) \

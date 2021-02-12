@@ -17,6 +17,7 @@ typedef struct {
    double *xcoords;
    double *ycoords;
    SlopeItem *slopeitem;
+   GtkCheckButton *showTraceHWCs;
 } vgtk_hwcPlotEntry_t;
 
 typedef struct {

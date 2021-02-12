@@ -8,6 +8,12 @@
 #include "vgtk_types.h"
 #include "vgtk_hwc_plot.h"
 #include "vfd_list.h"
+#include "vgtk_hwc_plot_trace_list.h"
+
+// callback definitions
+void vgtk_hwc_plot_available_traces_check_button_toggled(
+   GtkCheckButton *checkButton,
+   gpointer user_data);
 
 vgtk_hwcPlotEntry_t *new_hwcPlotEntry() {
    vgtk_hwcPlotEntry_t *hwcPlotEntry =
@@ -16,6 +22,7 @@ vgtk_hwcPlotEntry_t *new_hwcPlotEntry() {
    hwcPlotEntry->xcoords = NULL;
    hwcPlotEntry->ycoords = NULL;
    hwcPlotEntry->slopeitem = NULL;
+   hwcPlotEntry->showTraceHWCs = NULL;
 
    return hwcPlotEntry;
 }
@@ -51,16 +58,38 @@ void init_hwcPlotEntry(vfd_t *vfdtrace) {
          optionstr);
 
    vgtk_hwc_plot_add_slopeitem(entry->slopeitem);
+
+   //create the entry in the list for available traces
+   entry->showTraceHWCs = GTK_CHECK_BUTTON(
+      gtk_check_button_new_with_label(vfdtrace->filename));
+   // set default state to toggled (true)
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(entry->showTraceHWCs), TRUE);
+
+   // add checkbutton to hwc-plot trace list
+   vgtk_hwc_plot_available_traces_add_trace(entry->showTraceHWCs);
+
+   // connect toggle signal
+   g_signal_connect(entry->showTraceHWCs,
+                    "toggled",
+                    G_CALLBACK(vgtk_hwc_plot_available_traces_check_button_toggled),
+                    (gpointer) vfdtrace);
 }
 
 void free_hwcPlotEntry(vgtk_hwcPlotEntry_t **hwcPlotEntry_ptr) {
    vgtk_hwcPlotEntry_t *hwcPlotEntry = *hwcPlotEntry_ptr;
 
-   // 
+   // free data
    free(hwcPlotEntry->xcoords);
    hwcPlotEntry->xcoords = NULL;
    free(hwcPlotEntry->ycoords);
    hwcPlotEntry->ycoords = NULL;
+
+   // remove item from plot
+   vgtk_hwc_plot_remove_slopeitem(hwcPlotEntry->slopeitem);
+
+   // remove check button widget from available traces list
+   gtk_widget_destroy(GTK_WIDGET(hwcPlotEntry->showTraceHWCs));
+
 
 }
 
@@ -92,4 +121,21 @@ void evaluate_hwc_expression(vfd_t *vfdtrace, const char *expression) {
    te_free(expr);
    free(vars);
    free(tmp_var_storage);
+}
+
+// callback function for the trace list check button toggle
+void vgtk_hwc_plot_available_traces_check_button_toggled(
+   GtkCheckButton *checkButton,
+   gpointer user_data) {
+   vfd_t *vfdtrace = (vfd_t*) user_data;
+
+   gboolean active;
+   active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(checkButton));
+   if (active) {
+      vgtk_hwc_plot_add_slopeitem(
+         vfdtrace->vgtk_handles->hwcPlotEntry->slopeitem); 
+   } else {
+      vgtk_hwc_plot_remove_slopeitem(
+         vfdtrace->vgtk_handles->hwcPlotEntry->slopeitem);
+   }
 }

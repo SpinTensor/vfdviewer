@@ -72,10 +72,14 @@ void vgtk_hwc_set_plot_yaxis_title(const char *title) {
    SlopeItem *axis = slope_xyscale_get_axis(SLOPE_XYSCALE(hwc_plot_scale),
                                             SLOPE_XYSCALE_AXIS_LEFT);
 
+#ifdef __DEBUG
    printf("current yaxis title: %s\n", slope_xyaxis_get_title(SLOPE_XYAXIS(axis)));
+#endif
    slope_xyaxis_set_title(SLOPE_XYAXIS(axis), title);
 
+#ifdef __DEBUG
    printf("new yaxis title: %s\n", slope_xyaxis_get_title(SLOPE_XYAXIS(axis)));
+#endif
    slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
 }
 

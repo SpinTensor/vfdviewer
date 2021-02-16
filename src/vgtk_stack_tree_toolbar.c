@@ -8,6 +8,7 @@
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_comm_matrix.h"
 #include "vgtk_comm_matrix_grid.h"
+#include "vgtk_hwc_plot_select_observables.h"
 #include "vfd_list.h"
 
 GtkToolbar *stack_tree_toolbar = NULL;
@@ -77,5 +78,6 @@ void on_stack_tree_toolbar_remove_button_clicked(GtkToolButton *button) {
       comm_matrix_invalidate();
       comm_matrix_redraw();
       vgtk_comm_matrix_set_proc_labels(vfds_nprocs());
+      set_hwc_plot_derived_counters_select_counter_comboboxtext_options();
    }
 }

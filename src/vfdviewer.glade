@@ -1334,9 +1334,14 @@ BW: 1.234e-12</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkComboBox" id="hwc_plot_derived_counters_select_counter_combobox">
+                              <object class="GtkComboBoxText" id="hwc_plot_derived_counters_select_counter_comboboxtext">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="active">0</property>
+                                <items>
+                                  <item id="0" translatable="yes">Custom</item>
+                                </items>
+                                <signal name="changed" handler="on_hwc_plot_derived_counters_select_counter_comboboxtext_changed" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

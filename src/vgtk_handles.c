@@ -12,6 +12,7 @@ vgtk_handles_t *new_vgtk_handles() {
    vgtk_handles_t *handles = (vgtk_handles_t*) malloc(sizeof(vgtk_handles_t));
    handles->stackTimelineEntry = new_stackTimelineEntry();
    handles->hwcPlotEntry = new_hwcPlotEntry();
+
    return handles;
 }
 

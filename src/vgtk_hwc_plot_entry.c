@@ -104,7 +104,7 @@ void evaluate_hwc_expression(vfd_t *vfdtrace, const char *expression) {
       vars[ivar].address = tmp_var_storage+ivar;
    }
    // add sampling time as extra variable
-   vars[nhwc].name = "stime";
+   vars[nhwc].name = "t";
    vars[nhwc].address = tmp_var_storage+nhwc;
 
    int err;

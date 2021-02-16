@@ -2,6 +2,7 @@
 
 #include <gtk/gtk.h>
 #include <slope.h>
+//#include <xyscale.h>
 
 #include "vfd_types.h"
 #include "vgtk_types.h"
@@ -32,7 +33,7 @@ void vgtk_build_hwc_plot(GtkBuilder *builder) {
                          hwc_plot_figure);
 
    vgtk_hwc_plot_update();
-   hwc_plot_scale = slope_xyscale_new();
+   hwc_plot_scale = slope_xyscale_new_axis("runtime / s", "", "");
    slope_figure_add_scale(SLOPE_FIGURE(hwc_plot_figure),
                           hwc_plot_scale);
 
@@ -63,4 +64,15 @@ void vgtk_hwc_plot_remove_slopeitem(SlopeItem *item) {
    vgtk_hwc_plot_update();
 }
 
+void vgtk_hwc_set_plot_yaxis_title(const char *title) {
+
+   SlopeItem *axis = slope_xyscale_get_axis(SLOPE_XYSCALE(hwc_plot_scale),
+                                            SLOPE_XYSCALE_AXIS_LEFT);
+
+   printf("current yaxis title: %s\n", slope_xyaxis_get_title(SLOPE_XYAXIS(axis)));
+   slope_xyaxis_set_title(SLOPE_XYAXIS(axis), title);
+
+   printf("new yaxis title: %s\n", slope_xyaxis_get_title(SLOPE_XYAXIS(axis)));
+   slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
+}
 

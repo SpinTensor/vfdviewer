@@ -1361,6 +1361,7 @@ BW: 1.234e-12</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="width_chars">16</property>
+                                <signal name="activate" handler="on_hwc_plot_derived_counters_observablename_entry_activate" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

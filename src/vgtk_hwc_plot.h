@@ -12,4 +12,6 @@ void vgtk_hwc_plot_add_slopeitem(SlopeItem *item);
 
 void vgtk_hwc_plot_remove_slopeitem(SlopeItem *item);
 
+void vgtk_hwc_set_plot_yaxis_title(const char *title);
+
 #endif

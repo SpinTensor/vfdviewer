@@ -8,6 +8,7 @@
 #include "vgtk_types.h"
 #include "vgtk_hwc_plot.h"
 #include "vgtk_hwc_plot_entry.h"
+#include "vgtk_hwc_plot_select_observables.h"
 #include "vfd_list.h"
 
 GtkBox *main_hwc_plot_box = NULL;
@@ -32,7 +33,6 @@ void vgtk_build_hwc_plot(GtkBuilder *builder) {
    slope_view_set_figure(SLOPE_VIEW(hwc_plot_view),
                          hwc_plot_figure);
 
-   vgtk_hwc_plot_update();
    hwc_plot_scale = slope_xyscale_new_axis("runtime / s", "", "");
    slope_figure_add_scale(SLOPE_FIGURE(hwc_plot_figure),
                           hwc_plot_scale);
@@ -44,8 +44,11 @@ void vgtk_build_hwc_plot(GtkBuilder *builder) {
 void vgtk_hwc_plot_update() {
    vfd_t *vfdtrace = first_vfd();
 
+   const char *observable_expression =
+      vgtk_hwc_plot_derived_counters_formula_entry_get_text();
+
    while (vfdtrace != NULL) {
-      evaluate_hwc_expression(vfdtrace, "fpec * 1e-6");
+      evaluate_hwc_expression(vfdtrace, observable_expression);
       vfdtrace = vfdtrace->next;
    }
 

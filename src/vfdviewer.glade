@@ -1349,6 +1349,8 @@ BW: 1.234e-12</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="width_chars">16</property>
+                                <property name="placeholder_text" translatable="yes">&lt;observable expression&gt;</property>
+                                <signal name="activate" handler="on_hwc_plot_derived_counters_formula_entry_activate" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1361,6 +1363,7 @@ BW: 1.234e-12</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="width_chars">16</property>
+                                <property name="placeholder_text" translatable="yes">&lt;observable name&gt;</property>
                                 <signal name="activate" handler="on_hwc_plot_derived_counters_observablename_entry_activate" swapped="no"/>
                               </object>
                               <packing>

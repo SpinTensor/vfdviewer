@@ -1421,6 +1421,7 @@ BW: 1.234e-12</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
+                                            <property name="active">True</property>
                                             <property name="draw_indicator">True</property>
                                             <signal name="toggled" handler="on_hwc_plot_available_traces_selectall_checkbutton_toggled" swapped="no"/>
                                           </object>

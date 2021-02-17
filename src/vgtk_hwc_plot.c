@@ -33,9 +33,10 @@ void vgtk_build_hwc_plot(GtkBuilder *builder) {
    slope_view_set_figure(SLOPE_VIEW(hwc_plot_view),
                          hwc_plot_figure);
 
-   hwc_plot_scale = slope_xyscale_new_axis("runtime / s", "", "");
+   hwc_plot_scale = slope_xyscale_new();
    slope_figure_add_scale(SLOPE_FIGURE(hwc_plot_figure),
                           hwc_plot_scale);
+   vgtk_hwc_set_plot_xaxis_title("runtime / s");
 
    gtk_widget_show_all(GTK_WIDGET(main_hwc_plot_box));
    gtk_builder_connect_signals(builder, NULL);
@@ -83,3 +84,18 @@ void vgtk_hwc_set_plot_yaxis_title(const char *title) {
    slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
 }
 
+void vgtk_hwc_set_plot_xaxis_title(const char *title) {
+
+   SlopeItem *axis = slope_xyscale_get_axis(SLOPE_XYSCALE(hwc_plot_scale),
+                                            SLOPE_XYSCALE_AXIS_BOTTOM);
+
+#ifdef __DEBUG
+   printf("current xaxis title: %s\n", slope_xyaxis_get_title(SLOPE_XYAXIS(axis)));
+#endif
+   slope_xyaxis_set_title(SLOPE_XYAXIS(axis), title);
+
+#ifdef __DEBUG
+   printf("new xaxis title: %s\n", slope_xyaxis_get_title(SLOPE_XYAXIS(axis)));
+#endif
+   slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
+}

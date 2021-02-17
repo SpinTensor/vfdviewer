@@ -74,7 +74,6 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_main_hwc_plot.c \
 		     vgtk_hwc_plot.c \
 		     vgtk_hwc_plot_entry.c \
-		     vgtk_hwc_plot_test_button.c \
 		     vgtk_hwc_plot_select_observables.c \
 		     vgtk_hwc_plot_trace_list.c \
 		     vgtk_colors.c \

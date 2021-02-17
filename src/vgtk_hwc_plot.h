@@ -20,4 +20,6 @@ void vgtk_hwc_set_plot_yrange(double min, double max);
 
 void vgtk_hwc_set_plot_xrange(double min, double max);
 
+void vgtk_hwc_reset_plot_range();
+
 #endif

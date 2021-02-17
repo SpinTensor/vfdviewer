@@ -53,6 +53,7 @@ void vgtk_hwc_plot_update() {
       vfdtrace = vfdtrace->next;
    }
 
+   vgtk_hwc_reset_plot_range();
    slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
 }
 
@@ -108,4 +109,43 @@ void vgtk_hwc_set_plot_yrange(double min, double max) {
 void vgtk_hwc_set_plot_xrange(double min, double max) {
    slope_xyscale_set_x_range(SLOPE_XYSCALE(hwc_plot_scale), min, max);
    slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
+}
+
+void vgtk_hwc_reset_plot_range() {
+   vfd_t *vfdtrace = first_vfd();
+
+   double xmin;
+   double xmax;
+   double ymin;
+   double ymax;
+   if (vfdtrace != NULL) {
+      plot_hwc_get_minmax_values(vfdtrace,
+                                 &xmin, &xmax,
+                                 &ymin, &ymax);
+      vfdtrace = vfdtrace->next;
+   } else {
+      xmin = 0.0;
+      xmax = 1.0;
+      ymin = 0.0;
+      ymax = 1.0;
+   }
+
+   while (vfdtrace != NULL) {
+      double tmpxmin;
+      double tmpxmax;
+      double tmpymin;
+      double tmpymax;
+      plot_hwc_get_minmax_values(vfdtrace,
+                                 &tmpxmin, &tmpxmax,
+                                 &tmpymin, &tmpymax);
+      xmin = xmin < tmpxmin ? xmin : tmpxmin;
+      xmax = xmax > tmpxmax ? xmax : tmpxmax;
+      ymin = ymin < tmpymin ? ymin : tmpymin;
+      ymax = ymax > tmpymax ? ymax : tmpymax;
+
+      vfdtrace = vfdtrace->next;
+   }
+
+   vgtk_hwc_set_plot_xrange(xmin, xmax*1.025);
+   vgtk_hwc_set_plot_yrange(ymin, ymax*1.05);
 }

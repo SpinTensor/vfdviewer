@@ -123,6 +123,34 @@ void evaluate_hwc_expression(vfd_t *vfdtrace, const char *expression) {
    free(tmp_var_storage);
 }
 
+void plot_hwc_get_minmax_values(vfd_t *vfdtrace,
+                                double *xmin, double *xmax,
+                                double *ymin, double *ymax) {
+   unsigned int ndata = vfdtrace->vgtk_handles->hwcPlotEntry->ndata;
+   double *xcoords = vfdtrace->vgtk_handles->hwcPlotEntry->xcoords;
+   double *ycoords = vfdtrace->vgtk_handles->hwcPlotEntry->ycoords;
+   *xmin = xcoords[0];
+   *xmax = xcoords[0];
+   *ymin = ycoords[0];
+   *ymax = ycoords[0];
+
+   for (unsigned int i=1; i<ndata; i++) {
+      if (xcoords[i] < *xmin) {
+         *xmin = xcoords[i];
+      } else if (xcoords[i] > *xmax) {
+         *xmax = xcoords[i];
+      }
+      if (ycoords[i] < *ymin) {
+         *ymin = ycoords[i];
+      } else if (ycoords[i] > *ymax) {
+         *ymax = ycoords[i];
+      }
+   }
+
+   return;
+}
+
+
 // callback function for the trace list check button toggle
 void vgtk_hwc_plot_available_traces_check_button_toggled(
    GtkCheckButton *checkButton,

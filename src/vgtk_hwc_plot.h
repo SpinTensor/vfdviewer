@@ -16,4 +16,8 @@ void vgtk_hwc_set_plot_yaxis_title(const char *title);
 
 void vgtk_hwc_set_plot_xaxis_title(const char *title);
 
+void vgtk_hwc_set_plot_yrange(double min, double max);
+
+void vgtk_hwc_set_plot_xrange(double min, double max);
+
 #endif

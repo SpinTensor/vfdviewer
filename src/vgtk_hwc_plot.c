@@ -99,3 +99,13 @@ void vgtk_hwc_set_plot_xaxis_title(const char *title) {
 #endif
    slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
 }
+
+void vgtk_hwc_set_plot_yrange(double min, double max) {
+   slope_xyscale_set_y_range(SLOPE_XYSCALE(hwc_plot_scale), min, max);
+   slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
+}
+
+void vgtk_hwc_set_plot_xrange(double min, double max) {
+   slope_xyscale_set_x_range(SLOPE_XYSCALE(hwc_plot_scale), min, max);
+   slope_view_redraw(SLOPE_VIEW(hwc_plot_view));
+}

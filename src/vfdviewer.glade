@@ -689,8 +689,7 @@ stack timeline where MPI send traffic occured.</property>
                                   <object class="GtkLabel" id="stacktimeline_cursorpos_label">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="tooltip_text" translatable="yes">Displays the mouse cursor position in the stack timeline
-as time in seconds and stack level depth.</property>
+                                    <property name="tooltip_text" translatable="yes">Displays the mouse cursor position in the stack timeline unpon clicking, as time in seconds and stack level depth.</property>
                                     <property name="label" translatable="yes">t=0.0s
 l=0</property>
                                     <property name="xalign">0</property>
@@ -1337,6 +1336,7 @@ BW: 1.234e-12</property>
                               <object class="GtkComboBoxText" id="hwc_plot_derived_counters_select_counter_comboboxtext">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Select a predefined expression of hardware counters to display. Select "custom" to define your own expression in the fields below.</property>
                                 <property name="active">0</property>
                                 <items>
                                   <item id="0" translatable="yes">Custom</item>
@@ -1367,6 +1367,7 @@ BW: 1.234e-12</property>
                               <object class="GtkEntry" id="hwc_plot_derived_counters_observablename_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Set the y-axis label in the plot.</property>
                                 <property name="width_chars">16</property>
                                 <property name="placeholder_text" translatable="yes">&lt;observable name&gt;</property>
                                 <signal name="activate" handler="on_hwc_plot_derived_counters_observablename_entry_activate" swapped="no"/>
@@ -1405,6 +1406,7 @@ BW: 1.234e-12</property>
                               <object class="GtkScrolledWindow">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">(de)select individual vfd-traces to (hide/)show hardware counter observables in the plot. The special checkbox "all" (de)selects all traces.</property>
                                 <property name="shadow_type">in</property>
                                 <child>
                                   <object class="GtkViewport">

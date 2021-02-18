@@ -71,7 +71,7 @@ void set_hwc_plot_derived_counters_select_counter_comboboxtext_options() {
             // check if reallocation is required.
             if (noptions == max_options) {
                max_options *= 1.4;
-               optlist = (char**) realloc(optlist, max_options);
+               optlist = (char**) realloc(optlist, max_options*sizeof(char*));
             }
 
             optlist[noptions] = vfdtrace->hwc_header->scen_expr_names[iopt];

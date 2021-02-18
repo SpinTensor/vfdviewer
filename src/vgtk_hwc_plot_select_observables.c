@@ -16,6 +16,13 @@ void on_hwc_plot_derived_counters_observablename_entry_activate(
    GtkEntry *entry,
    gpointer user_data);
 
+gboolean vgtk_hwc_plot_derived_counters_formula_entry_query_tooltip_callback(
+   GtkWidget *widget,
+   gint x, gint y,
+   gboolean keyboard,
+   GtkTooltip *tooltip,
+   gpointer data);
+
 GtkComboBoxText *hwc_plot_derived_counters_select_counter_comboboxtext = NULL;
 GtkEntry *hwc_plot_derived_counters_formula_entry = NULL;
 GtkEntry *hwc_plot_derived_counters_observablename_entry = NULL;
@@ -26,6 +33,13 @@ void vgtk_build_hwc_select_observables(GtkBuilder *builder) {
 
    hwc_plot_derived_counters_formula_entry = GTK_ENTRY(
       gtk_builder_get_object(builder, "hwc_plot_derived_counters_formula_entry"));
+   // define the tooltip
+   gtk_widget_set_has_tooltip(GTK_WIDGET(hwc_plot_derived_counters_formula_entry), TRUE);
+   g_signal_connect(hwc_plot_derived_counters_formula_entry,
+                    "query-tooltip",
+                    G_CALLBACK(vgtk_hwc_plot_derived_counters_formula_entry_query_tooltip_callback),
+                    NULL);
+
    hwc_plot_derived_counters_observablename_entry = GTK_ENTRY(
       gtk_builder_get_object(builder, "hwc_plot_derived_counters_observablename_entry"));
 
@@ -167,4 +181,112 @@ void on_hwc_plot_derived_counters_observablename_entry_activate(
 
    const char *text = gtk_entry_get_text(entry);
    vgtk_hwc_set_plot_yaxis_title(text);
+}
+
+gboolean vgtk_hwc_plot_derived_counters_formula_entry_query_tooltip_callback(
+   GtkWidget *widget,
+   gint x, gint y,
+   gboolean keyboard,
+   GtkTooltip *tooltip,
+   gpointer data) {
+
+   (void) widget;
+   (void) x;
+   (void) y;
+   (void) keyboard;
+   (void) data;
+
+   // create a list of unique hwc variables
+   int nhwcs = 0;
+   int max_hwcs = 16;
+   char **hw_names = (char**) malloc(max_hwcs*sizeof(char*));
+   char **te_names = (char**) malloc(max_hwcs*sizeof(char*));
+   hw_names[nhwcs] = "runtime";
+   te_names[nhwcs] = "t";
+   nhwcs++;
+
+   // go over all vfds and add the variable names and their tiny expression name
+   vfd_t *vfdtrace = first_vfd();
+   while (vfdtrace != NULL) {
+      int vfdhwcs = vfdtrace->hwc_header->n_hw_obs;
+      for (int ihwc=0; ihwc<vfdhwcs; ihwc++) {
+         // check if hwc is not already contained in the list
+         bool new_hwc = true;
+         for (int jhwc=0; jhwc<nhwcs; jhwc++) {
+            if (!strcmp(hw_names[jhwc], vfdtrace->hwc_header->hw_obs_names[ihwc])) {
+               new_hwc = false;
+               break;
+            }
+         }
+
+         // hwc is new. add it to the list
+         if (new_hwc) {
+            // check if reallocation is required
+            if (nhwcs == max_hwcs) {
+               max_hwcs *= 1.4;
+               hw_names = (char**) realloc(hw_names, max_hwcs*sizeof(char*));
+               te_names = (char**) realloc(te_names, max_hwcs*sizeof(char*));
+            }
+
+            hw_names[nhwcs] = vfdtrace->hwc_header->hw_obs_names[ihwc];
+            te_names[nhwcs] = vfdtrace->hwc_header->te_var_names[ihwc];
+            nhwcs++;
+         }
+      }
+
+      vfdtrace = vfdtrace->next;
+   }
+
+   if (nhwcs > 0) {
+      // go through all hardware counter names
+      // and record their length
+      int sumstrlen = 0;
+      for (int ihwc=0; ihwc<nhwcs; ihwc++) {
+         // format is "\nhw_name: te_name" per line
+         sumstrlen += strlen(hw_names[ihwc]);
+         sumstrlen += strlen(te_names[ihwc]);
+         sumstrlen += 3; // "\n" and ": "
+      }
+
+      // Add some header text:
+#define HWC_TOOLTIP_HEADER_TEXT "Available variables\n(name: variable)"
+      sumstrlen += strlen(HWC_TOOLTIP_HEADER_TEXT);
+      // add null terminator space
+      sumstrlen ++;
+      // allocate memory and build the tooltip string
+      char *tooltipstr = (char*) malloc(sumstrlen*sizeof(char));
+      char *tooltipstr_ptr = tooltipstr;
+
+      // first the header text
+      strcpy(tooltipstr_ptr, HWC_TOOLTIP_HEADER_TEXT);
+      tooltipstr_ptr += strlen(HWC_TOOLTIP_HEADER_TEXT);
+#undef HWC_TOOLTIP_HEADER_TEXT
+
+      // next all the hwc variables
+      for (int ihwc=0; ihwc<nhwcs; ihwc++) {
+         strcpy(tooltipstr_ptr, "\n");
+         tooltipstr_ptr ++;
+         strcpy(tooltipstr_ptr, hw_names[ihwc]);
+         tooltipstr_ptr += strlen(hw_names[ihwc]);
+         strcpy(tooltipstr_ptr, ": ");
+         tooltipstr_ptr += 2;
+         strcpy(tooltipstr_ptr, te_names[ihwc]);
+         tooltipstr_ptr += strlen(te_names[ihwc]);
+      }
+
+      gtk_tooltip_set_text(tooltip, tooltipstr);
+
+      free(tooltipstr);
+      tooltipstr = NULL;
+      tooltipstr_ptr = NULL;
+
+      free(hw_names);
+      hw_names = NULL;
+      free(te_names);
+      te_names = NULL;
+
+      return TRUE;
+   } else {
+      return FALSE;
+   }
 }

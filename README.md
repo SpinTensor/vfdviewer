@@ -15,16 +15,17 @@ It allows for:
 You can clone an experimental version of the vfdviewer from github.
 The third party tools are included in the git repository as submodules, for your convinience.
 ```bash
-git clone --recursive git@github.com:SpinTensor/vfdviewer.git
+git clone --recursive https://github.com/SpinTensor/vfdviewer.git
 ```
 
 ## Installation
-vfdviewer utilizes GNU autotools to build. The submodules are integrated in the build process. First the cloned repository needs to be prepared for configuration and compilation
+vfdviewer utilizes GNU autotools to build. Make sure `automake`, `autoconf`, and `libtool` are installed on your system. The submodules are integrated in the build process. First the cloned repository needs to be prepared for configuration and compilation
 ```bash
 cd vfdviewer
 autoreconf -i
 ```
 Autoconf and make will take care of the rest. 
+Since vfdviewer requires the gtk3-devel library, you should ensure that it is available on your system. Your gtk installation will be tested by the configure script.
 ```bash
 ./configure --prefix=<path_to_intallation>
 make && make install

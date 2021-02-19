@@ -1,6 +1,6 @@
 [submodule "external/tinyexpr"]
 	path = external/tinyexpr
-	url = git@github.com:codeplea/tinyexpr.git
+	url = https://github.com/codeplea/tinyexpr.git
 [submodule "external/slope"]
 	path = external/slope
-	url = git@github.com:bytebrew/slope.git
+	url = https://github.com/bytebrew/slope.git

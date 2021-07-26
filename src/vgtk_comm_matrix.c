@@ -17,6 +17,7 @@
 #include "vgtk_comm_matrix_update_bw.h"
 #include "vgtk_comm_matrix_update_size.h"
 #include "vgtk_comm_matrix_update_count.h"
+#include "vgtk_comm_matrix_update_time.h"
 #include "vgtk_comm_matrix_cursorpos_labels.h"
 
 GtkDrawingArea *comm_matrix_matrix_drawing_area = NULL;
@@ -105,6 +106,19 @@ void comm_matrix_update() {
          break;
       case cm_count:
          comm_matrix_update_count(&comm_matrix);
+         break;
+      case cm_time:
+         switch(metric) {
+            case cm_max:
+               comm_matrix_update_time_max(&comm_matrix);
+               break;
+            case cm_avg:
+               comm_matrix_update_time_avg(&comm_matrix);
+               break;
+            case cm_min:
+               comm_matrix_update_time_min(&comm_matrix);
+               break;
+         }
          break;
    }
 

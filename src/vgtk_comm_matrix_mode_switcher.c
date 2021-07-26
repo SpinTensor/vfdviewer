@@ -17,6 +17,7 @@ GtkRadioButton *comm_matrix_metric_select_min = NULL;
 GtkRadioButton *comm_matrix_unit_select_bw = NULL;
 GtkRadioButton *comm_matrix_unit_select_size = NULL;
 GtkRadioButton *comm_matrix_unit_select_count = NULL;
+GtkRadioButton *comm_matrix_unit_select_time = NULL;
 
 GtkRadioButton *comm_matrix_plot_select_linear = NULL;
 GtkRadioButton *comm_matrix_plot_select_log = NULL;
@@ -52,6 +53,8 @@ void vgtk_build_comm_matrix_mode_switcher(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "comm_matrix_unit_select_size"));
    comm_matrix_unit_select_count = GTK_RADIO_BUTTON(
       gtk_builder_get_object(builder, "comm_matrix_unit_select_count"));
+   comm_matrix_unit_select_time = GTK_RADIO_BUTTON(
+      gtk_builder_get_object(builder, "comm_matrix_unit_select_time"));
 
    // only activate one button
    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
@@ -62,6 +65,9 @@ void vgtk_build_comm_matrix_mode_switcher(GtkBuilder *builder) {
       FALSE);
    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
       comm_matrix_unit_select_count),
+      FALSE);
+   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+      comm_matrix_unit_select_time),
       FALSE);
 
    // plot type selection buttons
@@ -170,6 +176,23 @@ void on_comm_matrix_unit_select_count_toggled(
       comm_matrix_redraw();
 
       set_comm_matrix_unit_label(cm_count);
+   }
+}
+
+void on_comm_matrix_unit_select_time_toggled(
+   GtkRadioButton *button,
+   gpointer data) {
+   (void) data;
+
+   // get radio button state
+   gboolean active;
+   active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+   if (active) {
+      comm_matrix_unit = cm_time;
+      comm_matrix_invalidate();
+      comm_matrix_redraw();
+
+      set_comm_matrix_unit_label(cm_time);
    }
 }
 

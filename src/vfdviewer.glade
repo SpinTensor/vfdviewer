@@ -1056,6 +1056,23 @@ l=0</property>
                                         <property name="position">2</property>
                                       </packing>
                                     </child>
+                                    <child>
+                                      <object class="GtkRadioButton" id="comm_matrix_unit_select_time">
+                                        <property name="label" translatable="yes">comm. time</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="active">True</property>
+                                        <property name="draw_indicator">True</property>
+                                        <property name="group">comm_matrix_unit_select_bw</property>
+                                        <signal name="toggled" handler="on_comm_matrix_unit_select_time_toggled" swapped="no"/>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">3</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">True</property>

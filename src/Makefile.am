@@ -70,6 +70,7 @@ libvgtk_la_SOURCES = vgtk_handles.c \
 		     vgtk_comm_matrix_update_bw.c \
 		     vgtk_comm_matrix_update_size.c \
 		     vgtk_comm_matrix_update_count.c \
+		     vgtk_comm_matrix_update_time.c \
 		     vgtk_comm_matrix_cursorpos_labels.c \
 		     vgtk_main_hwc_plot.c \
 		     vgtk_hwc_plot.c \

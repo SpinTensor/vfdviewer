@@ -183,8 +183,9 @@ vfd_message_sample_t read_vfd_message_sample(FILE *vfd_file) {
       exit(EXIT_FAILURE);
    }
    message_sample.dtend_sec = message_sample.tend_usec * 1.0e-6; // from microseconds to seconds
+   message_sample.time_sec = message_sample.dtend_sec - message_sample.dtstart_sec;
    message_sample.rate_MiBs = message_sample.count * message_sample.typeSize /
-                       (message_sample.dtend_sec - message_sample.dtstart_sec) /
+                       message_sample.time_sec /
                        (1024.0 * 1024.0);
    read_elem = fread(&(message_sample.callingStackID), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {

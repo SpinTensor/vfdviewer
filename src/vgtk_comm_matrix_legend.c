@@ -83,6 +83,9 @@ void set_comm_matrix_unit_label(comm_matrix_unit_t unit) {
       case cm_count:
          gtk_label_set_text(comm_matrix_legend_unit_label, "---");
          break;
+      case cm_time:
+         gtk_label_set_text(comm_matrix_legend_unit_label, "s");
+         break;
       default:
          gtk_label_set_text(comm_matrix_legend_unit_label, "INVALID");
          break;

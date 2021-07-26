@@ -34,7 +34,8 @@ typedef enum {
 typedef enum {
    cm_bw,
    cm_size,
-   cm_count
+   cm_count,
+   cm_time
 } comm_matrix_unit_t;
 
 typedef enum {

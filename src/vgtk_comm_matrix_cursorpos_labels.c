@@ -51,6 +51,10 @@ void set_comm_matrix_cursorpos_label(int send_rank, int recv_rank, double value,
          obs_string = "count=";
          unit_string = "";
          break;
+      case cm_time:
+         obs_string = "time=";
+         unit_string = "s";
+         break;
       default:
          obs_string = "";
          unit_string = "";

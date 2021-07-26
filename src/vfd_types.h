@@ -87,6 +87,7 @@ typedef struct {
    double dtstart_sec;
    long long tend_usec;
    double dtend_sec;
+   double time_sec;
    double rate_MiBs;
    int callingStackID;
 } vfd_message_sample_t;

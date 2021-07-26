@@ -7,6 +7,8 @@
 
 void vgtk_build_comm_matrix_cursorpos_labels(GtkBuilder *builder);
 
-void set_comm_matrix_cursorpos_label(int send_rank, int recv_rank, double value, bool valid);
+char *comm_matrix_cursorpos_label_string(int send_rank, int recv_rank, double value, bool valid);
+
+void set_comm_matrix_cursorpos_label(char *labelstring);
 
 #endif

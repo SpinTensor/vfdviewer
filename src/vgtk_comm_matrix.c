@@ -292,6 +292,36 @@ gboolean on_comm_matrix_matrix_drawing_area_draw(
    return TRUE;
 }
 
+gboolean on_comm_matrix_matrix_drawing_area_query_tooltip(
+   GtkWidget *widget,
+   gint x, gint y,
+   gboolean keyboard,
+   GtkTooltip *tooltip) {
+
+   (void) keyboard;
+
+   // get surface dimensions
+   int sfwidth = gtk_widget_get_allocated_width(widget);
+   int sfheight = gtk_widget_get_allocated_height(widget);
+
+   // Get the number of total processes
+   int nprocs = comm_matrix.nprocs;
+   // get mouse cursor position
+   int send_rank = nprocs * ((double) (x) / sfwidth);
+   int recv_rank = nprocs * (1.0 - ((double) (y) / sfheight));
+
+   // get value from communication matrix
+   int idx = recv_rank*nprocs + send_rank;
+   double value = comm_matrix.data[idx];
+   bool valid = comm_matrix.entry_valid[idx];
+
+   char *tooltipstr = comm_matrix_cursorpos_label_string(send_rank, recv_rank, value, valid);
+   gtk_tooltip_set_text(tooltip,
+                        tooltipstr);
+
+   return TRUE;
+}
+
 // callback function for left mouse button press on drawing area
 void on_comm_matrix_matrix_drawing_area_button_press_event(
    GtkWidget *widget,
@@ -318,5 +348,6 @@ void on_comm_matrix_matrix_drawing_area_button_press_event(
    bool valid = comm_matrix.entry_valid[idx];
 
    // set the cursor pos label
-   set_comm_matrix_cursorpos_label(send_rank, recv_rank, value, valid);
+   char *labelstring = comm_matrix_cursorpos_label_string(send_rank, recv_rank, value, valid);
+   set_comm_matrix_cursorpos_label(labelstring);
 }

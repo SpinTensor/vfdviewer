@@ -15,7 +15,7 @@ void vgtk_build_comm_matrix_cursorpos_labels(GtkBuilder *builder) {
    gtk_builder_connect_signals(builder, NULL);
 }
 
-void set_comm_matrix_cursorpos_label(int send_rank, int recv_rank, double value, bool valid) {
+char *comm_matrix_cursorpos_label_string(int send_rank, int recv_rank, double value, bool valid) {
    // a static string to hold a temporary version of a label
    static char *labelstring = NULL;
 
@@ -115,5 +115,9 @@ void set_comm_matrix_cursorpos_label(int send_rank, int recv_rank, double value,
                obs_string);
    }
 
+   return labelstring;
+}
+
+void set_comm_matrix_cursorpos_label(char *labelstring) {
    gtk_label_set_text(comm_matrix_cursorpos_label, labelstring);
 }

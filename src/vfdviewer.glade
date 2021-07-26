@@ -852,11 +852,13 @@ l=0</property>
                                         <property name="height_request">100</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
+                                        <property name="has_tooltip">True</property>
                                         <property name="hexpand">True</property>
                                         <property name="vexpand">True</property>
                                         <signal name="button-press-event" handler="on_comm_matrix_matrix_drawing_area_button_press_event" swapped="no"/>
                                         <signal name="configure-event" handler="on_comm_matrix_matrix_drawing_area_configure_event" swapped="no"/>
                                         <signal name="draw" handler="on_comm_matrix_matrix_drawing_area_draw" swapped="no"/>
+                                        <signal name="query-tooltip" handler="on_comm_matrix_matrix_drawing_area_query_tooltip" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>

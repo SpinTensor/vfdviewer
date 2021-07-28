@@ -5,6 +5,7 @@
 #include "vfd_list.h"
 #include "vgtk_stacktimeline_hscrollbar.h"
 #include "vgtk_stacktimeline_entry.h"
+#include "vgtk_comm_matrix.h"
 
 GtkSpinButton *main_stacktimeline_xzoom_spinner = NULL;
 GtkSpinButton *main_stacktimeline_yzoom_spinner = NULL;
@@ -72,6 +73,8 @@ void on_main_stacktimeline_xzoom_spinner_value_changed(
    vgtk_redraw_all_stacktimelines();
 
    vgtk_adjust_main_stacktimeline_hscrollbar();
+
+   comm_matrix_redraw();
 }
 
 // if the y-zoom spinner value is changed

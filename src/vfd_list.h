@@ -55,6 +55,9 @@ void indexlist_from_vfd_trace_and_stack(vfd_t *vfdtrace,
                                         vfd_stack_entry_t *vfd_stack,
                                         int *nidx_ptr, int **idx_ptr);
 
+// returns maximum number of message samples in vfds
+unsigned int vfds_max_message_sample_count();
+
 // returns the maximum of all maxlevel
 int vfds_max_maxlevel();
 

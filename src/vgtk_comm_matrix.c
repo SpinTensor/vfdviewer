@@ -241,13 +241,15 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
          }
       }
    } else {
-      cairo_set_source_rgba(cr, 0.1, 0.1, 0.1, 1.0);
-      const double font_size = 12;
-      cairo_set_font_size(cr, font_size);
-      cairo_move_to(cr, font_size, 2*font_size);
-      cairo_show_text(cr, "No MPI-Communication found.");
-      cairo_move_to(cr, font_size, 3*font_size);
-      cairo_show_text(cr, "Did you run with VFTR_MPI_LOG active?");
+      if (vfds_max_message_sample_count() == 0) {
+         cairo_set_source_rgba(cr, 0.1, 0.1, 0.1, 1.0);
+         const double font_size = 12;
+         cairo_set_font_size(cr, font_size);
+         cairo_move_to(cr, font_size, 2*font_size);
+         cairo_show_text(cr, "No MPI-Communication found.");
+         cairo_move_to(cr, font_size, 3*font_size);
+         cairo_show_text(cr, "Did you run with VFTR_MPI_LOG active?");
+      }
    }
 }
 

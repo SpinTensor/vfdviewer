@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include <math.h>
 #include <gtk/gtk.h>
 
 #include "vgtk_types.h"
@@ -87,6 +88,7 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
    gtk_widget_set_events(GTK_WIDGET(entry->drawing_area),
                          gtk_widget_get_events(GTK_WIDGET(entry->drawing_area))
                             | GDK_BUTTON_RELEASE_MASK);
+   // TODO ADD MOTION EVENT
 
    // define the tooltip
    gtk_widget_set_has_tooltip(GTK_WIDGET(entry->drawing_area), TRUE);
@@ -441,8 +443,6 @@ void vgtk_stacktimeline_button_release_callback(
    vfd_t *vfdtrace = (vfd_t*) data;
    vgtk_stackTimelineEntry_t *entry = vfdtrace->vgtk_handles->stackTimelineEntry;
    entry->buttonactive = false;
-   entry->buttonpressx = event->x;
-   entry->buttonpressy = event->y;
 #ifdef _DEBUG
    printf("Button release event at vfd=%d, x=%f, y=%f\n",
           vfd_position(vfdtrace), entry->buttonpressx, entry->buttonpressy);
@@ -454,84 +454,118 @@ void vgtk_stacktimeline_button_release_callback(
    int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
    int sfheight = gtk_widget_get_allocated_height(GTK_WIDGET(drawing_area));
 
-   // get maximum level and max runtime to derive image scaling parameters
-   int maxlvl = vfds_max_maxlevel();
-
-   int level = (int) ((maxlvl+2) * (1.0 - event->y / sfheight));
-   double time;
-   time = event->x / sfwidth;
-   time *= (tmax_stacktimeline_draw - tmin_stacktimeline_draw);
-   time += tmin_stacktimeline_draw;
-
-   set_stacktimeline_cursorpos_label(time, level);
-
-#ifdef _DEBUG
-   fprintf(stderr, "\n");
-   fprintf(stderr, "Stacktimeline click:\n");
-   fprintf(stderr, "   x=%f, y=%f\n", event->x, event->y);
-   fprintf(stderr, "   time=%f, level=%d\n", time, level);
-#endif
-
-   // search for the function call in the stacktimeline
-   // that fits the time and level of the click
-   bool found_funtion = false;
-   vfd_fcall_t fcall;
-   unsigned int stackID = -1;
-   for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
-      fcall = vfdtrace->fcalls[ifcall];
-      stackID = vfdtrace->fcalls[ifcall].stackID;
-
-      found_funtion = fcall.entry_time < time &&
-                      fcall.exit_time > time &&
-                      vfdtrace->stacks[stackID].level == level;
-      if (found_funtion) {break;}
-   }
-
-   // select the function in stack tree
-   // first get the index list
-   int *indices = NULL;
-   int nidx = 0;
-   indexlist_from_vfd_trace_and_stack(vfdtrace, (vfdtrace->stacks)+stackID,
-                                      &nidx, &indices);
-   // select a the function in the stack tree view
-   stack_tree_select_entry_from_indices(nidx, indices);
-   free(indices);
-
-   if (found_funtion) {
-#ifdef _DEBUG
-      fprintf(stderr, "   stackID=%u\n", stackID);
-      fprintf(stderr, "   name=%s\n", vfdtrace->stacks[stackID].name);
-#endif
-
-      // prepare the name of the matched function
-      // for exact regular expression matching
-      int namelen = strlen(vfdtrace->stacks[stackID].name);
-      int lnamelen = namelen + 2; // "^","$"
-      // reallocate stringbuffer if required
-      if (precise_name_matcher == NULL) {
-         precise_name_matcher = (char*) malloc((lnamelen+1)*sizeof(char));
+   // only select a function for stack filtering if the mouse was barely moved
+   // between button press and release
+   if (fabs(entry->buttonpressx - event->x) > 2.0) {
+      double ntmin;
+      double ntmax;
+      if (entry->buttonpressx > event->x) {
+         ntmin = event->x;
+         ntmax = entry->buttonpressx;
       } else {
-         if ((size_t) lnamelen > strlen(precise_name_matcher)) {
-            free(precise_name_matcher);
-            precise_name_matcher = (char*) malloc((lnamelen+1)*sizeof(char));
-         }
+         ntmin = entry->buttonpressx;
+         ntmax = event->x;
       }
-      // construct string
-      // first char needs to be "^" to mark beginning of text input for regex
-      precise_name_matcher[0] = '^';
-      // next the function name
-      strcpy(precise_name_matcher+1, vfdtrace->stacks[stackID].name);
-      // append a "$" char to indicate the end of the string input
-      precise_name_matcher[namelen+1] = '$';
-      // don't forget the null terminator
-      precise_name_matcher[namelen+2] = '\0';
 
-      // enter the regular expresion into the searchbar
-      vgtk_stack_tree_searchentry_set_text(precise_name_matcher);
-#ifdef _DEBUG
+      // compute the new min and max drawtimes
+      ntmin = ntmin < 0.0 ? 0.0 : ntmin;
+      ntmin /= sfwidth;
+      ntmin *= (tmax_stacktimeline_draw - tmin_stacktimeline_draw);
+      ntmin += tmin_stacktimeline_draw;
+
+      ntmax = ntmax > sfwidth ? sfwidth : ntmax;
+      ntmax /= sfwidth;
+      ntmax *= (tmax_stacktimeline_draw - tmin_stacktimeline_draw);
+      ntmax += tmin_stacktimeline_draw; 
+
+      double tmax_abs = vfds_max_runtime();
+      double ntcen = 0.5*(ntmin + ntmax);
+      double newscale = 2.0*(ntcen - ntmin)/tmax_abs; 
+
+      // set the new zoom values via the spinner signal
+      set_tmin_stacktimeline_draw(ntmin);
+      set_tmax_stacktimeline_draw(ntmax);
+      stacktimeline_xzoom_spinner_set_value(1.0/newscale);
    } else {
-      fprintf(stderr, "   No matching stack\n");
-#endif
+      // get maximum level and max runtime to derive image scaling parameters
+      int maxlvl = vfds_max_maxlevel();
+   
+      int level = (int) ((maxlvl+2) * (1.0 - event->y / sfheight));
+      double time;
+      time = event->x / sfwidth;
+      time *= (tmax_stacktimeline_draw - tmin_stacktimeline_draw);
+      time += tmin_stacktimeline_draw;
+   
+      set_stacktimeline_cursorpos_label(time, level);
+   
+   #ifdef _DEBUG
+      fprintf(stderr, "\n");
+      fprintf(stderr, "Stacktimeline click:\n");
+      fprintf(stderr, "   x=%f, y=%f\n", event->x, event->y);
+      fprintf(stderr, "   time=%f, level=%d\n", time, level);
+   #endif
+   
+      // search for the function call in the stacktimeline
+      // that fits the time and level of the click
+      bool found_funtion = false;
+      vfd_fcall_t fcall;
+      unsigned int stackID = -1;
+      for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
+         fcall = vfdtrace->fcalls[ifcall];
+         stackID = vfdtrace->fcalls[ifcall].stackID;
+   
+         found_funtion = fcall.entry_time < time &&
+                         fcall.exit_time > time &&
+                         vfdtrace->stacks[stackID].level == level;
+         if (found_funtion) {break;}
+      }
+   
+      // select the function in stack tree
+      // first get the index list
+      int *indices = NULL;
+      int nidx = 0;
+      indexlist_from_vfd_trace_and_stack(vfdtrace, (vfdtrace->stacks)+stackID,
+                                         &nidx, &indices);
+      // select a the function in the stack tree view
+      stack_tree_select_entry_from_indices(nidx, indices);
+      free(indices);
+   
+      if (found_funtion) {
+   #ifdef _DEBUG
+         fprintf(stderr, "   stackID=%u\n", stackID);
+         fprintf(stderr, "   name=%s\n", vfdtrace->stacks[stackID].name);
+   #endif
+   
+         // prepare the name of the matched function
+         // for exact regular expression matching
+         int namelen = strlen(vfdtrace->stacks[stackID].name);
+         int lnamelen = namelen + 2; // "^","$"
+         // reallocate stringbuffer if required
+         if (precise_name_matcher == NULL) {
+            precise_name_matcher = (char*) malloc((lnamelen+1)*sizeof(char));
+         } else {
+            if ((size_t) lnamelen > strlen(precise_name_matcher)) {
+               free(precise_name_matcher);
+               precise_name_matcher = (char*) malloc((lnamelen+1)*sizeof(char));
+            }
+         }
+         // construct string
+         // first char needs to be "^" to mark beginning of text input for regex
+         precise_name_matcher[0] = '^';
+         // next the function name
+         strcpy(precise_name_matcher+1, vfdtrace->stacks[stackID].name);
+         // append a "$" char to indicate the end of the string input
+         precise_name_matcher[namelen+1] = '$';
+         // don't forget the null terminator
+         precise_name_matcher[namelen+2] = '\0';
+   
+         // enter the regular expresion into the searchbar
+         vgtk_stack_tree_searchentry_set_text(precise_name_matcher);
+   #ifdef _DEBUG
+      } else {
+         fprintf(stderr, "   No matching stack\n");
+   #endif
+      }
    }
 }
 

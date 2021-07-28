@@ -52,7 +52,6 @@
   <object class="GtkWindow" id="main_window">
     <property name="width_request">768</property>
     <property name="height_request">512</property>
-    <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="default_width">1024</property>
     <property name="default_height">576</property>
@@ -338,65 +337,69 @@ e.g.: mpi_\|MPI_</property>
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="main_view_box">
-            <property name="width_request">500</property>
+          <object class="GtkPaned" id="main_horizontal_paned">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_left">2</property>
+            <property name="can_focus">True</property>
             <property name="margin_right">2</property>
             <property name="margin_top">2</property>
+            <property name="margin_bottom">2</property>
             <property name="orientation">vertical</property>
+            <property name="wide_handle">True</property>
             <child>
-              <object class="GtkStackSwitcher" id="main_view_gtkstackswitcher">
+              <object class="GtkBox" id="main_stacktimeline_box">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="stack">main_view_gtkstack</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkStack" id="main_view_gtkstack">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="transition_type">slide-left-right</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkBox" id="main_stacktimeline_box">
+                  <object class="GtkScrolledWindow" id="main_stacktimeline_scrolledwindow">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">never</property>
+                    <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkScrolledWindow" id="main_stacktimeline_scrolledwindow">
+                      <object class="GtkViewport" id="main_stacktimeline_viewport">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">never</property>
-                        <property name="shadow_type">in</property>
+                        <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkViewport" id="main_stacktimeline_viewport">
+                          <object class="GtkBox" id="main_stacktimeline_timeline_box">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">2</property>
                             <child>
-                              <object class="GtkBox" id="main_stacktimeline_timeline_box">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">2</property>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                              </object>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
                             </child>
                           </object>
                         </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">2</property>
+                    <child>
+                      <object class="GtkLabel" id="tmin_stacktimeline_draw_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">0.0s</property>
+                        <property name="width_chars">16</property>
+                        <property name="single_line_mode">True</property>
+                        <property name="max_width_chars">16</property>
+                        <property name="xalign">0</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -405,580 +408,106 @@ e.g.: mpi_\|MPI_</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkLabel" id="tcen_stacktimeline_draw_label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="spacing">2</property>
-                        <child>
-                          <object class="GtkLabel" id="tmin_stacktimeline_draw_label">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">0.0s</property>
-                            <property name="width_chars">16</property>
-                            <property name="single_line_mode">True</property>
-                            <property name="max_width_chars">16</property>
-                            <property name="xalign">0</property>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="tcen_stacktimeline_draw_label">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">0.5s</property>
-                            <property name="width_chars">16</property>
-                            <property name="single_line_mode">True</property>
-                            <property name="max_width_chars">16</property>
-                            <property name="xalign">0.5</property>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="tmax_stacktimeline_draw_label">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">1.0s</property>
-                            <property name="width_chars">16</property>
-                            <property name="single_line_mode">True</property>
-                            <property name="max_width_chars">16</property>
-                            <property name="xalign">1</property>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">4</property>
-                          </packing>
-                        </child>
+                        <property name="label" translatable="yes">0.5s</property>
+                        <property name="width_chars">16</property>
+                        <property name="single_line_mode">True</property>
+                        <property name="max_width_chars">16</property>
+                        <property name="xalign">0.5</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkScrollbar" id="main_stacktimeline_horizontal_scrollbar">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="adjustment">main_stacktimeline_horizontal_scrollbar_adjustment</property>
-                        <property name="lower_stepper_sensitivity">on</property>
-                        <property name="upper_stepper_sensitivity">on</property>
-                        <signal name="value-changed" handler="on_main_stacktimeline_horizontal_scrollbar_value_changed" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkLabel" id="tmax_stacktimeline_draw_label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <child>
-                          <object class="GtkButtonBox" id="main_stacktimeline_buttonbox">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="spacing">4</property>
-                            <property name="layout_style">start</property>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Horizontal Zoom</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkSpinButton" id="main_stacktimeline_xzoom_spinner">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip_text" translatable="yes">Horizontal (time-axis) zoom factor the stack timeline (1-10000x).</property>
-                                    <property name="xalign">1</property>
-                                    <property name="input_purpose">number</property>
-                                    <property name="adjustment">main_stacktimeline_xzoom_spinner_adjustment</property>
-                                    <property name="climb_rate">0.10000000000000001</property>
-                                    <property name="digits">1</property>
-                                    <property name="numeric">True</property>
-                                    <property name="update_policy">if-valid</property>
-                                    <property name="value">1</property>
-                                    <signal name="value-changed" handler="on_main_stacktimeline_xzoom_spinner_value_changed" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Vertical Zoom</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkSpinButton" id="main_stacktimeline_yzoom_spinner">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="tooltip_text" translatable="yes">Vertical (stack-depth-axis) zoom factor the stack timeline (1-100x).</property>
-                                    <property name="adjustment">main_stacktimeline_yzoom_spinner_adjustment</property>
-                                    <property name="climb_rate">0.10000000000000001</property>
-                                    <property name="digits">1</property>
-                                    <property name="numeric">True</property>
-                                    <signal name="value-changed" handler="on_main_stacktimeline_yzoom_spinner_value_changed" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">4</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">MPI traffic</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkCheckButton" id="stacktimeline_show_mpi_send_checkbutton">
-                                        <property name="label" translatable="yes">send</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">Displays the time slots in the
-stack timeline where MPI send traffic occured.</property>
-                                        <property name="draw_indicator">True</property>
-                                        <signal name="toggled" handler="on_stacktimeline_show_mpi_send_checkbutton_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkCheckButton" id="stacktimeline_show_mpi_recv_checkbutton">
-                                        <property name="label" translatable="yes">recv</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">Displays the time slots in the
-stack timeline where MPI send traffic occured.</property>
-                                        <property name="draw_indicator">True</property>
-                                        <signal name="toggled" handler="on_stacktimeline_show_mpi_recv_checkbutton_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButtonBox">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="layout_style">start</property>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">cursor position</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="stacktimeline_cursorpos_label">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="tooltip_text" translatable="yes">Displays the mouse cursor position in the stack timeline unpon clicking, as time in seconds and stack level depth.</property>
-                                    <property name="label" translatable="yes">t=0.0s
-l=0</property>
-                                    <property name="xalign">0</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
+                        <property name="label" translatable="yes">1.0s</property>
+                        <property name="width_chars">16</property>
+                        <property name="single_line_mode">True</property>
+                        <property name="max_width_chars">16</property>
+                        <property name="xalign">1</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
-                        <property name="position">3</property>
+                        <property name="position">4</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="name">Stacktimeline</property>
-                    <property name="title" translatable="yes">Timeline</property>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="main_comm_matrix_box">
+                  <object class="GtkScrollbar" id="main_stacktimeline_horizontal_scrollbar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="adjustment">main_stacktimeline_horizontal_scrollbar_adjustment</property>
+                    <property name="lower_stepper_sensitivity">on</property>
+                    <property name="upper_stepper_sensitivity">on</property>
+                    <signal name="value-changed" handler="on_main_stacktimeline_horizontal_scrollbar_value_changed" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">2</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkButtonBox" id="main_stacktimeline_buttonbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="orientation">vertical</property>
+                        <property name="spacing">4</property>
+                        <property name="layout_style">start</property>
                         <child>
-                          <object class="GtkGrid" id="main_comm_matrix_grid">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="row_spacing">2</property>
-                            <property name="column_spacing">2</property>
+                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">receiving process</property>
-                                <property name="angle">90</property>
+                                <property name="label" translatable="yes">Horizontal Zoom</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="main_stacktimeline_xzoom_spinner">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Horizontal (time-axis) zoom factor the stack timeline (1-10000x).</property>
                                 <property name="xalign">1</property>
+                                <property name="input_purpose">number</property>
+                                <property name="adjustment">main_stacktimeline_xzoom_spinner_adjustment</property>
+                                <property name="climb_rate">0.10000000000000001</property>
+                                <property name="digits">1</property>
+                                <property name="numeric">True</property>
+                                <property name="update_policy">if-valid</property>
+                                <property name="value">1</property>
+                                <signal name="value-changed" handler="on_main_stacktimeline_xzoom_spinner_value_changed" swapped="no"/>
                               </object>
                               <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
                               </packing>
-                            </child>
-                            <child>
-                              <object class="GtkAspectFrame">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label_xalign">0</property>
-                                <property name="shadow_type">none</property>
-                                <child>
-                                  <object class="GtkGrid">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkBox" id="comm_matrix_recv_proc_label_box">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="orientation">vertical</property>
-                                        <property name="homogeneous">True</property>
-                                        <child>
-                                          <object class="GtkLabel" id="comm_matrix_recv_maxproc_label">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">0</property>
-                                            <property name="xalign">1</property>
-                                            <property name="yalign">0</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkLabel" id="comm_matrix_recv_minproc_label">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">0</property>
-                                            <property name="xalign">1</property>
-                                            <property name="yalign">1</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">0</property>
-                                        <property name="top_attach">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkBox" id="comm_matrix_send_proc_label_box">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="homogeneous">True</property>
-                                        <child>
-                                          <object class="GtkLabel" id="comm_matrix_send_minproc_label">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">0</property>
-                                            <property name="xalign">0</property>
-                                            <property name="yalign">0</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkLabel" id="comm_matrix_send_maxproc_label">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">0</property>
-                                            <property name="xalign">1</property>
-                                            <property name="yalign">0</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="top_attach">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkDrawingArea" id="comm_matrix_matrix_drawing_area">
-                                        <property name="width_request">100</property>
-                                        <property name="height_request">100</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="has_tooltip">True</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="vexpand">True</property>
-                                        <signal name="button-press-event" handler="on_comm_matrix_matrix_drawing_area_button_press_event" swapped="no"/>
-                                        <signal name="configure-event" handler="on_comm_matrix_matrix_drawing_area_configure_event" swapped="no"/>
-                                        <signal name="draw" handler="on_comm_matrix_matrix_drawing_area_draw" swapped="no"/>
-                                        <signal name="query-tooltip" handler="on_comm_matrix_matrix_drawing_area_query_tooltip" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="top_attach">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">sending process</property>
-                                <property name="yalign">0</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="spacing">2</property>
-                                <child>
-                                  <object class="GtkDrawingArea" id="comm_matrix_legend_drawing_area">
-                                    <property name="width_request">32</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="has_tooltip">True</property>
-                                    <signal name="configure-event" handler="on_comm_matrix_legend_drawing_area_configure_event" swapped="no"/>
-                                    <signal name="draw" handler="on_comm_matrix_legend_drawing_area_draw" swapped="no"/>
-                                    <signal name="query-tooltip" handler="on_comm_matrix_legend_drawing_area_query_tooltip" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <property name="homogeneous">True</property>
-                                    <child>
-                                      <object class="GtkLabel" id="comm_matrix_legend_max_label">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">1.234e-12</property>
-                                        <property name="yalign">0</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="comm_matrix_legend_mid_label">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">1.234e-12</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="comm_matrix_legend_min_label">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">1.234e-12</property>
-                                        <property name="yalign">1</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="comm_matrix_legend_unit_label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">MiB/s</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
                             </child>
                           </object>
                           <packing>
@@ -991,263 +520,12 @@ l=0</property>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkButtonBox" id="main_comm_matrix_buttonbox">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="layout_style">start</property>
-                                <child>
-                                  <object class="GtkBox" id="comm_matrix_unit_select_box">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_unit_select_bw">
-                                        <property name="label" translatable="yes">bandwidth</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">display the bandwidth in MiB/s.
-(Message size / (t_end - t_start))</property>
-                                        <property name="halign">start</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <signal name="toggled" handler="on_comm_matrix_unit_select_bw_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_unit_select_size">
-                                        <property name="label" translatable="yes">msg. size</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">display the message sizes in MiB</property>
-                                        <property name="halign">start</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <property name="group">comm_matrix_unit_select_bw</property>
-                                        <signal name="toggled" handler="on_comm_matrix_unit_select_size_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_unit_select_count">
-                                        <property name="label" translatable="yes">msg. count</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">display the amount of messages.</property>
-                                        <property name="halign">start</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <property name="group">comm_matrix_unit_select_bw</property>
-                                        <signal name="toggled" handler="on_comm_matrix_unit_select_count_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_unit_select_time">
-                                        <property name="label" translatable="yes">comm. time</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <property name="group">comm_matrix_unit_select_bw</property>
-                                        <signal name="toggled" handler="on_comm_matrix_unit_select_time_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox" id="comm_matrix_metric_select_box">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_metric_select_max">
-                                        <property name="label" translatable="yes">maximum</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">display the maximum value from all recorded messages.
-For message count this option has no effect.</property>
-                                        <property name="halign">start</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <signal name="toggled" handler="on_comm_matrix_metric_select_max_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_metric_select_avg">
-                                        <property name="label" translatable="yes">average</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">display the average value from all recorded messages.
-For message count this option has no effect.</property>
-                                        <property name="halign">start</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <property name="group">comm_matrix_metric_select_max</property>
-                                        <signal name="toggled" handler="on_comm_matrix_metric_select_avg_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_metric_select_min">
-                                        <property name="label" translatable="yes">minimum</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">display the minimum value from all recorded messages.
-For message count this option has no effect.</property>
-                                        <property name="halign">start</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <property name="group">comm_matrix_metric_select_max</property>
-                                        <signal name="toggled" handler="on_comm_matrix_metric_select_min_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox" id="comm_matrix_plot_select_box">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_plot_select_linear">
-                                        <property name="label" translatable="yes">linear</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">color changes linear with the displayed value.</property>
-                                        <property name="halign">start</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <signal name="toggled" handler="on_comm_matrix_plot_select_linear_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkRadioButton" id="comm_matrix_plot_select_log">
-                                        <property name="label" translatable="yes">log</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">color changes logarithmicly with the displayed value.</property>
-                                        <property name="halign">start</property>
-                                        <property name="active">True</property>
-                                        <property name="draw_indicator">True</property>
-                                        <property name="group">comm_matrix_plot_select_linear</property>
-                                        <signal name="toggled" handler="on_comm_matrix_plot_select_log_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkBox" id="comm_matrix_direction_select_box">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <child>
-                                      <object class="GtkCheckButton" id="comm_matrix_direction_select_send">
-                                        <property name="label" translatable="yes">sends</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">activate to display send messages in the communication matrix.</property>
-                                        <property name="halign">start</property>
-                                        <property name="draw_indicator">True</property>
-                                        <signal name="toggled" handler="on_comm_matrix_direction_select_send_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkCheckButton" id="comm_matrix_direction_select_recv">
-                                        <property name="label" translatable="yes">receives</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="tooltip_text" translatable="yes">activate to display received messages in the communication matrix.</property>
-                                        <property name="halign">start</property>
-                                        <property name="draw_indicator">True</property>
-                                        <signal name="toggled" handler="on_comm_matrix_direction_select_recv_toggled" swapped="no"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">3</property>
-                                  </packing>
-                                </child>
+                                <property name="label" translatable="yes">Vertical Zoom</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1256,9 +534,15 @@ For message count this option has no effect.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSeparator">
+                              <object class="GtkSpinButton" id="main_stacktimeline_yzoom_spinner">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Vertical (stack-depth-axis) zoom factor the stack timeline (1-100x).</property>
+                                <property name="adjustment">main_stacktimeline_yzoom_spinner_adjustment</property>
+                                <property name="climb_rate">0.10000000000000001</property>
+                                <property name="digits">1</property>
+                                <property name="numeric">True</property>
+                                <signal name="value-changed" handler="on_main_stacktimeline_yzoom_spinner_value_changed" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1266,27 +550,67 @@ For message count this option has no effect.</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">4</property>
                             <child>
-                              <object class="GtkButtonBox">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="layout_style">start</property>
+                                <property name="label" translatable="yes">MPI traffic</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkLabel" id="comm_matrix_cursorpos_label">
+                                  <object class="GtkCheckButton" id="stacktimeline_show_mpi_send_checkbutton">
+                                    <property name="label" translatable="yes">send</property>
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="tooltip_text" translatable="yes">Displays the clicked on pair of processes
-in the communication matrix as well as the
-obtained value.</property>
-                                    <property name="label" translatable="yes">send proc: 123
-recv proc: 123
-BW: 1.234e-12</property>
-                                    <property name="xalign">0</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">Displays the time slots in the
+stack timeline where MPI send traffic occured.</property>
+                                    <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="on_stacktimeline_show_mpi_send_checkbutton_toggled" swapped="no"/>
                                   </object>
                                   <packing>
-                                    <property name="expand">True</property>
+                                    <property name="expand">False</property>
                                     <property name="fill">True</property>
                                     <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="stacktimeline_show_mpi_recv_checkbutton">
+                                    <property name="label" translatable="yes">recv</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes">Displays the time slots in the
+stack timeline where MPI send traffic occured.</property>
+                                    <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="on_stacktimeline_show_mpi_recv_checkbutton_toggled" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1295,6 +619,868 @@ BW: 1.234e-12</property>
                                 <property name="fill">True</property>
                                 <property name="position">2</property>
                               </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButtonBox">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="layout_style">start</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">cursor position</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="stacktimeline_cursorpos_label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Displays the mouse cursor position in the stack timeline unpon clicking, as time in seconds and stack level depth.</property>
+                                <property name="label" translatable="yes">t=0.0s
+l=0</property>
+                                <property name="xalign">0</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="main_view_gtkstack_box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkStackSwitcher" id="main_view_gtkstackswitcher">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="stack">main_view_gtkstack</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkStack" id="main_view_gtkstack">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="transition_type">slide-left-right</property>
+                    <child>
+                      <object class="GtkBox" id="main_comm_matrix_box">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">2</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkGrid" id="main_comm_matrix_grid">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="row_spacing">2</property>
+                                <property name="column_spacing">2</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">receiving process</property>
+                                    <property name="angle">90</property>
+                                    <property name="xalign">1</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">0</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkAspectFrame">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label_xalign">0</property>
+                                    <property name="shadow_type">none</property>
+                                    <child>
+                                      <object class="GtkGrid">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <child>
+                                          <object class="GtkBox" id="comm_matrix_recv_proc_label_box">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="orientation">vertical</property>
+                                            <property name="homogeneous">True</property>
+                                            <child>
+                                              <object class="GtkLabel" id="comm_matrix_recv_maxproc_label">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="label" translatable="yes">0</property>
+                                                <property name="xalign">1</property>
+                                                <property name="yalign">0</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="comm_matrix_recv_minproc_label">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="label" translatable="yes">0</property>
+                                                <property name="xalign">1</property>
+                                                <property name="yalign">1</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="left_attach">0</property>
+                                            <property name="top_attach">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkBox" id="comm_matrix_send_proc_label_box">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="homogeneous">True</property>
+                                            <child>
+                                              <object class="GtkLabel" id="comm_matrix_send_minproc_label">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="label" translatable="yes">0</property>
+                                                <property name="xalign">0</property>
+                                                <property name="yalign">0</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="comm_matrix_send_maxproc_label">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="label" translatable="yes">0</property>
+                                                <property name="xalign">1</property>
+                                                <property name="yalign">0</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="left_attach">1</property>
+                                            <property name="top_attach">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkDrawingArea" id="comm_matrix_matrix_drawing_area">
+                                            <property name="width_request">100</property>
+                                            <property name="height_request">100</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="has_tooltip">True</property>
+                                            <property name="hexpand">True</property>
+                                            <property name="vexpand">True</property>
+                                            <signal name="button-press-event" handler="on_comm_matrix_matrix_drawing_area_button_press_event" swapped="no"/>
+                                            <signal name="configure-event" handler="on_comm_matrix_matrix_drawing_area_configure_event" swapped="no"/>
+                                            <signal name="draw" handler="on_comm_matrix_matrix_drawing_area_draw" swapped="no"/>
+                                            <signal name="query-tooltip" handler="on_comm_matrix_matrix_drawing_area_query_tooltip" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="left_attach">1</property>
+                                            <property name="top_attach">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">sending process</property>
+                                    <property name="yalign">0</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="top_attach">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="spacing">2</property>
+                                    <child>
+                                      <object class="GtkDrawingArea" id="comm_matrix_legend_drawing_area">
+                                        <property name="width_request">32</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="has_tooltip">True</property>
+                                        <signal name="configure-event" handler="on_comm_matrix_legend_drawing_area_configure_event" swapped="no"/>
+                                        <signal name="draw" handler="on_comm_matrix_legend_drawing_area_draw" swapped="no"/>
+                                        <signal name="query-tooltip" handler="on_comm_matrix_legend_drawing_area_query_tooltip" swapped="no"/>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="orientation">vertical</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="comm_matrix_legend_max_label">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">1.234e-12</property>
+                                            <property name="yalign">0</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="comm_matrix_legend_mid_label">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">1.234e-12</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="comm_matrix_legend_min_label">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">1.234e-12</property>
+                                            <property name="yalign">1</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">2</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">2</property>
+                                    <property name="top_attach">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="comm_matrix_legend_unit_label">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">MiB/s</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkButtonBox" id="main_comm_matrix_buttonbox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="layout_style">start</property>
+                                    <child>
+                                      <object class="GtkBox" id="comm_matrix_unit_select_box">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_unit_select_bw">
+                                            <property name="label" translatable="yes">bandwidth</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">display the bandwidth in MiB/s.
+(Message size / (t_end - t_start))</property>
+                                            <property name="halign">start</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <signal name="toggled" handler="on_comm_matrix_unit_select_bw_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_unit_select_size">
+                                            <property name="label" translatable="yes">msg. size</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">display the message sizes in MiB</property>
+                                            <property name="halign">start</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <property name="group">comm_matrix_unit_select_bw</property>
+                                            <signal name="toggled" handler="on_comm_matrix_unit_select_size_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_unit_select_count">
+                                            <property name="label" translatable="yes">msg. count</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">display the amount of messages.</property>
+                                            <property name="halign">start</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <property name="group">comm_matrix_unit_select_bw</property>
+                                            <signal name="toggled" handler="on_comm_matrix_unit_select_count_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">2</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_unit_select_time">
+                                            <property name="label" translatable="yes">comm. time</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <property name="group">comm_matrix_unit_select_bw</property>
+                                            <signal name="toggled" handler="on_comm_matrix_unit_select_time_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">3</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox" id="comm_matrix_metric_select_box">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_metric_select_max">
+                                            <property name="label" translatable="yes">maximum</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">display the maximum value from all recorded messages.
+For message count this option has no effect.</property>
+                                            <property name="halign">start</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <signal name="toggled" handler="on_comm_matrix_metric_select_max_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_metric_select_avg">
+                                            <property name="label" translatable="yes">average</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">display the average value from all recorded messages.
+For message count this option has no effect.</property>
+                                            <property name="halign">start</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <property name="group">comm_matrix_metric_select_max</property>
+                                            <signal name="toggled" handler="on_comm_matrix_metric_select_avg_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_metric_select_min">
+                                            <property name="label" translatable="yes">minimum</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">display the minimum value from all recorded messages.
+For message count this option has no effect.</property>
+                                            <property name="halign">start</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <property name="group">comm_matrix_metric_select_max</property>
+                                            <signal name="toggled" handler="on_comm_matrix_metric_select_min_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">2</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox" id="comm_matrix_plot_select_box">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_plot_select_linear">
+                                            <property name="label" translatable="yes">linear</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">color changes linear with the displayed value.</property>
+                                            <property name="halign">start</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <signal name="toggled" handler="on_comm_matrix_plot_select_linear_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkRadioButton" id="comm_matrix_plot_select_log">
+                                            <property name="label" translatable="yes">log</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">color changes logarithmicly with the displayed value.</property>
+                                            <property name="halign">start</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                            <property name="group">comm_matrix_plot_select_linear</property>
+                                            <signal name="toggled" handler="on_comm_matrix_plot_select_log_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox" id="comm_matrix_direction_select_box">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkCheckButton" id="comm_matrix_direction_select_send">
+                                            <property name="label" translatable="yes">sends</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">activate to display send messages in the communication matrix.</property>
+                                            <property name="halign">start</property>
+                                            <property name="draw_indicator">True</property>
+                                            <signal name="toggled" handler="on_comm_matrix_direction_select_send_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkCheckButton" id="comm_matrix_direction_select_recv">
+                                            <property name="label" translatable="yes">receives</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">activate to display received messages in the communication matrix.</property>
+                                            <property name="halign">start</property>
+                                            <property name="draw_indicator">True</property>
+                                            <signal name="toggled" handler="on_comm_matrix_direction_select_recv_toggled" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">3</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSeparator">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButtonBox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="layout_style">start</property>
+                                    <child>
+                                      <object class="GtkLabel" id="comm_matrix_cursorpos_label">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="tooltip_text" translatable="yes">Displays the clicked on pair of processes
+in the communication matrix as well as the
+obtained value.</property>
+                                        <property name="label" translatable="yes">send proc: 123
+recv proc: 123
+BW: 1.234e-12</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="name">CommunicationMatrix</property>
+                        <property name="title" translatable="yes">Comm. Matrix</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="main_hwc_plot_box">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="hwc_plot_toolbar_box">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_left">2</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_top">2</property>
+                            <property name="margin_bottom">2</property>
+                            <property name="spacing">4</property>
+                            <child>
+                              <object class="GtkBox" id="hwc_plot_derived_counters_box">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkLabel" id="hwc_plot_derived_counters_header_label">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">Derived Counters</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBoxText" id="hwc_plot_derived_counters_select_counter_comboboxtext">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="tooltip_text" translatable="yes">Select a predefined expression of hardware counters to display. Select "custom" to define your own expression in the fields below.</property>
+                                    <property name="active">0</property>
+                                    <items>
+                                      <item id="0" translatable="yes">Custom</item>
+                                    </items>
+                                    <signal name="changed" handler="on_hwc_plot_derived_counters_select_counter_comboboxtext_changed" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="hwc_plot_derived_counters_formula_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="width_chars">16</property>
+                                    <property name="placeholder_text" translatable="yes">&lt;observable expression&gt;</property>
+                                    <signal name="activate" handler="on_hwc_plot_derived_counters_formula_entry_activate" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="hwc_plot_derived_counters_observablename_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">Set the y-axis label in the plot.</property>
+                                    <property name="width_chars">16</property>
+                                    <property name="placeholder_text" translatable="yes">&lt;observable name&gt;</property>
+                                    <signal name="activate" handler="on_hwc_plot_derived_counters_observablename_entry_activate" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">3</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="hwc_plot_available_traces_box">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkLabel" id="hwc_plot_available_traces_header_label">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">VFD traces</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkScrolledWindow">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="tooltip_text" translatable="yes">(de)select individual vfd-traces to (hide/)show hardware counter observables in the plot. The special checkbox "all" (de)selects all traces.</property>
+                                    <property name="shadow_type">in</property>
+                                    <child>
+                                      <object class="GtkViewport">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <child>
+                                          <object class="GtkBox" id="hwc_plot_available_traces_list_box">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="orientation">vertical</property>
+                                            <child>
+                                              <object class="GtkCheckButton" id="hwc_plot_available_traces_selectall_checkbutton">
+                                                <property name="label" translatable="yes">all</property>
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="receives_default">False</property>
+                                                <property name="active">True</property>
+                                                <property name="draw_indicator">True</property>
+                                                <signal name="toggled" handler="on_hwc_plot_available_traces_selectall_checkbutton_toggled" swapped="no"/>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
                             </child>
                           </object>
                           <packing>
@@ -1305,199 +1491,22 @@ BW: 1.234e-12</property>
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="name">CommunicationMatrix</property>
-                    <property name="title" translatable="yes">Comm. Matrix</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="main_hwc_plot_box">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="hwc_plot_toolbar_box">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">2</property>
-                        <property name="margin_right">2</property>
-                        <property name="margin_top">2</property>
-                        <property name="margin_bottom">2</property>
-                        <property name="spacing">4</property>
-                        <child>
-                          <object class="GtkBox" id="hwc_plot_derived_counters_box">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <object class="GtkLabel" id="hwc_plot_derived_counters_header_label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Derived Counters</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkComboBoxText" id="hwc_plot_derived_counters_select_counter_comboboxtext">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Select a predefined expression of hardware counters to display. Select "custom" to define your own expression in the fields below.</property>
-                                <property name="active">0</property>
-                                <items>
-                                  <item id="0" translatable="yes">Custom</item>
-                                </items>
-                                <signal name="changed" handler="on_hwc_plot_derived_counters_select_counter_comboboxtext_changed" swapped="no"/>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkEntry" id="hwc_plot_derived_counters_formula_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="width_chars">16</property>
-                                <property name="placeholder_text" translatable="yes">&lt;observable expression&gt;</property>
-                                <signal name="activate" handler="on_hwc_plot_derived_counters_formula_entry_activate" swapped="no"/>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkEntry" id="hwc_plot_derived_counters_observablename_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">Set the y-axis label in the plot.</property>
-                                <property name="width_chars">16</property>
-                                <property name="placeholder_text" translatable="yes">&lt;observable name&gt;</property>
-                                <signal name="activate" handler="on_hwc_plot_derived_counters_observablename_entry_activate" swapped="no"/>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">3</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkBox" id="hwc_plot_available_traces_box">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <object class="GtkLabel" id="hwc_plot_available_traces_header_label">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">VFD traces</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="tooltip_text" translatable="yes">(de)select individual vfd-traces to (hide/)show hardware counter observables in the plot. The special checkbox "all" (de)selects all traces.</property>
-                                <property name="shadow_type">in</property>
-                                <child>
-                                  <object class="GtkViewport">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkBox" id="hwc_plot_available_traces_list_box">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="orientation">vertical</property>
-                                        <child>
-                                          <object class="GtkCheckButton" id="hwc_plot_available_traces_selectall_checkbutton">
-                                            <property name="label" translatable="yes">all</property>
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="receives_default">False</property>
-                                            <property name="active">True</property>
-                                            <property name="draw_indicator">True</property>
-                                            <signal name="toggled" handler="on_hwc_plot_available_traces_selectall_checkbutton_toggled" swapped="no"/>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <placeholder/>
-                                        </child>
-                                        <child>
-                                          <placeholder/>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">True</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="name">PerformanceCounterPlot</property>
+                        <property name="title" translatable="yes">Perf. Counter</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="name">PerformanceCounterPlot</property>
-                    <property name="title" translatable="yes">Perf. Counter</property>
-                    <property name="position">2</property>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="resize">False</property>
+                <property name="shrink">False</property>
               </packing>
             </child>
           </object>

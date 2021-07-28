@@ -39,6 +39,10 @@ void vgtk_stacktimeline_button_release_callback(
    GtkWidget *widget,
    GdkEventButton *event,
    gpointer data);
+gboolean vgtk_stacktimeline_motion_notify_callback(
+   GtkWidget *widget,
+   GdkEventMotion *event,
+   gpointer data);
 gboolean vgtk_stacktimeline_query_tooltip_callback(
    GtkWidget *widget,
    gint x, gint y,
@@ -88,7 +92,13 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
    gtk_widget_set_events(GTK_WIDGET(entry->drawing_area),
                          gtk_widget_get_events(GTK_WIDGET(entry->drawing_area))
                             | GDK_BUTTON_RELEASE_MASK);
-   // TODO ADD MOTION EVENT
+   g_signal_connect(entry->drawing_area,
+                    "motion-notify-event",
+                    G_CALLBACK(vgtk_stacktimeline_motion_notify_callback),
+                    (gpointer) vfdtrace);
+   gtk_widget_set_events(GTK_WIDGET(entry->drawing_area),
+                         gtk_widget_get_events(GTK_WIDGET(entry->drawing_area))
+                            | GDK_POINTER_MOTION_MASK);
 
    // define the tooltip
    gtk_widget_set_has_tooltip(GTK_WIDGET(entry->drawing_area), TRUE);
@@ -101,6 +111,9 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
    entry->buttonactive = false;
    entry->buttonpressx = 0.0;
    entry->buttonpressy = 0.0;
+   entry->movex = 0.0;
+   entry->movey = 0.0;
+
 
    // add the new drawing area as a widget to the stacktimeline timeline box
    gtk_box_pack_start(main_stacktimeline_timeline_box,
@@ -279,7 +292,7 @@ void vgtk_draw_stacktimeline(
       }
    }
 
-   // draw message samples
+   // draw function samples
    for (unsigned int ifcall=0; ifcall<vfdtrace->header->fcallscount; ifcall++) {
       unsigned int stackID = vfdtrace->fcalls[ifcall].stackID;
 
@@ -337,6 +350,28 @@ void vgtk_draw_stacktimeline(
    cairo_set_font_size(cr, font_size);
    cairo_move_to(cr, 0, font_size);
    cairo_show_text(cr, vfdtrace->filename);
+
+   // draw mouse zoom marker
+   vgtk_stackTimelineEntry_t *entry = vfdtrace->vgtk_handles->stackTimelineEntry;
+   if (entry->buttonactive) {
+      cairo_set_source_rgba(cr,
+                            0.0/255.0,
+                            153.0/255.0,
+                            0.0/255.0,
+                            0.4);
+
+      double x = entry->buttonpressx;
+      double width = entry->movex - entry->buttonpressx;
+      double y = 0.0;
+      double height = sfheight;
+
+      if (width > 2) {
+         cairo_rectangle(cr,
+                         x, y,
+                         width, height);
+         cairo_fill(cr);
+      }
+   }
 
    // destroy cairo
    cairo_destroy(cr);
@@ -418,11 +453,15 @@ void vgtk_stacktimeline_button_press_callback(
    GdkEventButton *event,
    gpointer data) {
 
+   (void) widget;
+
    vfd_t *vfdtrace = (vfd_t*) data;
    vgtk_stackTimelineEntry_t *entry = vfdtrace->vgtk_handles->stackTimelineEntry;
    entry->buttonactive = true;
    entry->buttonpressx = event->x;
+   entry->movex = entry->buttonpressx;
    entry->buttonpressy = event->y;
+   entry->movey = entry->buttonpressy;
 #ifdef _DEBUG
    printf("Button Press event at vfd=%d, x=%f, y=%f\n",
           vfd_position(vfdtrace), entry->buttonpressx, entry->buttonpressy);
@@ -569,6 +608,36 @@ void vgtk_stacktimeline_button_release_callback(
    }
 }
 
+gboolean vgtk_stacktimeline_motion_notify_callback(
+   GtkWidget *widget,
+   GdkEventMotion *event,
+   gpointer data) {
+
+   (void) widget;
+
+   if (event->state & GDK_BUTTON1_MASK) {
+      vfd_t *vfdtrace = (vfd_t*) data;
+      vgtk_stackTimelineEntry_t *entry = vfdtrace->vgtk_handles->stackTimelineEntry;
+
+      // get the newest cursor pos values
+      entry->movex = event->x;
+      entry->movey = event->y;
+
+      // redraw only that one timeline
+      vgtk_set_drawing_area_size(
+         vfdtrace->vgtk_handles->stackTimelineEntry->drawing_area);
+      vgtk_draw_stacktimeline(
+         vfdtrace->vgtk_handles->stackTimelineEntry->drawing_area,
+         vfdtrace->vgtk_handles->stackTimelineEntry->surface,
+         vfdtrace);
+
+#ifdef _DEBUG
+      printf("Move-notify event at vfd=%d, x=%f, y=%f\n",
+             vfd_position(vfdtrace), event->x, event->y);
+#endif
+   }
+   return TRUE;
+}
 
 gboolean vgtk_stacktimeline_query_tooltip_callback(
    GtkWidget *widget,

@@ -12,6 +12,7 @@ typedef struct {
    GtkTooltip *tooltip;
    bool buttonactive;
    double buttonpressx, buttonpressy;
+   double movex, movey;
 } vgtk_stackTimelineEntry_t;
 
 typedef struct {

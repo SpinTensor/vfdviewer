@@ -34,6 +34,10 @@ void vgtk_stacktimeline_button_press_callback(
    GtkWidget *widget,
    GdkEventButton *event,
    gpointer data);
+void vgtk_stacktimeline_button_release_callback(
+   GtkWidget *widget,
+   GdkEventButton *event,
+   gpointer data);
 gboolean vgtk_stacktimeline_query_tooltip_callback(
    GtkWidget *widget,
    gint x, gint y,
@@ -76,6 +80,13 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
    gtk_widget_set_events(GTK_WIDGET(entry->drawing_area),
                          gtk_widget_get_events(GTK_WIDGET(entry->drawing_area))
                             | GDK_BUTTON_PRESS_MASK);
+   g_signal_connect(entry->drawing_area,
+                    "button-release-event",
+                    G_CALLBACK(vgtk_stacktimeline_button_release_callback),
+                    (gpointer) vfdtrace);
+   gtk_widget_set_events(GTK_WIDGET(entry->drawing_area),
+                         gtk_widget_get_events(GTK_WIDGET(entry->drawing_area))
+                            | GDK_BUTTON_RELEASE_MASK);
 
    // define the tooltip
    gtk_widget_set_has_tooltip(GTK_WIDGET(entry->drawing_area), TRUE);
@@ -83,6 +94,11 @@ void init_stacktimeline_entry(vfd_t *vfdtrace) {
                     "query-tooltip",
                     G_CALLBACK(vgtk_stacktimeline_query_tooltip_callback),
                     (gpointer) vfdtrace);
+
+   // set default button press values
+   entry->buttonactive = false;
+   entry->buttonpressx = 0.0;
+   entry->buttonpressy = 0.0;
 
    // add the new drawing area as a widget to the stacktimeline timeline box
    gtk_box_pack_start(main_stacktimeline_timeline_box,
@@ -400,14 +416,39 @@ void vgtk_stacktimeline_button_press_callback(
    GdkEventButton *event,
    gpointer data) {
 
+   vfd_t *vfdtrace = (vfd_t*) data;
+   vgtk_stackTimelineEntry_t *entry = vfdtrace->vgtk_handles->stackTimelineEntry;
+   entry->buttonactive = true;
+   entry->buttonpressx = event->x;
+   entry->buttonpressy = event->y;
+#ifdef _DEBUG
+   printf("Button Press event at vfd=%d, x=%f, y=%f\n",
+          vfd_position(vfdtrace), entry->buttonpressx, entry->buttonpressy);
+#endif
+}
+
+void vgtk_stacktimeline_button_release_callback(
+   GtkWidget *widget,
+   GdkEventButton *event,
+   gpointer data) {
+
    // a static string to hold a temporary version of a function name
    // with "^" in the beginning and "$" in the end
    // to enable precise function name matching
    // with regular expressions
    static char *precise_name_matcher = NULL;
 
-   GtkDrawingArea *drawing_area = GTK_DRAWING_AREA(widget);
    vfd_t *vfdtrace = (vfd_t*) data;
+   vgtk_stackTimelineEntry_t *entry = vfdtrace->vgtk_handles->stackTimelineEntry;
+   entry->buttonactive = false;
+   entry->buttonpressx = event->x;
+   entry->buttonpressy = event->y;
+#ifdef _DEBUG
+   printf("Button release event at vfd=%d, x=%f, y=%f\n",
+          vfd_position(vfdtrace), entry->buttonpressx, entry->buttonpressy);
+#endif
+
+   GtkDrawingArea *drawing_area = GTK_DRAWING_AREA(widget);
 
    // get surface dimensions
    int sfwidth = gtk_widget_get_allocated_width(GTK_WIDGET(drawing_area));
@@ -493,6 +534,7 @@ void vgtk_stacktimeline_button_press_callback(
 #endif
    }
 }
+
 
 gboolean vgtk_stacktimeline_query_tooltip_callback(
    GtkWidget *widget,

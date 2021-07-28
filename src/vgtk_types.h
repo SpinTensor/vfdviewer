@@ -10,6 +10,8 @@ typedef struct {
    cairo_surface_t *surface;
    GtkDrawingArea *drawing_area;
    GtkTooltip *tooltip;
+   bool buttonactive;
+   double buttonpressx, buttonpressy;
 } vgtk_stackTimelineEntry_t;
 
 typedef struct {

@@ -127,6 +127,7 @@ void comm_matrix_update() {
 }
 
 void vgtk_draw_comm_matrix(cairo_t *cr) {
+printf("draw start\n");
    // Get the number of total processes
    int nprocs = vfds_nprocs();
 
@@ -241,7 +242,7 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
          }
       }
    } else {
-      if (vfds_max_message_sample_count() == 0) {
+      if (num_vfds() > 0 && vfds_max_message_sample_count() == 0) {
          cairo_set_source_rgba(cr, 0.1, 0.1, 0.1, 1.0);
          const double font_size = 12;
          cairo_set_font_size(cr, font_size);
@@ -251,6 +252,7 @@ void vgtk_draw_comm_matrix(cairo_t *cr) {
          cairo_show_text(cr, "Did you run with VFTR_MPI_LOG active?");
       }
    }
+printf("draw end\n");
 }
 
 void comm_matrix_invalidate() {
@@ -310,25 +312,29 @@ gboolean on_comm_matrix_matrix_drawing_area_query_tooltip(
 
    (void) keyboard;
 
-   // get surface dimensions
-   int sfwidth = gtk_widget_get_allocated_width(widget);
-   int sfheight = gtk_widget_get_allocated_height(widget);
+   if (comm_matrix.any_entry_valid) {
+      // get surface dimensions
+      int sfwidth = gtk_widget_get_allocated_width(widget);
+      int sfheight = gtk_widget_get_allocated_height(widget);
 
-   // Get the number of total processes
-   int nprocs = comm_matrix.nprocs;
-   // get mouse cursor position
-   int send_rank = nprocs * ((double) (x) / sfwidth);
-   int recv_rank = nprocs * (1.0 - ((double) (y) / sfheight));
+      // Get the number of total processes
+      int nprocs = comm_matrix.nprocs;
+      // get mouse cursor position
+      int send_rank = nprocs * ((double) (x) / sfwidth);
+      int recv_rank = nprocs * (1.0 - ((double) (y) / sfheight));
 
-   // get value from communication matrix
-   int idx = recv_rank*nprocs + send_rank;
-   double value = comm_matrix.data[idx];
-   bool valid = comm_matrix.entry_valid[idx];
+      // get value from communication matrix
+      int idx = recv_rank*nprocs + send_rank;
+      double value = comm_matrix.data[idx];
+      bool valid = comm_matrix.entry_valid[idx];
 
-   char *tooltipstr = comm_matrix_cursorpos_label_string(send_rank, recv_rank, value, valid);
-   gtk_tooltip_set_text(tooltip,
-                        tooltipstr);
-
+      char *tooltipstr = comm_matrix_cursorpos_label_string(send_rank, recv_rank, value, valid);
+      gtk_tooltip_set_text(tooltip,
+                           tooltipstr);
+   } else {
+      gtk_tooltip_set_text(tooltip,
+                           "No valid communication entry");
+   }
    return TRUE;
 }
 

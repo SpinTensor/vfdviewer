@@ -127,7 +127,6 @@ void comm_matrix_update() {
 }
 
 void vgtk_draw_comm_matrix(cairo_t *cr) {
-printf("draw start\n");
    // Get the number of total processes
    int nprocs = vfds_nprocs();
 
@@ -252,7 +251,6 @@ printf("draw start\n");
          cairo_show_text(cr, "Did you run with VFTR_MPI_LOG active?");
       }
    }
-printf("draw end\n");
 }
 
 void comm_matrix_invalidate() {

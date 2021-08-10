@@ -280,7 +280,6 @@ gboolean stack_tree_determine_visibility(GtkTreeModel *model,
                                          GtkTreeIter *iter,
                                          gpointer data) {
    (void) data;
-   (void) model;
    // visibility was precomputed by the search entry changed signal
    // Here only a simple lookup is needed.
 

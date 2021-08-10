@@ -7,6 +7,9 @@
 
 void vgtk_build_stack_list_treeview(GtkBuilder *builder);
 
+// reapply the tree filter
+void vgtk_stack_list_refilter();
+
 void vgtk_stack_list_add_vfdtrace(vfd_t *vfdtrace);
 
 #endif

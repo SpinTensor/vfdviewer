@@ -20,6 +20,8 @@ GtkTreeViewColumn *stack_list_treeview_vfdname_column = NULL;
 GtkCellRenderer   *stack_list_treeview_vfdname_text = NULL;
 GtkTreeViewColumn *stack_list_treeview_functionname_column = NULL;
 GtkCellRenderer   *stack_list_treeview_functionname_text = NULL;
+GtkTreeViewColumn *stack_list_treeview_stackID_column = NULL;
+GtkCellRenderer   *stack_list_treeview_stackID_text = NULL;
 GtkTreeViewColumn *stack_list_treeview_stack_column = NULL;
 GtkCellRenderer   *stack_list_treeview_stack_text = NULL;
 GtkTreeViewColumn *stack_list_treeview_called_column = NULL;
@@ -74,6 +76,15 @@ void vgtk_build_stack_list_treeview(GtkBuilder *builder) {
                                       stack_list_treeview_functionname_text,
                                       "text", 1);
 
+   // stackID column
+   stack_list_treeview_stackID_column = GTK_TREE_VIEW_COLUMN(
+      gtk_builder_get_object(builder, "stack_list_treeview_stackID_column"));
+   stack_list_treeview_stackID_text = GTK_CELL_RENDERER(
+      gtk_builder_get_object(builder, "stack_list_treeview_stackID_text"));
+   gtk_tree_view_column_add_attribute(stack_list_treeview_stackID_column,
+                                      stack_list_treeview_stackID_text,
+                                      "text", 2);
+
    // stack column
    stack_list_treeview_stack_column = GTK_TREE_VIEW_COLUMN(
       gtk_builder_get_object(builder, "stack_list_treeview_stack_column"));
@@ -81,7 +92,8 @@ void vgtk_build_stack_list_treeview(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "stack_list_treeview_stack_text"));
    gtk_tree_view_column_add_attribute(stack_list_treeview_stack_column,
                                       stack_list_treeview_stack_text,
-                                      "text", 2);
+                                      "text", 3);
+
 
    // exclusive stack time column
    stack_list_treeview_exclusive_time_column = GTK_TREE_VIEW_COLUMN(
@@ -90,7 +102,7 @@ void vgtk_build_stack_list_treeview(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "stack_list_treeview_exclusive_time_text"));
    gtk_tree_view_column_add_attribute(stack_list_treeview_exclusive_time_column,
                                       stack_list_treeview_exclusive_time_text,
-                                      "text", 3);
+                                      "text", 4);
    gtk_cell_renderer_set_alignment(stack_list_treeview_exclusive_time_text,
                                    1.0, 0.5);
 
@@ -101,7 +113,7 @@ void vgtk_build_stack_list_treeview(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "stack_list_treeview_inclusive_time_text"));
    gtk_tree_view_column_add_attribute(stack_list_treeview_inclusive_time_column,
                                       stack_list_treeview_inclusive_time_text,
-                                      "text", 4);
+                                      "text", 5);
    gtk_cell_renderer_set_alignment(stack_list_treeview_inclusive_time_text,
                                    1.0, 0.5);
 
@@ -112,7 +124,7 @@ void vgtk_build_stack_list_treeview(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "stack_list_treeview_called_text"));
    gtk_tree_view_column_add_attribute(stack_list_treeview_called_column,
                                       stack_list_treeview_called_text,
-                                      "text", 5);
+                                      "text", 6);
    gtk_cell_renderer_set_alignment(stack_list_treeview_called_text,
                                    1.0, 0.5);
 
@@ -123,7 +135,7 @@ void vgtk_build_stack_list_treeview(GtkBuilder *builder) {
       gtk_builder_get_object(builder, "stack_list_treeview_children_called_text"));
    gtk_tree_view_column_add_attribute(stack_list_treeview_children_called_column,
                                       stack_list_treeview_children_called_text,
-                                      "text", 6);
+                                      "text", 7);
    gtk_cell_renderer_set_alignment(stack_list_treeview_children_called_text,
                                    1.0, 0.5);
 
@@ -150,16 +162,23 @@ void vgtk_stack_list_add_vfdtrace(vfd_t *vfdtrace) {
       gtk_list_store_set(stack_list_liststore, &iter,
                          1, stack_ptr->name, -1);
       gtk_list_store_set(stack_list_liststore, &iter,
-                         2, "TODO", -1);
+                         2, stack_ptr->ID, -1);
       gtk_list_store_set(stack_list_liststore, &iter,
-                         3, stack_ptr->excl_time, -1);
+                         3, "TODO", -1);
       gtk_list_store_set(stack_list_liststore, &iter,
-                         4, stack_ptr->incl_time, -1);
+                         4, stack_ptr->excl_time, -1);
       gtk_list_store_set(stack_list_liststore, &iter,
-                         5, stack_ptr->num_called, -1);
+                         5, stack_ptr->incl_time, -1);
       gtk_list_store_set(stack_list_liststore, &iter,
-                         6, stack_ptr->num_calls, -1);
+                         6, stack_ptr->num_called, -1);
+      gtk_list_store_set(stack_list_liststore, &iter,
+                         7, stack_ptr->num_calls, -1);
    }
+}
+
+// reapply the tree filter
+void vgtk_stack_list_refilter() {
+   gtk_tree_model_filter_refilter(stack_list_treefilter);
 }
 
 // Function to determine the visibility of stack tree entries
@@ -167,8 +186,32 @@ gboolean stack_list_determine_visibility(GtkTreeModel *model,
                                          GtkTreeIter *iter,
                                          gpointer data) {
    (void) data;
-   (void) model;
-   return TRUE;
+
+   char *vfdname;
+   unsigned int stackID;
+   gboolean visible = FALSE;
+
+   gtk_tree_model_get(model, iter,
+                      0, &vfdname,
+                      2, &stackID,
+                      -1);
+
+   vfd_t *vfd_ptr = NULL;
+   if (vfdname) {
+      // search for the vfd file base on the name
+      vfd_ptr = first_vfd();
+      while (vfd_ptr != NULL) {
+         if (strcmp(vfdname, vfd_ptr->filename) == 0) {
+            break;
+         }
+         vfd_ptr = vfd_ptr->next;
+      }
+      visible = vfd_ptr->stacks[stackID].visible_in_listview;
+   }
+   printf("visible: %s %d %s\n", vfdname, stackID, visible ? "true" : "false");
+   g_free(vfdname);
+
+   return visible;
 }
 
 // Callback function if a row is activated
@@ -177,6 +220,7 @@ void on_stack_list_treeview_row_activated(GtkTreeView *tree_view,
                                           GtkTreeViewColumn *column,
                                           gpointer user_data) {
    (void) tree_view;
+   (void) path;
    (void) column;
    (void) user_data;
 

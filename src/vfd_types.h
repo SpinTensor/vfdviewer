@@ -52,6 +52,7 @@ struct vdf_stack_entry_type{
    double excl_time;
    double incl_time;
    bool visible_in_treeview;
+   bool visible_in_listview;
 };
 
 typedef struct {

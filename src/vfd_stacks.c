@@ -87,6 +87,8 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
       }
       // if the function should be visible in the treeview
       stack_ptr->visible_in_treeview = true;
+      // if the function should be visible in the listview
+      stack_ptr->visible_in_listview = true;
       // who called this function?
       stack_ptr->caller = stacks+stack_ptr->callerID;
       // determine the default color for drawing this stack entry
@@ -172,6 +174,19 @@ bool update_stack_visible_in_treeview(regex_t *regex,
       (regexec(regex, stack->name, 0, NULL, 0) == 0);
 
    return stack->visible_in_treeview;
+}
+
+// precompute the visibility of each stack
+// so that the actual visibility function
+// can simply lookup the value, instead
+// of computing it in exponential time.
+bool update_stack_visible_in_listview(regex_t *regex,
+                                      vfd_stack_entry_t *stack) {
+   // a stack should only be visible if 
+   // its function name matches the regular expression
+   stack->visible_in_listview = regexec(regex, stack->name, 0, NULL, 0) == 0;
+
+   return stack->visible_in_listview;
 }
 
 void free_vfd_stacks(unsigned int nstacks, vfd_stack_entry_t *stacks) {

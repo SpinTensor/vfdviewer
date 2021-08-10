@@ -36,6 +36,8 @@
       <column type="gchararray"/>
       <!-- column-name function -->
       <column type="gchararray"/>
+      <!-- column-name StackID -->
+      <column type="guint"/>
       <!-- column-name Stack -->
       <column type="gchararray"/>
       <!-- column-name excl_time -->
@@ -332,12 +334,24 @@ e.g.: mpi_\|MPI_</property>
                           </object>
                         </child>
                         <child>
+                          <object class="GtkTreeViewColumn" id="stack_list_treeview_stackID_column">
+                            <property name="resizable">True</property>
+                            <property name="title" translatable="yes">StackID</property>
+                            <property name="reorderable">True</property>
+                            <property name="sort_indicator">True</property>
+                            <property name="sort_column_id">2</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_list_treeview_stackID_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
                           <object class="GtkTreeViewColumn" id="stack_list_treeview_stack_column">
                             <property name="resizable">True</property>
                             <property name="title" translatable="yes">Stack</property>
                             <property name="reorderable">True</property>
                             <property name="sort_indicator">True</property>
-                            <property name="sort_column_id">2</property>
+                            <property name="sort_column_id">3</property>
                             <child>
                               <object class="GtkCellRendererText" id="stack_list_treeview_stack_text"/>
                             </child>
@@ -349,7 +363,7 @@ e.g.: mpi_\|MPI_</property>
                             <property name="title" translatable="yes">Exclusive Time / s</property>
                             <property name="reorderable">True</property>
                             <property name="sort_indicator">True</property>
-                            <property name="sort_column_id">3</property>
+                            <property name="sort_column_id">4</property>
                             <child>
                               <object class="GtkCellRendererText" id="stack_list_treeview_exclusive_time_text"/>
                             </child>
@@ -361,7 +375,7 @@ e.g.: mpi_\|MPI_</property>
                             <property name="title" translatable="yes">Inclusive Time / s</property>
                             <property name="reorderable">True</property>
                             <property name="sort_indicator">True</property>
-                            <property name="sort_column_id">4</property>
+                            <property name="sort_column_id">5</property>
                             <child>
                               <object class="GtkCellRendererText" id="stack_list_treeview_inclusive_time_text"/>
                             </child>
@@ -373,7 +387,7 @@ e.g.: mpi_\|MPI_</property>
                             <property name="title" translatable="yes">Calls</property>
                             <property name="reorderable">True</property>
                             <property name="sort_indicator">True</property>
-                            <property name="sort_column_id">5</property>
+                            <property name="sort_column_id">6</property>
                             <child>
                               <object class="GtkCellRendererText" id="stack_list_treeview_called_text"/>
                             </child>
@@ -385,7 +399,7 @@ e.g.: mpi_\|MPI_</property>
                             <property name="title" translatable="yes">Child Calls</property>
                             <property name="reorderable">True</property>
                             <property name="sort_indicator">True</property>
-                            <property name="sort_column_id">6</property>
+                            <property name="sort_column_id">7</property>
                             <child>
                               <object class="GtkCellRendererText" id="stack_list_treeview_children_called_text"/>
                             </child>

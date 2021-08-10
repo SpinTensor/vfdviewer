@@ -6,6 +6,7 @@
 #include "vfd_list.h"
 #include "vfd_stacks.h"
 #include "vgtk_stack_treeview.h"
+#include "vgtk_stack_list_treeview.h"
 #ifdef _DEBUG
 #include "v_timer.h"
 #endif
@@ -61,6 +62,16 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
       // to the same value as the the main function
       vfdptr->stacks[0].visible_in_treeview = vfdptr->stacks[1].visible_in_treeview;
 
+      // loop over all stacks to determine
+      // their visibility in the stack list
+      unsigned int nstacks = vfdptr->header->stackscount;
+      for (unsigned int istack=1; istack<nstacks; istack++) {
+
+         vfdptr->stacks[istack].visible_in_listview =
+            update_stack_visible_in_listview(&regex, vfdptr->stacks+istack);
+printf("updating %s %d %s\n", vfdptr->filename, istack, vfdptr->stacks[istack].visible_in_listview ? "true" : "false");
+      }
+
       // go to next vfd trace
       vfdptr = vfdptr->next;
    }
@@ -72,6 +83,7 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
    struct timespec t3 = current_time();
 #endif
    vgtk_stack_tree_refilter();
+   vgtk_stack_list_refilter();
 #ifdef _DEBUG
    struct timespec t4 = current_time();
 #endif

@@ -7,6 +7,7 @@
 #include "vgtk_about_dialog.h"
 #include "vgtk_main_menu_bar.h"
 #include "vgtk_stack_treeview.h"
+#include "vgtk_stack_list_treeview.h"
 #include "vgtk_main_view.h"
 
 GtkBuilder *vgtk_builder = NULL;
@@ -48,6 +49,9 @@ void vgtk_build_user_interface() {
 
    // assign the pointers for handling the stack_treeStore
    vgtk_build_stack_treeview(vgtk_builder);
+
+   // assign the pointers for handling the stack_list_treeStore
+   vgtk_build_stack_list_treeview(vgtk_builder);
 
    // build main viewer area
    vgtk_build_main_view(vgtk_builder);

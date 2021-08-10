@@ -30,6 +30,32 @@
       <pattern>*.vfd</pattern>
     </patterns>
   </object>
+  <object class="GtkListStore" id="stack_list_liststore">
+    <columns>
+      <!-- column-name vfdFile -->
+      <column type="gchararray"/>
+      <!-- column-name function -->
+      <column type="gchararray"/>
+      <!-- column-name Stack -->
+      <column type="gchararray"/>
+      <!-- column-name excl_time -->
+      <column type="gdouble"/>
+      <!-- column-name incl_time -->
+      <column type="gdouble"/>
+      <!-- column-name ncalled -->
+      <column type="guint"/>
+      <!-- column-name nchildrencalled -->
+      <column type="guint"/>
+      <!-- column-name nothing -->
+      <column type="gchar"/>
+    </columns>
+  </object>
+  <object class="GtkTreeModelFilter" id="stack_list_treefilter">
+    <property name="child_model">stack_list_liststore</property>
+  </object>
+  <object class="GtkTreeModelSort" id="stack_list_treesort">
+    <property name="model">stack_list_liststore</property>
+  </object>
   <object class="GtkTreeStore" id="stack_tree_treestore">
     <columns>
       <!-- column-name Stack -->
@@ -149,6 +175,18 @@
             <property name="orientation">vertical</property>
             <property name="spacing">2</property>
             <child>
+              <object class="GtkStackSwitcher" id="stack_tree_and_list_stack_switcher">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="stack">stack_tree_and_list_stack</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkSearchEntry" id="stack_tree_searchentry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -165,87 +203,211 @@ e.g.: mpi_\|MPI_</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="stack_tree_scrolledwindow">
+              <object class="GtkStack" id="stack_tree_and_list_stack">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="shadow_type">in</property>
+                <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkTreeView" id="stack_tree_treeview">
+                  <object class="GtkScrolledWindow" id="stack_tree_scrolledwindow">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="tooltip_text" translatable="yes">Stack tree: shows all encountered stacks during program execution. If stacks you expected are not present they might have been skipped due to a corse sample time.</property>
-                    <property name="model">stack_tree_treefilter</property>
-                    <property name="enable_search">False</property>
-                    <property name="enable_tree_lines">True</property>
-                    <property name="activate_on_single_click">True</property>
-                    <signal name="row-activated" handler="on_stack_tree_treeview_row_activated" swapped="no"/>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection" id="stack_tree_treeselection"/>
-                    </child>
+                    <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkTreeViewColumn" id="stack_tree_treeview_functionnames_column">
-                        <property name="resizable">True</property>
-                        <property name="sizing">fixed</property>
-                        <property name="title" translatable="yes">Stack</property>
+                      <object class="GtkTreeView" id="stack_tree_treeview">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Stack tree: shows all encountered stacks during program execution. If stacks you expected are not present they might have been skipped due to a corse sample time.</property>
+                        <property name="model">stack_tree_treefilter</property>
+                        <property name="enable_search">False</property>
+                        <property name="enable_tree_lines">True</property>
+                        <property name="activate_on_single_click">True</property>
+                        <signal name="row-activated" handler="on_stack_tree_treeview_row_activated" swapped="no"/>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection" id="stack_tree_treeselection"/>
+                        </child>
                         <child>
-                          <object class="GtkCellRendererText" id="stack_tree_treeview_functionnames_text"/>
+                          <object class="GtkTreeViewColumn" id="stack_tree_treeview_functionnames_column">
+                            <property name="resizable">True</property>
+                            <property name="sizing">fixed</property>
+                            <property name="title" translatable="yes">Stack</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_tree_treeview_functionnames_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_tree_treeview_exclusive_time_column">
+                            <property name="resizable">True</property>
+                            <property name="sizing">fixed</property>
+                            <property name="title" translatable="yes">Exclusive Time / s</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_tree_treeview_exclusive_time_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_tree_treeview_inclusive_time_column">
+                            <property name="resizable">True</property>
+                            <property name="sizing">fixed</property>
+                            <property name="title" translatable="yes">Inclusive Time / s</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_tree_treeview_inclusive_time_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_tree_treeview_called_column">
+                            <property name="resizable">True</property>
+                            <property name="sizing">fixed</property>
+                            <property name="title" translatable="yes">Calls</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_tree_treeview_called_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_tree_treeview_children_called_column">
+                            <property name="resizable">True</property>
+                            <property name="sizing">fixed</property>
+                            <property name="title" translatable="yes">Child Calls</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_tree_treeview_children_called_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn"/>
                         </child>
                       </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="stack_tree_treeview_exclusive_time_column">
-                        <property name="resizable">True</property>
-                        <property name="sizing">fixed</property>
-                        <property name="title" translatable="yes">Exclusive Time / s</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="stack_tree_treeview_exclusive_time_text"/>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="stack_tree_treeview_inclusive_time_column">
-                        <property name="resizable">True</property>
-                        <property name="sizing">fixed</property>
-                        <property name="title" translatable="yes">Inclusive Time / s</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="stack_tree_treeview_inclusive_time_text"/>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="stack_tree_treeview_called_column">
-                        <property name="resizable">True</property>
-                        <property name="sizing">fixed</property>
-                        <property name="title" translatable="yes">Calls</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="stack_tree_treeview_called_text"/>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="stack_tree_treeview_children_called_column">
-                        <property name="resizable">True</property>
-                        <property name="sizing">fixed</property>
-                        <property name="title" translatable="yes">Child Calls</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="stack_tree_treeview_children_called_text"/>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn"/>
                     </child>
                   </object>
+                  <packing>
+                    <property name="name">StackTree</property>
+                    <property name="title" translatable="yes">Stack Tree</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="stack_list_scrolledwindow">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkTreeView" id="stack_list_treeview">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Stack List: shows all encountered functions and their correspoinding stack during program execution. If functions and/or stacks you expected are not present they might have been skipped due to a corse sample time.</property>
+                        <property name="model">stack_list_treesort</property>
+                        <property name="reorderable">True</property>
+                        <property name="enable_search">False</property>
+                        <property name="activate_on_single_click">True</property>
+                        <signal name="row-activated" handler="on_stack_list_treeview_row_activated" swapped="no"/>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection" id="stack_list_treeselection"/>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_list_treeview_vfdname_column">
+                            <property name="resizable">True</property>
+                            <property name="title" translatable="yes">vfd-File</property>
+                            <property name="reorderable">True</property>
+                            <property name="sort_indicator">True</property>
+                            <property name="sort_column_id">0</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_list_treeview_vfdname_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_list_treeview_functionname_column">
+                            <property name="resizable">True</property>
+                            <property name="title" translatable="yes">Function</property>
+                            <property name="reorderable">True</property>
+                            <property name="sort_indicator">True</property>
+                            <property name="sort_column_id">1</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_list_treeview_functionname_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_list_treeview_stack_column">
+                            <property name="resizable">True</property>
+                            <property name="title" translatable="yes">Stack</property>
+                            <property name="reorderable">True</property>
+                            <property name="sort_indicator">True</property>
+                            <property name="sort_column_id">2</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_list_treeview_stack_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_list_treeview_exclusive_time_column">
+                            <property name="resizable">True</property>
+                            <property name="title" translatable="yes">Exclusive Time / s</property>
+                            <property name="reorderable">True</property>
+                            <property name="sort_indicator">True</property>
+                            <property name="sort_column_id">3</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_list_treeview_exclusive_time_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_list_treeview_inclusive_time_column">
+                            <property name="resizable">True</property>
+                            <property name="title" translatable="yes">Inclusive Time / s</property>
+                            <property name="reorderable">True</property>
+                            <property name="sort_indicator">True</property>
+                            <property name="sort_column_id">4</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_list_treeview_inclusive_time_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_list_treeview_called_column">
+                            <property name="resizable">True</property>
+                            <property name="title" translatable="yes">Calls</property>
+                            <property name="reorderable">True</property>
+                            <property name="sort_indicator">True</property>
+                            <property name="sort_column_id">5</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_list_treeview_called_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="stack_list_treeview_children_called_column">
+                            <property name="resizable">True</property>
+                            <property name="title" translatable="yes">Child Calls</property>
+                            <property name="reorderable">True</property>
+                            <property name="sort_indicator">True</property>
+                            <property name="sort_column_id">6</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="stack_list_treeview_children_called_text"/>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn"/>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="name">StackList</property>
+                    <property name="title" translatable="yes">Stack List</property>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
@@ -327,7 +489,7 @@ e.g.: mpi_\|MPI_</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>

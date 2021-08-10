@@ -1,4 +1,5 @@
 #include "vgtk_stack_treeview.h"
+#include "vgtk_stack_list_treeview.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vgtk_stacktimeline_spinner.h"
 #include "vgtk_hwc_plot_entry.h"
@@ -10,6 +11,7 @@ void vfd_load_file(char *filename) {
    append_vfd(vfdfile);
    // add the vfdtrace to the stack treeView
    vgtk_stack_tree_add_vfdtrace(vfdfile);
+   vgtk_stack_list_add_vfdtrace(vfdfile);
    // add the vfdtrace to the timeline view
    init_stacktimeline_entry(vfdfile);
    init_hwcPlotEntry(vfdfile);

@@ -43,7 +43,6 @@ gboolean stack_list_determine_visibility(GtkTreeModel *model,
                                          gpointer data);
 
 void vgtk_build_stack_list_treeview(GtkBuilder *builder) {
-   printf("building stack list\n");
    stack_list_liststore = GTK_LIST_STORE(
       gtk_builder_get_object(builder, "stack_list_liststore"));
    stack_list_treeview = GTK_TREE_VIEW(
@@ -208,7 +207,6 @@ gboolean stack_list_determine_visibility(GtkTreeModel *model,
       }
       visible = vfd_ptr->stacks[stackID].visible_in_listview;
    }
-   printf("visible: %s %d %s\n", vfdname, stackID, visible ? "true" : "false");
    g_free(vfdname);
 
    return visible;

@@ -56,7 +56,7 @@
     <property name="child_model">stack_list_liststore</property>
   </object>
   <object class="GtkTreeModelSort" id="stack_list_treesort">
-    <property name="model">stack_list_liststore</property>
+    <property name="model">stack_list_treefilter</property>
   </object>
   <object class="GtkTreeStore" id="stack_tree_treestore">
     <columns>

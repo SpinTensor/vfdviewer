@@ -66,10 +66,7 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
       // their visibility in the stack list
       unsigned int nstacks = vfdptr->header->stackscount;
       for (unsigned int istack=1; istack<nstacks; istack++) {
-
-         vfdptr->stacks[istack].visible_in_listview =
-            update_stack_visible_in_listview(&regex, vfdptr->stacks+istack);
-printf("updating %s %d %s\n", vfdptr->filename, istack, vfdptr->stacks[istack].visible_in_listview ? "true" : "false");
+         update_stack_visible_in_listview(&regex, vfdptr->stacks+istack);
       }
 
       // go to next vfd trace

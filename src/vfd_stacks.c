@@ -5,11 +5,12 @@
 #include <regex.h>
 
 #include "vfd_types.h"
+#include "vfd_stacks.h"
 #include "vgtk_colors.h"
 #include "hashing.h"
 
-vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
-                                   vfd_stack_entry_t **stacks_ptr, int *maxlevel) {
+void read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
+                      vfd_stack_entry_t **stacks_ptr, int *maxlevel) {
    unsigned int nstacks = header->stackscount;
    *maxlevel = 0;
 
@@ -127,8 +128,6 @@ vfd_stack_entry_t *read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
          exit(EXIT_FAILURE);
       }
    }
-
-   return stacks;
 }
 
 // returns a pointer to a vfd trace stack entry
@@ -209,6 +208,46 @@ void free_vfd_stacks(unsigned int nstacks, vfd_stack_entry_t *stacks) {
    }
 
    free(stacks);
+}
+
+int get_stack_string_length(vfd_stack_entry_t *stack) {
+   int stackstrlength = stack->namelen;
+   vfd_stack_entry_t *stackroot = stack-stack->ID;
+   vfd_stack_entry_t *tmpstack = stack;
+   // go down the stack until the bottom is reached
+   // record the length of the function names each
+   while (tmpstack->callerID) {
+      tmpstack = stackroot+tmpstack->callerID;
+      // add one chars for function division by "<"
+      stackstrlength += 1;
+      stackstrlength += tmpstack->namelen;
+   }
+
+   return stackstrlength;
+}
+
+char *get_stack_string(vfd_stack_entry_t *stack) {
+   // determine the length of the stack string
+   int stackstrlength = get_stack_string_length(stack);
+
+   // allocate space to hold the complete string
+   char *stackstring = (char*) malloc((1+stackstrlength)*sizeof(char));
+   char *strptr = stackstring;
+   // copy the first string in and move the strpointer forward
+   strcpy(strptr, stack->name);
+   strptr += strlen(stack->name);
+   // go down the stack until the bottom is reached
+   // copy the function names onto the string
+   vfd_stack_entry_t *stackroot = stack-stack->ID;
+   vfd_stack_entry_t *tmpstack = stack;
+   while (tmpstack->callerID) {
+      tmpstack = stackroot+tmpstack->callerID;;
+      strcpy(strptr, "<");
+      strptr += 1;
+      strcpy(strptr, tmpstack->name);
+      strptr += strlen(tmpstack->name);
+   }
+   return stackstring;
 }
 
 void print_vfd_stacks(vfd_header_t *header, vfd_stack_entry_t *stacks) {

@@ -7,6 +7,7 @@
 #include "vgtk_stack_tree_searchentry.h"
 #include "vgtk_stacktimeline_entry.h"
 #include "vfd_types.h"
+#include "vfd_stacks.h"
 #include "vfd_list.h"
 
 #ifdef _DEBUG
@@ -162,8 +163,10 @@ void vgtk_stack_list_add_vfdtrace(vfd_t *vfdtrace) {
                          1, stack_ptr->name, -1);
       gtk_list_store_set(stack_list_liststore, &iter,
                          2, stack_ptr->ID, -1);
+      char *stackstr = get_stack_string(stack_ptr);
       gtk_list_store_set(stack_list_liststore, &iter,
-                         3, "TODO", -1);
+                         3, stackstr, -1);
+      free(stackstr);
       gtk_list_store_set(stack_list_liststore, &iter,
                          4, stack_ptr->excl_time, -1);
       gtk_list_store_set(stack_list_liststore, &iter,

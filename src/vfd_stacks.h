@@ -29,6 +29,10 @@ bool update_stack_visible_in_listview(regex_t *regex,
 
 void free_vfd_stacks(unsigned int nstacks, vfd_stack_entry_t *stacks);
 
+int get_stack_string_length(vfd_stack_entry_t *stack);
+
+char *get_stack_string(vfd_stack_entry_t *stack);
+
 void print_vfd_stacks(vfd_header_t *header, vfd_stack_entry_t *stacks);
 
 #endif

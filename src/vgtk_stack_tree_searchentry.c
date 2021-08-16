@@ -7,6 +7,7 @@
 #include "vfd_stacks.h"
 #include "vgtk_stack_treeview.h"
 #include "vgtk_stack_list_treeview.h"
+#include "vgtk_comm_matrix.h"
 #ifdef _DEBUG
 #include "v_timer.h"
 #endif
@@ -85,6 +86,12 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
    struct timespec t4 = current_time();
 #endif
    vgtk_stack_tree_expand();
+
+   // The message samples, included in the comm matrix,
+   // depend on the filtered stack list.
+   // Thus, it needs to be redrawn as soon as the filter is changed.
+   comm_matrix_invalidate();
+   comm_matrix_redraw();
 #ifdef _DEBUG
    struct timespec t5 = current_time();
    fprintf(stderr, "\n");

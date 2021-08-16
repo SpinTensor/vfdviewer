@@ -36,9 +36,13 @@ void comm_matrix_update_time_max(vgtk_comm_matrix_t *comm_matrix) {
             // than the max_drawtime of the stacktimeline is encountered.
             // They are sorted, thus no one should be forgotten.
             break;
-         } else if (message.dtend_sec > tmin) {
+         } else if (message.dtend_sec > tmin &&
+                    vfdtrace->stacks[message.callingStackID].visible_in_listview) {
             // only update matrix if the end time
             // falls into the selected time window
+            //
+            // and the sending stack is selected in the stack list
+            // via the search bar for regular expressions
 
             if ((show_send && message.dir == send) ||
                 (show_recv && message.dir == recv)) {
@@ -128,9 +132,13 @@ void comm_matrix_update_time_avg(vgtk_comm_matrix_t *comm_matrix) {
             // than the max_drawtime of the stacktimeline is encountered.
             // They are sorted, thus no one should be forgotten.
             break;
-         } else if (message.dtend_sec > tmin) {
+         } else if (message.dtend_sec > tmin &&
+                    vfdtrace->stacks[message.callingStackID].visible_in_listview) {
             // only update matrix if the end time
             // falls into the selected time window
+            //
+            // and the sending stack is selected in the stack list
+            // via the search bar for regular expressions
 
             if ((show_send && message.dir == send) ||
                 (show_recv && message.dir == recv)) {
@@ -227,9 +235,13 @@ void comm_matrix_update_time_min(vgtk_comm_matrix_t *comm_matrix) {
             // than the max_drawtime of the stacktimeline is encountered.
             // They are sorted, thus no one should be forgotten.
             break;
-         } else if (message.dtend_sec > tmin) {
+         } else if (message.dtend_sec > tmin &&
+                    vfdtrace->stacks[message.callingStackID].visible_in_listview) {
             // only update matrix if the end time
             // falls into the selected time window
+            //
+            // and the sending stack is selected in the stack list
+            // via the search bar for regular expressions
 
             if ((show_send && message.dir == send) ||
                 (show_recv && message.dir == recv)) {

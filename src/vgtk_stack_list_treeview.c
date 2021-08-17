@@ -150,6 +150,13 @@ void vgtk_build_stack_list_treeview(GtkBuilder *builder) {
 
 void vgtk_stack_list_add_vfdtrace(vfd_t *vfdtrace) {
 
+   // To Prevent Gtk from resorting the list after every entry is added
+   // The TreeModel structure is reconnected, such that the View
+   // displays the filtered Model and not the filtered and sorted one
+   // The ModelSort needs to be completely destroyed.
+   gtk_tree_view_set_model(stack_list_treeview, GTK_TREE_MODEL(stack_list_treefilter));
+   g_object_unref(stack_list_treesort);
+
    // loop over all stacks and add them to the list store
    unsigned int nstacks = vfdtrace->header->stackscount;
    // skip istack==0 to avoid init function
@@ -176,6 +183,13 @@ void vgtk_stack_list_add_vfdtrace(vfd_t *vfdtrace) {
       gtk_list_store_set(stack_list_liststore, &iter,
                          7, stack_ptr->num_calls, -1);
    }
+
+   // Now that everything was added we create a new ModelSort and reconnect it
+   // as it was before
+   stack_list_treesort = GTK_TREE_MODEL_SORT(
+      gtk_tree_model_sort_new_with_model(
+         GTK_TREE_MODEL(stack_list_treefilter)));
+   gtk_tree_view_set_model(stack_list_treeview, GTK_TREE_MODEL(stack_list_treesort));
 }
 
 // reapply the tree filter

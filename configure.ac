@@ -52,7 +52,7 @@ AM_CONDITIONAL(
 # check for ncurses
 PKG_CHECK_MODULES(
    [NCURSES],
-   [ncursesasdf],
+   [ncurses],
    [has_ncurses_pkg="yes"],
    [has_ncurses_pkg="no"])
 AM_CONDITIONAL(

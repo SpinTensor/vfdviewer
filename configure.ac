@@ -31,6 +31,16 @@ AM_COND_IF(
 
 # enable building of textlogn viewer
 AC_ARG_ENABLE(
+   [vfdviewer],
+   [AS_HELP_STRING([--enable-vfdviewer],[build with the gtk based viewer for vfdfiles [default=yes]])],
+   [],
+   [enable_vfdviewer="yes"])
+AM_CONDITIONAL(
+   [ENABLE_VFDVIEWER],
+   [test "$enable_vfdviewer" = yes])
+
+# enable building of textlogn viewer
+AC_ARG_ENABLE(
    [logviewer],
    [AS_HELP_STRING([--enable-logviewer],[build with the ncurses based viewer for text logfiles [default=yes]])],
    [],
@@ -59,6 +69,14 @@ AM_CONDITIONAL(
    [HAS_NCURSES_PKG],
    [test "$has_ncurses_pkg" = yes])
 
+# check vfdviewer and gtk consistency
+AM_COND_IF(
+   [ENABLE_LOGVIEWER],
+   [AM_COND_IF(
+      [HAS_GTK_PKG],
+      [],
+      [AC_MSG_FAILURE([vfdviewer requires GTK+-3 library. Install GTK, or disable vfdviewer compilation.])])])
+
 # check logviewer and ncurses consistency
 AM_COND_IF(
    [ENABLE_LOGVIEWER],
@@ -69,6 +87,8 @@ AM_COND_IF(
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([src/Makefile])
+AC_CONFIG_FILES([src/vfdviewer/Makefile])
+AC_CONFIG_FILES([src/logviewer/Makefile])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_FILES([external/Makefile])
 

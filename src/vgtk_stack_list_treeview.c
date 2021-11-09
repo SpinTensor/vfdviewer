@@ -239,5 +239,7 @@ void on_stack_list_treeview_row_activated(GtkTreeView *tree_view,
    (void) column;
    (void) user_data;
 
+#ifdef _DEBUG
    printf("Row selected\n");
+#endif
 }

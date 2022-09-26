@@ -18,23 +18,47 @@ void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
       exit(EXIT_FAILURE);
    }
 
-   read_elem = fread(&(header->vftrace_version), sizeof(char), VFTR_VERSIONSIZE, vfd_file);
-   if (read_elem != VFTR_VERSIONSIZE) {
-      fprintf(stderr, "Error in reading vfd-header vftrace_version\n"
+   int package_string_len;
+   read_elem = fread(&package_string_len, sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+       fprintf(stderr, "Error in reading vfd-header package_string_len\n"
+                       "Expected 1 int, read %ld\n",
+                       read_elem);
+       exit(EXIT_FAILURE);
+   }
+   header->package_string = (char*) malloc(package_string_len*sizeof(char));
+   read_elem = fread(header->package_string, sizeof(char), package_string_len, vfd_file);
+   if (read_elem != (size_t)package_string_len) {
+      fprintf(stderr, "Error in reading vfd-header package_string\n"
                       "Expected %d char, read %ld\n",
-                      VFTR_VERSIONSIZE, read_elem);
+                      package_string_len, read_elem);
       exit(EXIT_FAILURE);
    }
-   header->vftrace_version[VFTR_VERSIONSIZE] = '\0';
 
-   read_elem = fread(&(header->date), sizeof(char), DATESTRINGSIZE, vfd_file);
-   if (read_elem != DATESTRINGSIZE) {
-      fprintf(stderr, "Error in reading vfd-header date\n"
-                      "Expected %d char, read %ld\n",
-                      DATESTRINGSIZE, read_elem);
+   int datestr_len;
+   read_elem = fread(&datestr_len, sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header datestr_len\n"
+                      "Expected %d int, read %ld\n",
+                      datestr_len, read_elem);
       exit(EXIT_FAILURE);
    }
-   header->date[DATESTRINGSIZE] = '\0';
+   header->datestr_start = (char*) malloc(datestr_len*sizeof(char));
+   read_elem = fread(header->datestr_start, sizeof(char), datestr_len, vfd_file);
+   if (read_elem != (size_t)datestr_len) {
+      fprintf(stderr, "Error in reading vfd-header start date\n"
+                      "Expected %d char, read %ld\n",
+                      datestr_len, read_elem);
+      exit(EXIT_FAILURE);
+   }
+   header->datestr_end = (char*) malloc(datestr_len*sizeof(char));
+   read_elem = fread(header->datestr_end, sizeof(char), datestr_len, vfd_file);
+   if (read_elem != (size_t)datestr_len) {
+      fprintf(stderr, "Error in reading vfd-header end date\n"
+                      "Expected %d char, read %ld\n",
+                      datestr_len, read_elem);
+      exit(EXIT_FAILURE);
+   }
 
    read_elem = fread(&(header->interval), sizeof(long long), 1, vfd_file);
    if (read_elem != 1) {
@@ -44,6 +68,23 @@ void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
       exit(EXIT_FAILURE);
    }
 
+   read_elem = fread(&(header->nprocesses), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header nprocesses\n"
+                      "Expected 1 int, read %ld\n",
+                      read_elem);
+      exit(EXIT_FAILURE);
+   }
+
+   read_elem = fread(&(header->processID), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header processID\n"
+                      "Expected 1 int, read %ld\n",
+                      read_elem);
+      exit(EXIT_FAILURE);
+   }
+
+
    read_elem = fread(&(header->nthreads), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {
       fprintf(stderr, "Error in reading vfd-header nthreads\n"
@@ -52,28 +93,6 @@ void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
       exit(EXIT_FAILURE);
    }
 
-   read_elem = fread(&(header->mythread), sizeof(int), 1, vfd_file);
-   if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-header mythread\n"
-                      "Expected 1 int, read %ld\n",
-                      read_elem);
-      exit(EXIT_FAILURE);
-   }
-
-   read_elem = fread(&(header->nranks), sizeof(int), 1, vfd_file);
-   if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-header nranks\n"
-                      "Expected 1 int, read %ld\n",
-                      read_elem);
-      exit(EXIT_FAILURE);
-   }
-   read_elem = fread(&(header->myrank), sizeof(int), 1, vfd_file);
-   if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-header myrank\n"
-                      "Expected 1 int, read %ld\n",
-                      read_elem);
-      exit(EXIT_FAILURE);
-   }
    read_elem = fread(&(header->runtime), sizeof(double), 1, vfd_file);
    if (read_elem != 1) {
       fprintf(stderr, "Error in reading vfd-header runtime\n"
@@ -95,23 +114,30 @@ void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(header->stackscount), sizeof(unsigned int), 1, vfd_file);
+   read_elem = fread(&(header->nstacks), sizeof(unsigned int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-header stackscount\n"
+      fprintf(stderr, "Error in reading vfd-header nstacks\n"
                       "Expected 1 unsigned int, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(header->stacksoffset), sizeof(long), 1, vfd_file);
+   read_elem = fread(&(header->samples_offset), sizeof(long int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-header stacksoffset\n"
+      fprintf(stderr, "Error in reading vfd-header samples_offset\n"
                       "Expected 1 long, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   read_elem = fread(&(header->sampleoffset), sizeof(long), 1, vfd_file);
+   read_elem = fread(&(header->stacks_offset), sizeof(long int), 1, vfd_file);
    if (read_elem != 1) {
-      fprintf(stderr, "Error in reading vfd-header sampleoffset\n"
+      fprintf(stderr, "Error in reading vfd-header stacks_offset\n"
+                      "Expected 1 long, read %ld\n",
+                      read_elem);
+      exit(EXIT_FAILURE);
+   }
+   read_elem = fread(&(header->threadtree_offset), sizeof(long int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-header threadtree_offset\n"
                       "Expected 1 long, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);
@@ -120,41 +146,43 @@ void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
 
 void free_vfd_header(vfd_header_t *vfd_header) {
    vfd_header->vfd_version = 0;
-   vfd_header->vftrace_version[0] = '\0';
-   vfd_header->date[0] = '\0';
-   vfd_header->interval = 0;
+   free(vfd_header->package_string);
+   free(vfd_header->datestr_start);
+   free(vfd_header->datestr_end);
+   vfd_header->interval = 0ll;
+   vfd_header->nprocesses = 0;
+   vfd_header->processID = 0;
    vfd_header->nthreads = 0;
-   vfd_header->mythread = 0;
-   vfd_header->nranks = 0;
-   vfd_header->myrank = 0;
    vfd_header->runtime = 0.0;
    vfd_header->function_samplecount = 0;
    vfd_header->message_samplecount = 0;
-   vfd_header->stackscount = 0;
-   vfd_header->stacksoffset = 0;
-   vfd_header->sampleoffset = 0;
-
+   vfd_header->samples_offset = 0x0;
+   vfd_header->stacks_offset = 0x0;
+   vfd_header->threadtree_offset = 0x0;
+   vfd_header->msgregsendcount = 0;
+   vfd_header->msgregrecvcount = 0;
    free(vfd_header);
 }
 
 void print_vfd_header(vfd_header_t *vfd_header) {
 
    fprintf(stderr, "VFD-Header:\n");
-   fprintf(stderr, "   vfd version:     %d\n", vfd_header->vfd_version);
-   fprintf(stderr, "   vftrace version: %s\n", vfd_header->vftrace_version);
-   fprintf(stderr, "   Date:            %s\n", vfd_header->date);
-   fprintf(stderr, "   MPI rank         %d (of %d)\n", vfd_header->myrank,
-                                                       vfd_header->nranks);
-   fprintf(stderr, "   OMP thread       %d (of %d)\n", vfd_header->mythread,
-                                                       vfd_header->nthreads);
-   fprintf(stderr, "   Sample interval: %.6le seconds\n", vfd_header->interval*1.0e-6);
-   fprintf(stderr, "   Runtime:         %.3lf seconds\n", vfd_header->runtime);
-   fprintf(stderr, "   Samples:         %d\n", vfd_header->function_samplecount +
-                                               vfd_header->message_samplecount);
-   fprintf(stderr, "      Function:     %d\n", vfd_header->function_samplecount);
-   fprintf(stderr, "      Messages:     %d\n", vfd_header->message_samplecount);
-   fprintf(stderr, "   Stacks:          %u\n", vfd_header->stackscount);
-   fprintf(stderr, "   Stacks offset:   0x%lx\n", vfd_header->stacksoffset);
-   fprintf(stderr, "   Sample offset:   0x%lx\n", vfd_header->sampleoffset);
+   fprintf(stderr, "   vfd version:       %d\n", vfd_header->vfd_version);
+   fprintf(stderr, "   vftrace version:   %s\n", vfd_header->package_string);
+   fprintf(stderr, "   Start date:        %s\n", vfd_header->datestr_start);
+   fprintf(stderr, "   End date:          %s\n", vfd_header->datestr_end);
+   fprintf(stderr, "   MPI rank           %d (of %d)\n", vfd_header->processID,
+                                                         vfd_header->nprocesses);
+   fprintf(stderr, "   OMP threads:       %d\n", vfd_header->nthreads);
+   fprintf(stderr, "   Sample interval:   %.6le seconds\n", vfd_header->interval*1.0e-9);
+   fprintf(stderr, "   Runtime:           %.3lf seconds\n", vfd_header->runtime);
+   fprintf(stderr, "   Samples:           %d\n", vfd_header->function_samplecount +
+                                                 vfd_header->message_samplecount);
+   fprintf(stderr, "      Function:       %d\n", vfd_header->function_samplecount);
+   fprintf(stderr, "      Messages:       %d\n", vfd_header->message_samplecount);
+   fprintf(stderr, "   Stacks:            %u\n", vfd_header->nstacks);
+   fprintf(stderr, "   Stacks offset:     0x%lx\n", vfd_header->stacks_offset);
+   fprintf(stderr, "   Sample offset:     0x%lx\n", vfd_header->samples_offset);
+   fprintf(stderr, "   Threadtree offset: 0x%lx\n", vfd_header->threadtree_offset);
    fprintf(stderr, "\n");
 }

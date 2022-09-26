@@ -174,7 +174,7 @@ vfd_message_sample_t read_vfd_message_sample(FILE *vfd_file) {
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   message_sample.dtstart_sec = message_sample.tstart_usec * 1.0e-6; // from microseconds to seconds
+   message_sample.dtstart_sec = message_sample.tstart_usec * 1.0e-9; // from nanoseconds to seconds
    read_elem = fread(&(message_sample.tend_usec), sizeof(long long), 1, vfd_file);
    if (read_elem != 1) {
       fprintf(stderr, "Error in reading vfd-message sample tend_usec\n"
@@ -182,7 +182,7 @@ vfd_message_sample_t read_vfd_message_sample(FILE *vfd_file) {
                       read_elem);
       exit(EXIT_FAILURE);
    }
-   message_sample.dtend_sec = message_sample.tend_usec * 1.0e-6; // from microseconds to seconds
+   message_sample.dtend_sec = message_sample.tend_usec * 1.0e-9; // from nanoseconds to seconds
    message_sample.time_sec = message_sample.dtend_sec - message_sample.dtstart_sec;
    message_sample.rate_MiBs = message_sample.count * message_sample.typeSize /
                        message_sample.time_sec /
@@ -228,7 +228,7 @@ void print_vfd_stack_samples(vfd_header_t *header, vfd_stack_sample_t *samples) 
    fprintf(stderr, "VFD stack samples:\n");
    unsigned int samplecount = header->function_samplecount;
    for (unsigned int isample=0; isample<samplecount; isample++) {
-      fprintf(stderr, "%16.6lf", samples[isample].sampletime*1.0e-6);
+      fprintf(stderr, "%16.6lf", samples[isample].sampletime*1.0e-9);
       fprintf(stderr, " %s", samples[isample].kind == fnct_entry ? "call" : "exit");
       fprintf(stderr, " stackID=%d\n", samples[isample].stackID);
    }

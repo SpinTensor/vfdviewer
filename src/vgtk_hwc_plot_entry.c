@@ -38,7 +38,7 @@ void init_hwcPlotEntry(vfd_t *vfdtrace) {
    entry->ycoords = (double*) malloc(entry->ndata*sizeof(double));
    for (unsigned int i=0; i<entry->ndata; i++ ){
       // convert the sampletime into seconds
-      entry->xcoords[i] = vfdtrace->stack_samples[i].sampletime * 1.0e-6;
+      entry->xcoords[i] = vfdtrace->stack_samples[i].sampletime * 1.0e-9;
       entry->ycoords[i] = 0.0;
    }
 

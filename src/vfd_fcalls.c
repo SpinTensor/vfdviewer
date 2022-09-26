@@ -163,7 +163,7 @@ void construct_vfd_fcalls(vfd_t *vfd) {
       // only need to build up the stack
       buildup_stack(sample.stackID, 0.0,
                     stacks, &ilevel, curr_stack);
-      buildup_stackhead(sample.stackID, sample.sampletime*1.0e-6,
+      buildup_stackhead(sample.stackID, sample.sampletime*1.0e-9,
                         stacks, &ilevel, curr_stack);
    } else {
       // first build up the stack
@@ -172,21 +172,21 @@ void construct_vfd_fcalls(vfd_t *vfd) {
                     stacks, &ilevel, curr_stack);
       buildup_stackhead(sample.stackID, 0.0,
                         stacks, &ilevel, curr_stack);
-      dismantle_stackhead(sample.stackID, sample.sampletime*1.0e-6,
+      dismantle_stackhead(sample.stackID, sample.sampletime*1.0e-9,
                           stacks, &ilevel, curr_stack,
                           &nfcalls, &maxfcalls, &fcalls);
    }
 
 #ifdef _DEBUG
    fprintf(stderr, "Stack-sample %u\n", 0);
-   fprintf(stderr, "%16.6lf", sample.sampletime*1.0e-6);
+   fprintf(stderr, "%16.6lf", sample.sampletime*1.0e-9);
    fprintf(stderr, " %s", sample.kind == fnct_entry ? "call" : "exit");
    fprintf(stderr, " stackID=%d\n", sample.stackID);
    print_current_fcalls(ilevel, curr_stack);
 #endif
 
    // save the last time for time estimates
-   double lastsampletime = sample.sampletime*1.0e-6;
+   double lastsampletime = sample.sampletime*1.0e-9;
    // go through all stack samples and reconstruct the function calls
    for (unsigned int isample=1; isample<vfd->header->function_samplecount; isample++) {
       // current stack already has entries
@@ -195,9 +195,9 @@ void construct_vfd_fcalls(vfd_t *vfd) {
       // as it is not available estimate the time of events
       // since the last sample
       double timeestimate;
-      timeestimate = lastsampletime + sample.sampletime*1.0e-6;
+      timeestimate = lastsampletime + sample.sampletime*1.0e-9;
       timeestimate *=0.5;
-      lastsampletime = sample.sampletime*1.0e-6;
+      lastsampletime = sample.sampletime*1.0e-9;
       // compute the closest common stack
       // between the current stackhead
       // and the new stack sample
@@ -227,7 +227,7 @@ void construct_vfd_fcalls(vfd_t *vfd) {
                               stacks, &ilevel, curr_stack);
          }
          // if the sample is a function exit dismantle the current head stack
-         dismantle_stackhead(sample.stackID, sample.sampletime*1.0e-6,
+         dismantle_stackhead(sample.stackID, sample.sampletime*1.0e-9,
                              stacks, &ilevel, curr_stack,
                              &nfcalls, &maxfcalls, &fcalls);
       } else {
@@ -236,17 +236,17 @@ void construct_vfd_fcalls(vfd_t *vfd) {
          // constructing it newly
          if (sample.stackID == curr_stack[ilevel].stackID) {
             dismantle_stackhead(sample.stackID,
-                                sample.sampletime*1.0e-6,
+                                sample.sampletime*1.0e-9,
                                 stacks, &ilevel, curr_stack,
                                 &nfcalls, &maxfcalls, &fcalls);
          }
          // if the sample is a function entry build new head stack
-         buildup_stackhead(sample.stackID, sample.sampletime*1.0e-6,
+         buildup_stackhead(sample.stackID, sample.sampletime*1.0e-9,
                            stacks, &ilevel, curr_stack);
       }
 #ifdef _DEBUG
       fprintf(stderr, "Stack-sample %u\n", isample);
-      fprintf(stderr, "%16.6lf", sample.sampletime*1.0e-6);
+      fprintf(stderr, "%16.6lf", sample.sampletime*1.0e-9);
       fprintf(stderr, " %s", sample.kind == fnct_entry ? "call" : "exit");
       fprintf(stderr, " stackID=%d\n", sample.stackID);
       print_current_fcalls(ilevel, curr_stack);

@@ -6,27 +6,25 @@
 #include "vgtk_types.h"
 #include "vgtk_colors.h"
 
-#define VFTR_VERSIONSIZE 16
-#define DATESTRINGSIZE 24
-
 typedef struct {
    int vfd_version;
-   char vftrace_version[VFTR_VERSIONSIZE+1];
-   char date[DATESTRINGSIZE+1];
+   char *package_string;
+   char *datestr_start;
+   char *datestr_end;
    long long interval;
+   int nprocesses;
+   int processID;
    int nthreads;
-   int mythread;
-   int nranks;
-   int myrank;
    double runtime;
    unsigned int function_samplecount;
    unsigned int message_samplecount;
    unsigned int fcallscount;
+   unsigned int nstacks;
+   long int samples_offset;
+   long int stacks_offset;
+   long int threadtree_offset;
    unsigned int msgregsendcount;
    unsigned int msgregrecvcount;
-   unsigned int stackscount;
-   long stacksoffset;
-   long sampleoffset;
 } vfd_header_t;
 
 typedef enum {
@@ -43,6 +41,7 @@ struct vdf_stack_entry_type{
    vfd_stack_entry_t *caller;
    int ncallees;
    vfd_stack_entry_t **callees;
+   int threadID;
    bool precise;
    int namelen;
    char *name;
@@ -60,6 +59,14 @@ typedef struct {
    int stackID;
    long long sampletime;
 } vfd_stack_sample_t;
+
+typedef struct {
+   int threadID;
+   int parent_thread;
+   int nchildren;
+   int *children;
+   int level;
+} thread_t;
 
 typedef struct {
    int stackID;
@@ -91,6 +98,7 @@ typedef struct {
    double time_sec;
    double rate_MiBs;
    int callingStackID;
+   int callingThreadID;
 } vfd_message_sample_t;
 
 typedef struct {

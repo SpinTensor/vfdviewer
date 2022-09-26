@@ -7,6 +7,12 @@ void read_vfd_hwc_header(FILE *vfd_file, vfd_hwc_header_t **hwc_header_ptr) {
    *hwc_header_ptr = (vfd_hwc_header_t*) malloc(sizeof(vfd_hwc_header_t));
    vfd_hwc_header_t *hwc_header = *hwc_header_ptr;
 
+// TODO:
+// Only temporary until HWCs are implemented back in the vfd format
+hwc_header->n_formulae = 0;
+hwc_header->n_hw_obs = 0;
+return;
+
    size_t read_elem;
    read_elem = fread(&(hwc_header->n_formulae), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {

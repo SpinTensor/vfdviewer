@@ -36,7 +36,7 @@ void read_vfd_samples(FILE *vfd_file, vfd_header_t *header,
    unsigned int read_function_samplecount = 0;
    unsigned int read_message_samplecount = 0;
 
-   fseek(vfd_file, header->sampleoffset, SEEK_SET);
+   fseek(vfd_file, header->samples_offset, SEEK_SET);
    for (unsigned int isample=0; isample<tot_samplecount; isample++) {
       vfd_sample_kind_enum sample_kind;
       size_t read_elem;
@@ -190,6 +190,13 @@ vfd_message_sample_t read_vfd_message_sample(FILE *vfd_file) {
    read_elem = fread(&(message_sample.callingStackID), sizeof(int), 1, vfd_file);
    if (read_elem != 1) {
       fprintf(stderr, "Error in reading vfd-message sample callingStackID\n"
+                      "Expected 1 int, read %ld\n",
+                      read_elem);
+      exit(EXIT_FAILURE);
+   }
+   read_elem = fread(&(message_sample.callingThreadID), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading vfd-message sample callingThreadID\n"
                       "Expected 1 int, read %ld\n",
                       read_elem);
       exit(EXIT_FAILURE);

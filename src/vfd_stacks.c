@@ -9,9 +9,13 @@
 #include "vgtk_colors.h"
 #include "hashing.h"
 
+bool is_precise (char *s) {
+   return s[strlen(s)-1] == '*';
+}
+
 void read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
                       vfd_stack_entry_t **stacks_ptr, int *maxlevel) {
-   unsigned int nstacks = header->stackscount;
+   unsigned int nstacks = header->nstacks;
    *maxlevel = 0;
 
    *stacks_ptr = (vfd_stack_entry_t*) malloc(nstacks*sizeof(vfd_stack_entry_t));
@@ -19,69 +23,88 @@ void read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
    memset((void*) stacks, 0, nstacks*sizeof(vfd_stack_entry_t));
 
    // Read in the vfd information
-   fseek(vfd_file, header->stacksoffset, SEEK_SET);
-   for (unsigned int istack=0; istack<nstacks; istack++) {
-      int id;
-      size_t read_elem;
-      read_elem = fread(&id, sizeof(int), 1, vfd_file);
-      if (read_elem != 1) {
-         fprintf(stderr, "Error in reading vfd-stack nr. %u: ID\n"
-                         "Expected 1 int, read %ld\n",
-                         istack, read_elem);
-         exit(EXIT_FAILURE);
-      }
-      if ((unsigned int) id >= nstacks) {
-         fprintf(stderr, "Error in stack ID: %d is larger than number of stacks %d\n",
-                         id, nstacks);
-         exit(EXIT_FAILURE);
-      }
-      vfd_stack_entry_t *stack_ptr = stacks+id;
-      stack_ptr->ID = id;
-      read_elem = fread(&(stack_ptr->level), sizeof(int), 1, vfd_file);
-      if (read_elem != 1) {
-         fprintf(stderr, "Error in reading vfd-stack nr. %u: level\n"
-                         "Expected 1 int, read %ld\n",
-                         istack, read_elem);
-         exit(EXIT_FAILURE);
-      }
-      // reduce level by one as init starts with level one
-      // but everything is easier if it starts at zero
-      stack_ptr->level--;
-      // update maximum level
-      *maxlevel = stack_ptr->level > *maxlevel ? stack_ptr->level : *maxlevel;
+   fseek(vfd_file, header->stacks_offset, SEEK_SET);
 
-      read_elem = fread(&(stack_ptr->callerID), sizeof(int), 1, vfd_file);
-      if (read_elem != 1) {
-         fprintf(stderr, "Error in reading vfd-stack nr. %u: callerID\n"
-                         "Expected 1 int, read %ld\n",
-                         istack, read_elem);
-         exit(EXIT_FAILURE);
-      }
-      read_elem = fread(&(stack_ptr->namelen), sizeof(int), 1, vfd_file);
-      if (read_elem != 1) {
-         fprintf(stderr, "Error in reading vfd-stack nr. %u: namelen\n"
-                         "Expected 1 int, read %ld\n",
-                         istack, read_elem);
-         exit(EXIT_FAILURE);
-      }
-      stack_ptr->name = (char*) malloc((stack_ptr->namelen+1)*sizeof(char));
-      read_elem = fread(stack_ptr->name, sizeof(char), stack_ptr->namelen, vfd_file);
-      if (read_elem != (size_t) (stack_ptr->namelen)) {
-         fprintf(stderr, "Error in reading vfd-stack nr. %u: name\n"
-                         "Expected 1 int, read %ld\n",
-                         istack, read_elem);
-         exit(EXIT_FAILURE);
-      }
-      stack_ptr->name[stack_ptr->namelen] = '\0';
+   // first stack needs special treatment
+   stacks[0].ID = 0;
+   stacks[0].level = 0;
+   stacks[0].callerID = 0;
+   stacks[0].caller = NULL;
+   stacks[0].ncallees = 0;
+   stacks[0].callees = NULL;
+   stacks[0].threadID = 0;
+   stacks[0].precise = false;
+   stacks[0].namelen = 0;
+   stacks[0].name = NULL;
+   stacks[0].num_called = 0;
+   stacks[0].num_calls = 0;
+   stacks[0].excl_time = 0.0;
+   stacks[0].incl_time = 0.0;
+   stacks[0].visible_in_treeview = true;
+   stacks[0].visible_in_listview = true;
+   
+   size_t read_elem;
+   read_elem = fread(&(stacks[0].callerID), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading first stacks caller\n");
+      exit(EXIT_FAILURE);
+   }
+   stacks[0].callerID = 0;
+   read_elem = fread(&(stacks[0].namelen), sizeof(int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading first stacks namelen\n");
+      exit(EXIT_FAILURE);
+   }
+   stacks[0].name = (char*) malloc(stacks[0].namelen*sizeof(char));
+   read_elem = fread(stacks[0].name, sizeof(char), stacks[0].namelen, vfd_file);
+   if (read_elem != (size_t)stacks[0].namelen) {
+      fprintf(stderr, "Error in reading first stacks name\n");
+      exit(EXIT_FAILURE);
    }
 
+   // all other stacks
+   for (unsigned int istack=1; istack<nstacks; istack++) {
+      stacks[istack].ID = istack;
+      stacks[istack].level = 0;
+      stacks[istack].callerID = 0;
+      stacks[istack].caller = NULL;
+      stacks[istack].ncallees = 0;
+      stacks[istack].callees = NULL;
+      stacks[istack].threadID = 0;
+      stacks[istack].precise = false;
+      stacks[istack].namelen = 0;
+      stacks[istack].name = NULL;
+      stacks[istack].num_called = 0;
+      stacks[istack].num_calls = 0;
+      stacks[istack].excl_time = 0.0;
+      stacks[istack].incl_time = 0.0;
+      stacks[istack].visible_in_treeview = true;
+      stacks[istack].visible_in_listview = true;
+      read_elem = fread(&(stacks[istack].callerID), sizeof(int), 1, vfd_file);
+      if (read_elem != 1) {
+         fprintf(stderr, "Error in reading stacks[%d] caller\n", istack);
+         exit(EXIT_FAILURE);
+      }
+      read_elem = fread(&(stacks[istack].namelen), sizeof(int), 1, vfd_file);
+      if (read_elem != 1) {
+         fprintf(stderr, "Error in reading first stacks[%d] namelen\n", istack);
+         exit(EXIT_FAILURE);
+      }
+      stacks[istack].name = (char*) malloc(stacks[istack].namelen*sizeof(char));
+      read_elem = fread(stacks[istack].name, sizeof(char),
+                        stacks[istack].namelen, vfd_file);
+      if (read_elem != (size_t)stacks[istack].namelen) {
+         fprintf(stderr, "Error in reading first stacks[%d] name\n", istack);
+         exit(EXIT_FAILURE);
+      }
+   }
 
-   // no additional data on the stacks is read in.
-   // the rest is derived
+   // Derive the remaining properties of the stacks
    for (unsigned int istack=0; istack<nstacks; istack++) {
       vfd_stack_entry_t *stack_ptr = stacks+istack;
       // if the function is precise
-      stack_ptr->precise = stack_ptr->name[stack_ptr->namelen-1] == '*';
+      stack_ptr->precise = is_precise(stack_ptr->name);
+      stack_ptr->namelen--;
       // remove the asterisk from the name
       if (stack_ptr->precise) {
          stack_ptr->name[stack_ptr->namelen-1] = '\0';
@@ -116,7 +139,7 @@ void read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
       vfd_stack_entry_t *stack_ptr = stacks+istack;
       vfd_stack_entry_t *caller = stack_ptr->caller;
       bool registered = false;
-      for (int icallee=0; icallee < caller->ncallees; icallee++) {
+      for (int icallee=0; icallee<caller->ncallees; icallee++) {
          if (caller->callees[icallee] == NULL) {
             registered = true;
             caller->callees[icallee] = stack_ptr;
@@ -126,6 +149,16 @@ void read_vfd_stacks(FILE *vfd_file, vfd_header_t *header,
       if (!registered) {
          fprintf(stderr, "Not enough memory allocated to register callee\n");
          exit(EXIT_FAILURE);
+      }
+   }
+
+   // determine the call depth
+   for (unsigned int istack=1; istack<nstacks; istack++) {
+      vfd_stack_entry_t *stack_ptr = stacks+istack;
+      vfd_stack_entry_t *caller = stack_ptr->caller;
+      stack_ptr->level = caller->level+1;
+      if (stack_ptr->level > *maxlevel) {
+         *maxlevel = stack_ptr->level;
       }
    }
 }
@@ -251,11 +284,12 @@ char *get_stack_string(vfd_stack_entry_t *stack) {
 }
 
 void print_vfd_stacks(vfd_header_t *header, vfd_stack_entry_t *stacks) {
-   unsigned int nstacks = header->stackscount;
+   unsigned int nstacks = header->nstacks;
    fprintf(stderr, "VFD-Stacks:\n");
    for (unsigned int istack=0; istack<nstacks; istack++) {
       vfd_stack_entry_t *stack_ptr = stacks+istack;
       fprintf(stderr, "   ID:             %d\n", stack_ptr->ID);
+      fprintf(stderr, "      Namelen      %d\n", stack_ptr->namelen);
       fprintf(stderr, "      Name         %s\n", stack_ptr->name);
       fprintf(stderr, "      Level        %d\n", stack_ptr->level);
       fprintf(stderr, "      Precise      %s\n", stack_ptr->precise ? "true" : "false");
@@ -265,6 +299,10 @@ void print_vfd_stacks(vfd_header_t *header, vfd_stack_entry_t *stacks) {
       for (int icallee=0; icallee < stack_ptr->ncallees; icallee++) {
          fprintf(stderr, "         %s\n", stack_ptr->callees[icallee]->name);
       }
+      fprintf(stderr, "      DrawColor:   %5.1lf %5.1lf %5.1lf\n",
+              stack_ptr->drawcolor.red,
+              stack_ptr->drawcolor.green,
+              stack_ptr->drawcolor.blue);
    }
 }
 

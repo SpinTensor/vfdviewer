@@ -65,7 +65,7 @@ void on_stack_tree_searchentry_search_changed(GtkSearchEntry *entry) {
 
       // loop over all stacks to determine
       // their visibility in the stack list
-      unsigned int nstacks = vfdptr->header->stackscount;
+      unsigned int nstacks = vfdptr->header->nstacks;
       for (unsigned int istack=1; istack<nstacks; istack++) {
          update_stack_visible_in_listview(&regex, vfdptr->stacks+istack);
       }

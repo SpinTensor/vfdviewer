@@ -24,7 +24,7 @@ void comm_matrix_update_time_max(vgtk_comm_matrix_t *comm_matrix) {
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
-      int myrank = vfdtrace->header->myrank;
+      int myrank = vfdtrace->header->processID;
       // go through all message samples of this vfd-trace
       // and search for the maximum time for the spcific
       // combination of sender and receiver
@@ -120,7 +120,7 @@ void comm_matrix_update_time_avg(vgtk_comm_matrix_t *comm_matrix) {
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
-      int myrank = vfdtrace->header->myrank;
+      int myrank = vfdtrace->header->processID;
       // go through all message samples of this vfd-trace
       // and search for the maximum time for the spcific
       // combination of sender and receiver
@@ -223,7 +223,7 @@ void comm_matrix_update_time_min(vgtk_comm_matrix_t *comm_matrix) {
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
-      int myrank = vfdtrace->header->myrank;
+      int myrank = vfdtrace->header->processID;
       // go through all message samples of this vfd-trace
       // and search for the maximum time for the spcific
       // combination of sender and receiver

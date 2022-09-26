@@ -158,7 +158,7 @@ void vgtk_stack_list_add_vfdtrace(vfd_t *vfdtrace) {
    g_object_unref(stack_list_treesort);
 
    // loop over all stacks and add them to the list store
-   unsigned int nstacks = vfdtrace->header->stackscount;
+   unsigned int nstacks = vfdtrace->header->nstacks;
    // skip istack==0 to avoid init function
    for (unsigned int istack=1; istack<nstacks; istack++) {
       vfd_stack_entry_t *stack_ptr = vfdtrace->stacks + istack;

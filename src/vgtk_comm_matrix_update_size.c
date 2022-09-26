@@ -24,7 +24,7 @@ void comm_matrix_update_size_max(vgtk_comm_matrix_t *comm_matrix) {
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
-      int myrank = vfdtrace->header->myrank;
+      int myrank = vfdtrace->header->processID;
       // go through all message samples of this vfd-trace
       // and search for the maximum bandwidth for the spcific
       // combination of sender and receiver
@@ -121,7 +121,7 @@ void comm_matrix_update_size_avg(vgtk_comm_matrix_t *comm_matrix) {
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
-      int myrank = vfdtrace->header->myrank;
+      int myrank = vfdtrace->header->processID;
       // go through all message samples of this vfd-trace
       // and search for the maximum bandwidth for the spcific
       // combination of sender and receiver
@@ -225,7 +225,7 @@ void comm_matrix_update_size_min(vgtk_comm_matrix_t *comm_matrix) {
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
-      int myrank = vfdtrace->header->myrank;
+      int myrank = vfdtrace->header->processID;
       // go through all message samples of this vfd-trace
       // and search for the maximum bandwidth for the spcific
       // combination of sender and receiver

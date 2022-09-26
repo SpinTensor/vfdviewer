@@ -113,7 +113,7 @@ void free_vfd(vfd_t **vfd_ptr) {
    // free the struct members
    // done in reverse order, because some
    // free routines might need header information
-   free_vfd_stacks(vfd->header->stackscount, vfd->stacks);
+   free_vfd_stacks(vfd->header->nstacks, vfd->stacks);
    vfd->stacks = NULL;
 
    free_vfd_message_samples(vfd->header->message_samplecount, vfd->message_samples);
@@ -416,7 +416,7 @@ int vfds_nprocs() {
    if (vfd == NULL) {
       return 0;
    } else {
-      return vfd->header->nranks;
+      return vfd->header->nprocesses;
    }
 }
 

@@ -24,7 +24,7 @@ void comm_matrix_update_count(vgtk_comm_matrix_t *comm_matrix) {
    // loop over all vfd-traces
    vfd_t *vfdtrace = first_vfd();
    while (vfdtrace != NULL) {
-      int myrank = vfdtrace->header->myrank;
+      int myrank = vfdtrace->header->processID;
       // go through all message samples of this vfd-trace
       // and count the messages for the spcific
       // combination of sender and receiver

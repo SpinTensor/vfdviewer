@@ -121,6 +121,16 @@ void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
                       read_elem);
       exit(EXIT_FAILURE);
    }
+   read_elem = fread(&(header->n_hw_counters), sizeof(unsigned int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf (stderr, "Error in reader n_hw_counters from vfd-file header\n");
+      exit(EXIT_FAILURE);
+   }
+   read_elem = fread(&(header->n_hw_observables), sizeof(unsigned int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf (stderr, "Error in reader n_hw_observables from vfd-file header\n");
+      exit(EXIT_FAILURE);
+   }
    read_elem = fread(&(header->samples_offset), sizeof(long int), 1, vfd_file);
    if (read_elem != 1) {
       fprintf(stderr, "Error in reading vfd-header samples_offset\n"
@@ -140,6 +150,11 @@ void read_vfd_header(FILE *vfd_file, vfd_header_t **header_ptr) {
       fprintf(stderr, "Error in reading vfd-header threadtree_offset\n"
                       "Expected 1 long, read %ld\n",
                       read_elem);
+      exit(EXIT_FAILURE);
+   }
+   read_elem = fread(&(header->hwprof_offset), sizeof(long int), 1, vfd_file);
+   if (read_elem != 1) {
+      fprintf(stderr, "Error in reading hwprof_offset from vfd-file header\n");
       exit(EXIT_FAILURE);
    }
 }

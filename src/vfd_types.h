@@ -20,9 +20,12 @@ typedef struct {
    unsigned int message_samplecount;
    unsigned int fcallscount;
    unsigned int nstacks;
+   unsigned int n_hw_counters;
+   unsigned int n_hw_observables;
    long int samples_offset;
    long int stacks_offset;
    long int threadtree_offset;
+   long int hwprof_offset;
    unsigned int msgregsendcount;
    unsigned int msgregrecvcount;
 } vfd_header_t;
